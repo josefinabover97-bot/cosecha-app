@@ -1,0 +1,1011 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Control Cosecha 25/26</title>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:    #181C14;
+  --bg2:   #20261A;
+  --bg3:   #272E20;
+  --card:  #2D3526;
+  --brd:   rgba(255,255,255,0.08);
+  --gold:  #C9A84C;
+  --goldl: #E4C97A;
+  --green: #5A9A3E;
+  --greenl:#7DC05A;
+  --red:   #C0392B;
+  --blue:  #3A7BD5;
+  --wh:    #F5F5F0;
+  --mut:   #7A8270;
+  --r:     14px;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{height:100%;overscroll-behavior:none;}
+body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--wh);max-width:500px;margin:0 auto;min-height:100vh;}
+
+/* HEADER */
+.hdr{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1.5px solid var(--gold);display:flex;align-items:center;padding:10px 16px;gap:10px;}
+.hdr-back{background:none;border:none;color:var(--gold);font-size:24px;cursor:pointer;padding:2px 6px;display:none;line-height:1;}
+.hdr-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold);flex:1;}
+.sync-wrap{display:flex;align-items:center;gap:5px;}
+.sync-dot{width:8px;height:8px;border-radius:50%;background:#444;flex-shrink:0;transition:.3s;}
+.sync-dot.ok{background:var(--greenl);box-shadow:0 0 5px var(--green);}
+.sync-dot.err{background:var(--red);}
+.sync-lbl{font-size:10px;color:var(--mut);}
+
+/* SCREENS */
+.scr{display:none;padding:16px;}
+.scr.active{display:block;}
+
+/* HOME */
+.hero{background:linear-gradient(135deg,#364428,#1F2A18);border-radius:var(--r);padding:20px;margin-bottom:16px;border:1px solid rgba(201,168,76,.25);position:relative;overflow:hidden;}
+.hero::after{content:'🌾';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:56px;opacity:.12;}
+.hero h2{font-family:'Barlow Condensed',sans-serif;font-size:24px;letter-spacing:2px;color:var(--gold);}
+.hero-stats{font-size:12px;color:var(--mut);margin-top:3px;}
+.role-bar{display:flex;gap:6px;margin-bottom:14px;}
+.rbtn{flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid var(--brd);background:var(--bg3);color:var(--mut);font-size:11px;font-family:'Nunito',sans-serif;font-weight:600;cursor:pointer;text-align:center;transition:.15s;letter-spacing:.3px;}
+.rbtn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.1);}
+.btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.mbtn{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:16px 14px;cursor:pointer;text-align:left;color:var(--wh);transition:.15s;}
+.mbtn:active{transform:scale(.97);}
+.mbtn.g{border-color:rgba(90,154,62,.45);background:rgba(90,154,62,.12);}
+.mbtn.o{border-color:rgba(201,168,76,.45);background:rgba(201,168,76,.1);}
+.mbtn.b{border-color:rgba(58,123,213,.35);background:rgba(58,123,213,.1);}
+.mbtn.wide{grid-column:span 2;}
+.mbtn .ic{font-size:24px;margin-bottom:5px;}
+.mbtn .lbl{font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;color:var(--goldl);display:block;}
+.mbtn .sub{font-size:11px;color:var(--mut);margin-top:1px;}
+
+/* FORMS */
+.sec-hdr{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;color:var(--gold);margin:16px 0 8px;display:flex;align-items:center;gap:8px;}
+.sec-hdr::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.2);}
+label{display:block;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--mut);margin-bottom:3px;}
+input,select,textarea{width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;color:var(--wh);font-family:'Nunito',sans-serif;font-size:14px;outline:none;transition:.15s;-webkit-appearance:none;}
+input:focus,select:focus,textarea:focus{border-color:var(--gold);background:rgba(201,168,76,.07);}
+select{background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7'%3E%3Cpath d='M1 1l4 4 4-4' stroke='%23C9A84C' stroke-width='1.5' fill='none' stroke-linecap='round'/%3E%3C/svg%3E");background-repeat:no-repeat;background-position:right 12px center;padding-right:32px;}
+select option{background:#2D3526;color:var(--wh);}
+textarea{resize:vertical;min-height:68px;}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+.frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
+.fld{margin-bottom:10px;}
+.neto{background:rgba(90,154,62,.15)!important;border-color:var(--green)!important;color:var(--greenl)!important;font-weight:700;font-size:16px!important;}
+.save-btn{width:100%;background:var(--gold);color:#181C14;border:none;border-radius:12px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:19px;letter-spacing:2px;cursor:pointer;margin-top:18px;transition:.15s;font-weight:700;}
+.save-btn:active{transform:scale(.98);}
+.add-btn{background:none;border:1.5px dashed rgba(201,168,76,.3);border-radius:8px;color:var(--gold);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:3px;}
+
+/* VIEWS */
+.sum-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;}
+.sc{background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:10px 6px;text-align:center;}
+.sv{font-family:'Barlow Condensed',sans-serif;font-size:22px;color:var(--gold);line-height:1;}
+.sl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
+.campo-card{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;cursor:pointer;}
+.campo-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.campo-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gold);}
+.campo-pct{font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--goldl);}
+.prog-bg{background:rgba(255,255,255,.08);border-radius:5px;height:6px;margin-bottom:8px;overflow:hidden;}
+.prog-fill{height:6px;border-radius:5px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .4s;}
+.campo-meta{font-size:11px;color:var(--mut);}
+.lote-expand{display:none;border-top:1px solid var(--brd);margin-top:10px;padding-top:10px;}
+.lote-expand.open{display:block;}
+.lote-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.lote-row:last-child{border-bottom:none;}
+.lote-name{font-size:12px;color:var(--wh);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.lote-cult{font-size:10px;color:var(--mut);background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
+.lote-pbg{width:60px;flex-shrink:0;background:rgba(255,255,255,.08);border-radius:3px;height:4px;}
+.lote-pfill{height:4px;border-radius:3px;background:var(--green);}
+.lote-pct{font-size:11px;color:var(--mut);width:28px;text-align:right;flex-shrink:0;}
+.lote-has{font-size:11px;color:var(--mut);width:82px;text-align:right;flex-shrink:0;white-space:nowrap;}
+.chevron{font-size:10px;color:var(--mut);transition:.2s;margin-left:4px;}
+.chevron.open{transform:rotate(180deg);}
+.filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;}
+.fsel{background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--wh);font-size:12px;font-family:'Nunito',sans-serif;min-width:100px;flex-shrink:0;-webkit-appearance:none;}
+.row-card{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
+.row-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
+.pat{font-family:'Barlow Condensed',sans-serif;font-size:17px;letter-spacing:2px;color:var(--gold);}
+.tn{font-weight:700;font-size:15px;color:var(--greenl);}
+.row-meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--mut);}
+.row-obs{font-size:11px;color:rgba(245,245,240,.4);margin-top:4px;font-style:italic;}
+.badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:2px 7px;border-radius:20px;margin-bottom:5px;}
+.b-hum{background:rgba(52,152,219,.2);color:#74b9ff;}
+.b-dem{background:rgba(230,126,34,.2);color:#fab46a;}
+.b-maq{background:rgba(192,57,43,.2);color:#ff7675;}
+.b-cam{background:rgba(142,68,173,.2);color:#d7a8f0;}
+.b-lot{background:rgba(90,154,62,.2);color:#95e085;}
+.b-gen{background:rgba(255,255,255,.1);color:var(--mut);}
+.empty{text-align:center;padding:40px 20px;color:var(--mut);}
+.empty .ei{font-size:40px;margin-bottom:8px;}
+.empty p{font-size:13px;}
+
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:flex-end;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:75vh;overflow-y:auto;border-top:2px solid var(--gold);}
+.modal h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gold);margin-bottom:14px;}
+.modal-close{float:right;background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;}
+
+/* DESTINO CHIPS */
+.dest-chip{display:inline-block;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;margin:3px;transition:.15s;}
+.dest-chip.sel{background:var(--gold);color:#181C14;font-weight:700;}
+
+/* PDF */
+.pdf-zone{border:2px dashed rgba(201,168,76,.25);border-radius:10px;padding:16px;text-align:center;cursor:pointer;position:relative;margin-bottom:4px;}
+.pdf-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
+.pdf-zone p{font-size:12px;color:var(--mut);}
+.pdf-item{display:flex;align-items:center;gap:8px;background:rgba(58,123,213,.1);border:1px solid rgba(58,123,213,.2);border-radius:8px;padding:7px 10px;margin-top:6px;}
+.pdf-item .pn{flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.pdf-item .pd{background:none;border:none;color:var(--mut);cursor:pointer;font-size:16px;}
+
+/* SENDING */
+.send-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+.send-ov.show{display:flex;}
+.spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:10px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;transition:.3s;white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.5);}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(--red);}
+
+/* CONFIG */
+.cfg-box{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:14px;margin-bottom:14px;}
+.cfg-box h4{font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;color:var(--gold);margin-bottom:10px;}
+.cfg-input{width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:8px;padding:9px 11px;color:var(--wh);font-family:'Nunito',sans-serif;font-size:12px;outline:none;}
+.cfg-input:focus{border-color:var(--gold);}
+.cfg-save{margin-top:8px;background:var(--gold);color:#181C14;border:none;border-radius:8px;padding:9px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;width:100%;}
+
+/* CUIT */
+.cuit-hint{font-size:10px;color:var(--mut);margin-top:2px;}
+
+/* BALANZA LOG CARD */
+.blog-card{background:var(--card);border:1.5px solid var(--brd);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.15s;}
+.blog-card:active{transform:scale(.98);}
+.blog-card.pesado{border-color:rgba(90,154,62,.4);opacity:.6;}
+.blog-patente{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);}
+.blog-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:12px;margin-left:8px;background:rgba(90,154,62,.2);color:var(--greenl);}
+.blog-badge.pend{background:rgba(201,168,76,.2);color:var(--goldl);}
+.blog-meta{font-size:11px;color:var(--mut);margin-top:3px;}
+</style>
+</head>
+<body>
+
+<div class="hdr">
+  <button class="hdr-back" id="hdr-back" onclick="goHome()">←</button>
+  <div class="hdr-title" id="hdr-title">COSECHA 25/26</div>
+  <div class="sync-wrap">
+    <div class="sync-dot" id="sdot"></div>
+    <span class="sync-lbl" id="slbl">local</span>
+  </div>
+</div>
+
+<!-- ═══════ HOME ═══════ -->
+<div class="scr active" id="scr-home">
+  <div class="hero">
+    <h2>CONTROL DE COSECHA</h2>
+    <div class="hero-stats" id="hero-stats">Cargando...</div>
+  </div>
+
+  <div id="cfg-wrap">
+    <div class="cfg-box">
+      <h4>⚙ CONECTAR GOOGLE SHEETS</h4>
+      <div id="cfg-conectado" style="display:none;margin-bottom:8px;">
+        <div style="display:flex;align-items:center;gap:8px;background:rgba(90,154,62,.15);border:1px solid rgba(90,154,62,.3);border-radius:8px;padding:8px 12px;">
+          <span style="font-size:16px;">✅</span>
+          <span style="font-size:12px;color:var(--greenl);flex:1;">Google Sheets conectado</span>
+          <button onclick="cambiarURL()" style="background:none;border:none;color:var(--mut);font-size:11px;cursor:pointer;text-decoration:underline;">Cambiar URL</button>
+        </div>
+      </div>
+      <div id="cfg-form">
+        <label>URL del Web App (Apps Script)</label>
+        <input class="cfg-input" id="cfg-url" type="url" placeholder="https://script.google.com/macros/s/...">
+        <button class="cfg-save" onclick="saveConfig()">GUARDAR Y CONECTAR</button>
+      </div>
+    </div>
+  </div>
+
+  <p style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">¿Quién sos?</p>
+  <div class="role-bar">
+    <button class="rbtn" id="r-campo"    onclick="setRole('campo')">🌾 Campo</button>
+    <button class="rbtn" id="r-balanza"  onclick="setRole('balanza')">⚖️ Balanza</button>
+    <button class="rbtn" id="r-logistica"onclick="setRole('logistica')">🚛 Logística</button>
+    <button class="rbtn" id="r-admin"    onclick="setRole('admin')">📊 Admin</button>
+  </div>
+  <div class="btn-grid" id="home-btns"></div>
+</div>
+
+<!-- ═══════ CARGAR CAMPO ═══════ -->
+<div class="scr" id="scr-campo">
+  <div class="sec-hdr">📅 Identificación</div>
+  <div class="frow fld">
+    <div><label>Fecha</label><input type="date" id="cf-fecha"></div>
+    <div><label>Establecimiento</label>
+      <select id="cf-campo" onchange="onCampoChange('cf')"><option value="">— Seleccionar —</option></select>
+    </div>
+  </div>
+  <div class="frow fld">
+    <div><label>Lote</label><select id="cf-lote" onchange="onLoteChange('cf')"><option value="">—</option></select></div>
+    <div><label>Cultivo</label><select id="cf-cultivo"><option value="">—</option></select></div>
+  </div>
+  <div class="fld"><label>Contratista</label><select id="cf-contratista"><option value="">—</option></select></div>
+
+  <div class="sec-hdr">📈 Avance del día</div>
+  <div class="frow fld">
+    <div><label>Has. cosechadas hoy</label><input type="number" id="cf-has" placeholder="50" step="0.1" min="0"></div>
+    <div><label>Humedad (%)</label><input type="number" id="cf-humedad" placeholder="18.5" step="0.1" min="0" max="40"></div>
+  </div>
+  <div class="sec-hdr">⚠️ Pérdida de cosecha</div>
+  <div class="frow fld">
+    <div>
+      <label>Pérdida (kg/ha)</label>
+      <input type="number" id="cf-perdida-kgha" placeholder="0" step="0.1" min="0" oninput="calcPerdidaTotal()">
+    </div>
+    <div>
+      <label>Total pérdida (kg)</label>
+      <input type="number" id="cf-perdida-total" class="neto" readonly placeholder="—">
+    </div>
+  </div>
+  <div class="fld">
+    <label>Causa de pérdida</label>
+    <select id="cf-perdida-causa">
+      <option value="">— Sin pérdida —</option>
+      <option>Velocidad de cosechadora</option>
+      <option>Altura de corte</option>
+      <option>Vuelco / encamado</option>
+      <option>Desgrane previo</option>
+      <option>Falla mecánica</option>
+      <option>Otra</option>
+    </select>
+  </div>
+  <!-- avance restante display -->
+  <div id="cf-avance-info" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:none;">
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mut);">
+      <span>Has. del lote</span><span id="ci-total">—</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:4px;">
+      <span>Ya cosechadas</span><span id="ci-ya">—</span>
+    </div>
+    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--goldl);margin-top:6px;font-weight:600;">
+      <span>Restante</span><span id="ci-resta">—</span>
+    </div>
+    <div class="prog-bg" style="margin-top:8px;margin-bottom:0;">
+      <div class="prog-fill" id="ci-prog" style="width:0%"></div>
+    </div>
+  </div>
+
+  <div class="fld"><label>Observaciones</label><textarea id="cf-obs" placeholder="Demoras, problemas, novedades..."></textarea></div>
+
+  <div class="sec-hdr">📄 Carta de Porte (PDF)</div>
+  <div class="pdf-zone">
+    <input type="file" accept="application/pdf" multiple id="cf-pdf" onchange="handlePDF(this,'cf')">
+    <div style="font-size:24px;margin-bottom:4px;">📄</div>
+    <p>Tocá para adjuntar carta de porte</p>
+  </div>
+  <div id="cf-pdf-list"></div>
+
+  <button class="save-btn" onclick="guardarCampo()">GUARDAR REGISTRO</button>
+</div>
+
+<!-- ═══════ CARGAR BALANZA ═══════ -->
+<div class="scr" id="scr-balanza">
+
+  <!-- PASO 1: seleccionar camión de logística -->
+  <div id="bal-paso1">
+    <div class="sec-hdr">🚛 Seleccionar camión</div>
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <input style="flex:1;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="bf-buscar" placeholder="Buscar patente, campo o chofer..." oninput="renderBalanzaLista()">
+    </div>
+    <div id="bal-log-lista"></div>
+    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--brd);">
+      <p style="font-size:11px;color:var(--mut);margin-bottom:6px;">¿Camión sin registro de logística?</p>
+      <button class="add-btn" onclick="balSinLogistica()">+ Cargar sin logística</button>
+    </div>
+  </div>
+
+  <!-- PASO 2: cargar pesos -->
+  <div id="bal-paso2" style="display:none;">
+    <!-- info del camión seleccionado -->
+    <div id="bal-camion-info" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
+      <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--gold);" id="bal-info-pat">—</div>
+      <div style="font-size:12px;color:var(--mut);margin-top:3px;" id="bal-info-detalle">—</div>
+      <button class="add-btn" style="margin-top:8px;font-size:11px;" onclick="balCambiarPatente()">✏ Cambiar patente</button>
+    </div>
+
+    <!-- cambio de patente (oculto por defecto) -->
+    <div id="bal-cambio-pat" style="display:none;" class="fld">
+      <label>Nueva patente chasis</label>
+      <select id="bf-patente-nueva"><option value="">—</option></select>
+      <button class="add-btn" onclick="openModal('modal-pat')" style="margin-top:4px;">+ Nueva patente</button>
+    </div>
+
+    <div class="sec-hdr">⚖️ Pesajes</div>
+    <div class="frow3 fld">
+      <div><label>Tara (kg)</label><input type="number" id="bf-tara" placeholder="10000" oninput="calcNeto()"></div>
+      <div><label>Bruto (kg)</label><input type="number" id="bf-bruto" placeholder="28000" oninput="calcNeto()"></div>
+      <div><label>Neto (kg)</label><input type="number" id="bf-neto" class="neto" readonly placeholder="—"></div>
+    </div>
+    <div class="fld"><label>Observaciones</label><textarea id="bf-obs" placeholder="Novedades..."></textarea></div>
+
+    <div style="display:flex;gap:10px;">
+      <button class="add-btn" onclick="balVolver()" style="padding:12px 16px;">← Volver</button>
+      <button class="save-btn" style="flex:1;margin-top:0;" onclick="guardarBalanza()">GUARDAR BALANZA</button>
+    </div>
+  </div>
+</div>
+
+<!-- ═══════ LOGÍSTICA ═══════ -->
+<div class="scr" id="scr-logistica">
+  <div class="sec-hdr">🚛 Camión</div>
+  <div class="frow fld">
+    <div><label>Patente Chasis</label><select id="lf-ch"><option value="">—</option></select></div>
+    <div><label>Patente Acoplado</label><input type="text" id="lf-ac" placeholder="ABC 001" style="text-transform:uppercase;"></div>
+  </div>
+  <div class="sec-hdr">👤 Chofer</div>
+  <div class="frow fld">
+    <div><label>Nombre</label><input type="text" id="lf-chofer" placeholder="Juan Pérez"></div>
+    <div><label>CUIT Chofer</label><input type="text" id="lf-cuit-ch" placeholder="20-12345678-9" maxlength="13" oninput="fmtCUIT(this)"><div class="cuit-hint">20-XXXXXXXX-X</div></div>
+  </div>
+  <div class="sec-hdr">🏢 Transporte</div>
+  <div class="frow fld">
+    <div><label>Empresa</label><input type="text" id="lf-transp" placeholder="Trans. García SA"></div>
+    <div><label>CUIT Transporte</label><input type="text" id="lf-cuit-tr" placeholder="30-12345678-9" maxlength="13" oninput="fmtCUIT(this)"></div>
+  </div>
+  <div class="sec-hdr">📍 Destino</div>
+  <div id="dest-chips"></div>
+  <div class="frow fld" style="margin-top:8px;">
+    <input type="text" id="lf-nuevo-dest" placeholder="Nuevo destino...">
+    <button class="add-btn" style="white-space:nowrap;" onclick="addDestino()">+ Agregar</button>
+  </div>
+  <div class="sec-hdr">🌾 Cultivo</div>
+  <div class="frow fld">
+    <div><label>Establecimiento</label><select id="lf-campo" onchange="onCampoChange('lf')"><option value="">—</option></select></div>
+    <div><label>Lote</label><select id="lf-lote"><option value="">—</option></select></div>
+  </div>
+  <div class="frow fld">
+    <div><label>Cultivo</label>
+      <select id="lf-cultivo"><option>Soja</option><option>Maíz</option><option>Trigo</option><option>Girasol</option><option>Sorgo</option><option>Otro</option></select>
+    </div>
+    <div><label>Fecha</label><input type="date" id="lf-fecha"></div>
+  </div>
+  <div class="fld"><label>Observaciones</label><textarea id="lf-obs" placeholder="Novedades..."></textarea></div>
+  <button class="save-btn" onclick="guardarLogistica()">GUARDAR LOGÍSTICA</button>
+</div>
+
+<!-- ═══════ VER AVANCE ═══════ -->
+<div class="scr" id="scr-avance">
+  <div class="sum-strip" id="av-sum"></div>
+  <div class="filter-bar">
+    <select class="fsel" id="av-fil-cult" onchange="renderAvance()"><option value="">Todos los cultivos</option></select>
+    <input style="flex:1;min-width:100px;background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--wh);font-size:12px;font-family:Nunito,sans-serif;outline:none;" id="av-buscar" placeholder="Buscar..." oninput="renderAvance()">
+  </div>
+  <div id="av-list"></div>
+</div>
+
+<!-- ═══════ VER CAMIONES ═══════ -->
+<div class="scr" id="scr-camiones">
+  <div class="filter-bar">
+    <select class="fsel" id="fc-fecha" onchange="renderCamiones()"><option value="">Todas fechas</option></select>
+    <select class="fsel" id="fc-campo" onchange="renderCamiones()"><option value="">Todos campos</option></select>
+    <select class="fsel" id="fc-lote"  onchange="renderCamiones()"><option value="">Todos lotes</option></select>
+  </div>
+  <div class="sum-strip" id="cam-sum"></div>
+  <div id="cam-list"></div>
+</div>
+
+<!-- ═══════ OBSERVACIONES ═══════ -->
+<div class="scr" id="scr-obs">
+  <div id="obs-list"></div>
+</div>
+
+<!-- ═══════ MODAL: NUEVA PATENTE ═══════ -->
+<div class="modal-bg" id="modal-pat">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-pat')">×</button>
+    <h3>NUEVA PATENTE</h3>
+    <div class="fld"><label>Chasis</label><input type="text" id="np-ch" placeholder="ABC 123" style="text-transform:uppercase;"></div>
+    <div class="fld"><label>Acoplado</label><input type="text" id="np-ac" placeholder="DEF 456" style="text-transform:uppercase;"></div>
+    <button class="save-btn" onclick="saveNewPat()" style="margin-top:8px;">AGREGAR</button>
+  </div>
+</div>
+
+<div class="send-ov" id="send-ov">
+  <div class="spinner"></div>
+  <span style="color:var(--wh);font-size:14px;font-weight:600;">Guardando...</span>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+// ══════════════════════════════════════════
+// DATOS MAESTROS — Plan de Siembra 25/26
+// ══════════════════════════════════════════
+const CAMPOS = {"CAM":{"has_total":1006.0,"lotes":[{"nombre":"1_Cloquell","cultivo":"SOJA 2da","has":45.0},{"nombre":"1_JAC","cultivo":"SOJA 2da","has":48.0},{"nombre":"3_4_La Angela","cultivo":"SOJA 2da","has":177.0},{"nombre":"1_Landaburu","cultivo":"SOJA 2da","has":42.0},{"nombre":"1_Los Cuises","cultivo":"SOJA 1ra","has":14.0},{"nombre":"1_Ramos","cultivo":"MAIZ 1ra","has":105.0},{"nombre":"2_La Angela","cultivo":"MAIZ 1ra","has":117.0},{"nombre":"2_Los Cuises","cultivo":"SOJA 2da","has":94.0},{"nombre":"1A_La Angela","cultivo":"SOJA 1ra","has":54.0},{"nombre":"3_Los Cuises","cultivo":"SOJA 2da","has":133.0},{"nombre":"1_La Angela","cultivo":"SOJA 2da","has":50.0},{"nombre":"4_Los Cuises","cultivo":"MAIZ 1ra","has":127.0}]},"CARYJUAN":{"has_total":1877.7,"lotes":[{"nombre":"01S_Caryjuan","cultivo":"TRIGO","has":96.8},{"nombre":"01S_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":93.2},{"nombre":"02S_Caryjuan","cultivo":"TRIGO","has":184.9},{"nombre":"01S_Caryjuan","cultivo":"SOJA 2da ORGANICA","has":96.8},{"nombre":"03S_Caryjuan","cultivo":"TRIGO","has":135.5},{"nombre":"02S_Caryjuan","cultivo":"SOJA 2da ORGANICA","has":184.9},{"nombre":"03S_Caryjuan","cultivo":"SOJA 2da ORGANICA","has":135.5},{"nombre":"04S_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":123.5},{"nombre":"04S_Caryjuan","cultivo":"COBERTURA","has":123.5},{"nombre":"05_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":32.1},{"nombre":"05_Caryjuan","cultivo":"COBERTURA","has":32.1},{"nombre":"05A_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":35.5},{"nombre":"05A_Caryjuan","cultivo":"COBERTURA","has":35.5},{"nombre":"06_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":78.0},{"nombre":"06_Caryjuan","cultivo":"COBERTURA","has":78.0},{"nombre":"07_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":83.0},{"nombre":"07_Caryjuan","cultivo":"COBERTURA","has":83.0},{"nombre":"08_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":33.5},{"nombre":"12_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":25.0},{"nombre":"13_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":22.8},{"nombre":"14_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":28.5},{"nombre":"15_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":37.0},{"nombre":"16_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":34.3},{"nombre":"17_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":32.5},{"nombre":"18_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":32.3}]},"DON CARLOS":{"has_total":329.0,"lotes":[{"nombre":"01_Don Carlos","cultivo":"CAMELINA","has":164.5},{"nombre":"01_Don Carlos","cultivo":"SOJA 2da NO GMO","has":164.5}]},"EL CARDENAL":{"has_total":576.0,"lotes":[{"nombre":"El_Largo_El Cardenal","cultivo":"SOJA 2da","has":217.0},{"nombre":"El_Largo_El Cardenal","cultivo":"TRIGO","has":217.0},{"nombre":"San_Luis_ El Cardenal","cultivo":"SOJA 2da","has":71.0},{"nombre":"San_Luis_ El Cardenal","cultivo":"TRIGO","has":71.0}]},"EL FORTIN":{"has_total":117.6,"lotes":[{"nombre":"01_El Fortín","cultivo":"SOJA 1ra","has":117.6}]},"EL GRILLO":{"has_total":276.2,"lotes":[{"nombre":"05-06_El Grillo","cultivo":"COBERTURA","has":52.5},{"nombre":"05-06_El Grillo","cultivo":"SOJA 1ra ORGANICA","has":52.5},{"nombre":"10_El Grillo","cultivo":"COBERTURA","has":85.6},{"nombre":"10_El Grillo","cultivo":"SOJA 1ra ORGANICA","has":85.6}]},"EL HARAS":{"has_total":655.4,"lotes":[{"nombre":"10H_El Haras","cultivo":"MAIZ 1ra","has":16.3},{"nombre":"11H_El Haras","cultivo":"MAIZ 1ra","has":24.3},{"nombre":"1G_El Haras","cultivo":"MAIZ 1ra","has":45.2},{"nombre":"01_02El Haras","cultivo":"SOJA 1ra","has":93.8},{"nombre":"02_03_04H_El Haras","cultivo":"SOJA 1ra","has":66.0},{"nombre":"03_04El Haras","cultivo":"SOJA 1ra","has":119.5},{"nombre":"05_06_07H_El Haras","cultivo":"SOJA 1ra","has":60.3},{"nombre":"05_06El Haras","cultivo":"SOJA 1ra","has":92.6},{"nombre":"08H_El Haras","cultivo":"SOJA 1ra","has":2.4},{"nombre":"09H_El Haras","cultivo":"SOJA 1ra","has":11.4},{"nombre":"11B/C_El Haras","cultivo":"SOJA 1ra","has":10.8},{"nombre":"12A_El Haras","cultivo":"SOJA 1ra","has":44.9},{"nombre":"12B_CEl Haras","cultivo":"SOJA 1ra","has":47.8},{"nombre":"1H_El Haras","cultivo":"SOJA 1ra","has":20.0}]},"EL INFIERNO DRIBEL":{"has_total":424.3,"lotes":[{"nombre":"1_El Infierno Dribel","cultivo":"SOJA 1ra NO GMO","has":27.1},{"nombre":"2_El Infierno Dribel","cultivo":"SOJA 1ra NO GMO","has":33.5},{"nombre":"22_El Infierno Dribel","cultivo":"TRIGO","has":45.0},{"nombre":"22_El Infierno Dribel","cultivo":"SOJA 2da ORGANICA","has":45.0},{"nombre":"3I_El Infierno Dribel","cultivo":"TRIGO","has":73.0},{"nombre":"3I_El Infierno Dribel","cultivo":"SOJA 2da ORGANICA","has":73.0},{"nombre":"8_El Infierno Drible","cultivo":"SOJA 1ra","has":79.5},{"nombre":"9_El Infierno Drible","cultivo":"SOJA 1ra","has":48.1}]},"EL RECUERDO":{"has_total":956.7,"lotes":[{"nombre":"01_El Recuerdo","cultivo":"SOJA 2da NO GMO","has":45.4},{"nombre":"01_El Recuerdo","cultivo":"TRIGO","has":45.4},{"nombre":"02_El Recuerdo","cultivo":"MAIZ 1ra","has":51.8},{"nombre":"03A_El Recuerdo","cultivo":"MAIZ 1ra","has":79.4},{"nombre":"04_El Recuerdo","cultivo":"MAIZ 1ra","has":219.5},{"nombre":"05_El Recuerdo","cultivo":"SOJA 2da NO GMO","has":86.9},{"nombre":"05_El Recuerdo","cultivo":"TRIGO","has":86.9},{"nombre":"06_El Recuerdo","cultivo":"SOJA 2da NO GMO","has":122.8},{"nombre":"06_El Recuerdo","cultivo":"TRIGO","has":122.8},{"nombre":"07_El Recuerdo","cultivo":"GIRASOL","has":47.8},{"nombre":"07_El Recuerdo","cultivo":"COBERTURA","has":47.8}]},"EL TEJADO":{"has_total":598.3,"lotes":[{"nombre":"01_El Tejado","cultivo":"TRIGO","has":78.0},{"nombre":"01_El Tejado","cultivo":"SOJA 2da NO GMO","has":78.0},{"nombre":"02_El Tejado","cultivo":"TRIGO","has":16.3},{"nombre":"02_El Tejado","cultivo":"SOJA 2da NO GMO","has":16.3},{"nombre":"03_El Tejado","cultivo":"TRIGO","has":27.0},{"nombre":"03_El Tejado","cultivo":"SOJA 2da NO GMO","has":27.0},{"nombre":"Platano_El Tejado","cultivo":"TRIGO","has":105.2},{"nombre":"Platano_El Tejado","cultivo":"SOJA 2da","has":105.2},{"nombre":"Puesto_Lopez_El Tejado","cultivo":"MAIZ 1ra","has":145.3}]},"FRERS":{"has_total":248.6,"lotes":[{"nombre":"01_FRERS","cultivo":"SOJA 1ra","has":149.3},{"nombre":"02_FRERS","cultivo":"SOJA 1ra","has":99.3}]},"JUANCITO":{"has_total":1454.3,"lotes":[{"nombre":"01_Juancito","cultivo":"MAIZ FLINT","has":101.0},{"nombre":"02_Juancito","cultivo":"SOJA 2da ORGANICA","has":106.2},{"nombre":"03_Juancito","cultivo":"SOJA 1ra ORGANICA","has":50.8},{"nombre":"03_Juancito","cultivo":"COBERTURA","has":50.8},{"nombre":"04_Juancito","cultivo":"MAIZ FLINT","has":72.0},{"nombre":"06_Juancito","cultivo":"SOJA 1ra ORGANICA","has":86.0},{"nombre":"07_Juancito","cultivo":"SOJA 1ra ORGANICA","has":108.8},{"nombre":"07_Juancito","cultivo":"COBERTURA","has":108.8},{"nombre":"02_Juancito","cultivo":"TRIGO","has":106.2},{"nombre":"08_Juancito","cultivo":"SOJA 1ra ORGANICA","has":55.7},{"nombre":"09/10/11_Juancito","cultivo":"SOJA 2da ORGANICA","has":244.5},{"nombre":"12/13_Juancito","cultivo":"MAIZ FLINT","has":119.0},{"nombre":"09/10/11_Juancito","cultivo":"TRIGO","has":244.5}]},"LA CELINA":{"has_total":72.4,"lotes":[{"nombre":"Esquina La Celina","cultivo":"MAIZ 2da FLINT","has":36.2},{"nombre":"Esquina La Celina","cultivo":"ARVEJA VERDE","has":36.2}]},"LA CIRCUNSTANCIA":{"has_total":1173.9,"lotes":[{"nombre":"Campamento_La Circunstacia","cultivo":"MAIZ 1ra","has":92.0},{"nombre":"Corrales_La Circunstacia","cultivo":"MAIZ 1ra","has":162.9},{"nombre":"Entrada_La Circunstacia","cultivo":"SOJA 2da","has":60.0},{"nombre":"Entrada_La Circunstacia","cultivo":"TRIGO","has":60.0},{"nombre":"La Beba 1_La Circunstacia","cultivo":"MAIZ 1ra","has":111.0},{"nombre":"La Beba 2_La Circunstacia","cultivo":"SOJA 2da","has":106.0},{"nombre":"La Beba 2_La Circunstacia","cultivo":"TRIGO","has":106.0},{"nombre":"Las Moras_La Circunstacia","cultivo":"SOJA 2da","has":120.0},{"nombre":"Las Moras_La Circunstacia","cultivo":"TRIGO","has":120.0},{"nombre":"Monte Redondo_La Circunstacia","cultivo":"SOJA 2da","has":24.0},{"nombre":"Monte Redondo_La Circunstacia","cultivo":"TRIGO","has":24.0},{"nombre":"Pastura_La Circunstacia","cultivo":"SOJA 2da","has":94.0},{"nombre":"Pastura_La Circunstacia","cultivo":"TRIGO","has":94.0}]},"LA MATILDE":{"has_total":1247.0,"lotes":[{"nombre":"01_La Matilde","cultivo":"TRIGO","has":33.8},{"nombre":"01_La Matilde","cultivo":"SOJA 2da NO GMO","has":33.8},{"nombre":"02_La Matilde","cultivo":"TRIGO","has":70.0},{"nombre":"02_La Matilde","cultivo":"SOJA 2da NO GMO","has":70.0},{"nombre":"03_La Matilde","cultivo":"TRIGO","has":105.0},{"nombre":"03_La Matilde","cultivo":"SOJA 2da NO GMO","has":105.0},{"nombre":"04_La Matilde","cultivo":"TRIGO","has":106.5},{"nombre":"04_La Matilde","cultivo":"SOJA 2da NO GMO","has":106.5},{"nombre":"23_La Matilde","cultivo":"TRIGO","has":64.5},{"nombre":"23_La Matilde","cultivo":"SOJA 2da NO GMO","has":64.5},{"nombre":"25_La Matilde","cultivo":"TRIGO","has":42.0},{"nombre":"25_La Matilde","cultivo":"SOJA 2da NO GMO","has":42.0},{"nombre":"28_La Matilde","cultivo":"MAIZ 1ra","has":121.2},{"nombre":"31_La Matilde","cultivo":"MAIZ 1ra","has":81.5},{"nombre":"32_La Matilde","cultivo":"SOJA 1ra","has":75.3},{"nombre":"33a_La Matilde","cultivo":"SOJA 1ra","has":70.0},{"nombre":"33b_La Matilde","cultivo":"SOJA 1ra","has":55.5}]},"LA NUEVA DRIBEL":{"has_total":1163.3,"lotes":[{"nombre":"15A_La Nueva Dribel","cultivo":"MAIZ FLINT","has":55.2},{"nombre":"15B_La Nueva Dribel","cultivo":"MAIZ FLINT","has":48.9},{"nombre":"01N_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":64.1},{"nombre":"01S_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":43.2},{"nombre":"07N_La Nueva Dribel","cultivo":"TRIGO","has":55.0},{"nombre":"02_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":15.4},{"nombre":"07N_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":55.0},{"nombre":"07S_La Nueva Dribel","cultivo":"SOJA 1ra NO GMO","has":54.8},{"nombre":"10_La Nueva Dribel","cultivo":"SOJA 1ra NO GMO","has":64.9},{"nombre":"11N_La Nueva Dribel","cultivo":"SOJA 1ra","has":13.4},{"nombre":"13_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":90.4},{"nombre":"15C_La Nueva Dribel","cultivo":"SOJA 1ra","has":60.7},{"nombre":"17N_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":44.4},{"nombre":"17N_La Nueva Dribel","cultivo":"TRIGO","has":44.4},{"nombre":"18_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":74.8},{"nombre":"18_La Nueva Dribel","cultivo":"TRIGO","has":74.8},{"nombre":"19_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":83.3},{"nombre":"19_La Nueva Dribel","cultivo":"TRIGO","has":83.3},{"nombre":"20N_La Nueva Dribel","cultivo":"SOJA 1ra NO GMO","has":49.6},{"nombre":"20S_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":37.2},{"nombre":"20S_La Nueva Dribel","cultivo":"TRIGO","has":36.0},{"nombre":"Pista_La Nueva Drible","cultivo":"SOJA 2da ORGANICA","has":7.2},{"nombre":"Pista_La Nueva Drible","cultivo":"TRIGO","has":7.2}]},"LA PEREGRINA":{"has_total":354.0,"lotes":[{"nombre":"01_LA PEREGRINA","cultivo":"SOJA 2da","has":177.0},{"nombre":"01_LA PEREGRINA","cultivo":"TRIGO","has":177.0}]},"LAS PEPITAS DRIBEL":{"has_total":1231.5,"lotes":[{"nombre":"10_La Pepita Dribel","cultivo":"TRIGO","has":53.0},{"nombre":"13_La Pepita Dribel","cultivo":"GIRASOL","has":60.6},{"nombre":"8_La Pepita Dribel","cultivo":"MAIZ FLINT","has":93.2},{"nombre":"11_La Pepita Dribel","cultivo":"SOJA 1ra","has":89.1},{"nombre":"15_La Pepita Dribel","cultivo":"SOJA 1ra","has":114.3},{"nombre":"14_La Pepita Dribel","cultivo":"TRIGO","has":97.0},{"nombre":"20_La Pepita Dribel","cultivo":"SOJA 1ra","has":46.9},{"nombre":"23_La Pepita Dribel","cultivo":"SOJA 1ra","has":46.6},{"nombre":"22_La Pepita Dribel","cultivo":"TRIGO","has":50.0},{"nombre":"3_La Pepita Dribel","cultivo":"SOJA 1ra","has":84.0},{"nombre":"4_La Pepita Dribel","cultivo":"SOJA 1ra","has":48.7},{"nombre":"5_La Pepita Dribel","cultivo":"SOJA 1ra","has":81.0},{"nombre":"6_La Pepita Dribel","cultivo":"SOJA 1ra","has":129.7},{"nombre":"9_La Pepita Dribel","cultivo":"SOJA 1ra","has":37.2},{"nombre":"10_La Pepita Dribel","cultivo":"SOJA 2da ORGANICA","has":53.0},{"nombre":"14_La Pepita Dribel","cultivo":"SOJA 2da ORGANICA","has":97.0},{"nombre":"22_La Pepita Dribel","cultivo":"SOJA 2da ORGANICA","has":50.0}]},"LIMA":{"has_total":86.0,"lotes":[{"nombre":"01_Lima","cultivo":"SOJA 2da","has":86.0}]},"LOS SOJALES":{"has_total":831.7,"lotes":[{"nombre":"01_Los Sojales","cultivo":"SOJA 2da","has":62.0},{"nombre":"01_Los Sojales","cultivo":"TRIGO","has":62.0},{"nombre":"02_Los Sojales","cultivo":"SOJA 2da","has":104.6},{"nombre":"02_Los Sojales","cultivo":"TRIGO","has":104.6},{"nombre":"03_Los Sojales","cultivo":"MAIZ SEMILLA","has":70.0},{"nombre":"04_Los Sojales","cultivo":"MAIZ SEMILLA","has":40.4},{"nombre":"05_Los Sojales","cultivo":"ARVEJA VERDE","has":66.6},{"nombre":"05_Los Sojales","cultivo":"SOJA 2da","has":66.6},{"nombre":"06_Los Sojales","cultivo":"ARVEJA VERDE","has":68.9},{"nombre":"06_Los Sojales","cultivo":"SOJA 2da","has":68.9},{"nombre":"07_Los Sojales","cultivo":"ARVEJA VERDE","has":19.5},{"nombre":"07_Los Sojales","cultivo":"SOJA 2da","has":19.5},{"nombre":"08_Los Sojales","cultivo":"ARVEJA VERDE","has":39.1},{"nombre":"08_Los Sojales","cultivo":"SOJA 2da","has":39.1}]},"MAHFUD":{"has_total":404.5,"lotes":[{"nombre":"MF_Arroyo Dulce","cultivo":"MAIZ 1ra","has":38.5},{"nombre":"MF_Hunter","cultivo":"MAIZ POP","has":99.9},{"nombre":"MF_La Vigia","cultivo":"SOJA 1ra NO GMO","has":195.4},{"nombre":"MF_Las Polvaredas","cultivo":"MAIZ 1ra","has":58.0},{"nombre":"MF_Las Polvaredas","cultivo":"MAIZ 1ra","has":12.7}]},"MARIA JOSEFINA":{"has_total":414.0,"lotes":[{"nombre":"01_Maria Josefina","cultivo":"TRIGO","has":207.0},{"nombre":"01_Maria Josefina","cultivo":"SOJA 2da","has":207.0}]},"NAZARENAS":{"has_total":711.8,"lotes":[{"nombre":"Anexo Camarasa_Nazarena","cultivo":"ARVEJA VERDE","has":17.8},{"nombre":"Palmera_Nazarena","cultivo":"MAIZ 2da FLINT","has":56.0},{"nombre":"Cholo Parra_Nazarena","cultivo":"ARVEJA VERDE","has":23.4},{"nombre":"Porteria - Tango_Nazarena","cultivo":"MAIZ 2da FLINT","has":86.1},{"nombre":"Loma_Nazarena","cultivo":"ARVEJA VERDE","has":21.5},{"nombre":"Sanchez - Tapera_Nazarena","cultivo":"MAIZ 2da FLINT","has":62.0},{"nombre":"Ombu/Gajo_Nazarena","cultivo":"ARVEJA VERDE","has":47.1},{"nombre":"Tala_Nazarena","cultivo":"MAIZ 2da FLINT","has":42.0},{"nombre":"Palmera_Nazarena","cultivo":"ARVEJA VERDE","has":56.0},{"nombre":"Anexo Camarasa_Nazarena","cultivo":"SOJA 2da NO GMO","has":17.8},{"nombre":"Porteria - Tango_Nazarena","cultivo":"ARVEJA VERDE","has":86.1},{"nombre":"Cholo Parra_Nazarena","cultivo":"SOJA 2da NO GMO","has":23.4},{"nombre":"Sanchez - Tapera_Nazarena","cultivo":"ARVEJA VERDE","has":62.0},{"nombre":"Loma_Nazarena","cultivo":"SOJA 2da NO GMO","has":21.5},{"nombre":"Tala_Nazarena","cultivo":"ARVEJA VERDE","has":42.0},{"nombre":"Ombu/Gajo_Nazarena","cultivo":"SOJA 2da NO GMO","has":47.1}]},"PUESTO LAS MULAS":{"has_total":462.0,"lotes":[{"nombre":"02_Puesto Las Mulas","cultivo":"CAMELINA","has":89.0},{"nombre":"1A_Puesto Las Mulas","cultivo":"CAMELINA","has":121.0},{"nombre":"04_Puesto Las Mulas","cultivo":"SOJA 1ra","has":42.0},{"nombre":"02_Puesto Las Mulas","cultivo":"SOJA 2da NO GMO","has":89.0},{"nombre":"1A_Puesto Las Mulas","cultivo":"SOJA 2da NO GMO","has":121.0}]},"SAN CARLOS":{"has_total":718.2,"lotes":[{"nombre":"01_Maria","cultivo":"TRIGO","has":239.4},{"nombre":"01_Matilde","cultivo":"SOJA 1ra NO GMO","has":226.8},{"nombre":"02_Matilde","cultivo":"SOJA 1ra NO GMO","has":13.0},{"nombre":"Banquina_San Carlos","cultivo":"SOJA 1ra NO GMO","has":2.7},{"nombre":"01_Maria","cultivo":"SOJA 2da NO GMO","has":236.4}]},"SAN EUGENIO":{"has_total":612.4,"lotes":[{"nombre":"01_San Eugenio","cultivo":"MAIZ 1ra","has":28.0},{"nombre":"10_San Eugenio","cultivo":"MAIZ 1ra","has":95.8},{"nombre":"12_San Eugenio","cultivo":"MAIZ 1ra","has":91.9},{"nombre":"13_San Eugenio","cultivo":"MAIZ 1ra","has":97.0},{"nombre":"11_San Eugenio","cultivo":"SOJA 2da","has":74.9},{"nombre":"11_San Eugenio","cultivo":"TRIGO","has":74.9},{"nombre":"9_San Eugenio","cultivo":"SOJA 2da","has":75.0},{"nombre":"9_San Eugenio","cultivo":"TRIGO","has":75.0}]},"SAN FRANCISCO DE ASIS":{"has_total":767.8,"lotes":[{"nombre":"01-02_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":52.7},{"nombre":"05_San Francisco de Asis Riego","cultivo":"MAIZ 1ra","has":90.0},{"nombre":"03_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":20.8},{"nombre":"05_San Francisco de Asis Secano","cultivo":"MAIZ 1ra","has":26.2},{"nombre":"04_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":55.8},{"nombre":"01-02_San Francisco de Asis","cultivo":"MAIZ 2da","has":52.7},{"nombre":"03_San Francisco de Asis","cultivo":"MAIZ 2da","has":20.8},{"nombre":"04_San Francisco de Asis","cultivo":"MAIZ 2da","has":55.8},{"nombre":"05_San Francisco de Asis Riego.","cultivo":"TRIGO","has":90.0},{"nombre":"05_San Francisco de Asis Secano","cultivo":"ARVEJA VERDE","has":46.4},{"nombre":"05_San Francisco de Asis Secano","cultivo":"SOJA 2da NO GMO","has":46.4},{"nombre":"05_San Francisco de Asis Secano","cultivo":"SOJA 2da NO GMO","has":6.1},{"nombre":"06_San Francisco de Asis","cultivo":"SOJA 2da NO GMO","has":54.0},{"nombre":"05_San Francisco de Asis Secano","cultivo":"TRIGO","has":6.1},{"nombre":"06_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":54.0},{"nombre":"05_San Francisco de Asis Riego.","cultivo":"SOJA 2da NO GMO Riego","has":90.0}]},"SAN JOSE NS":{"has_total":390.0,"lotes":[{"nombre":"01_San Jose NS","cultivo":"TRIGO","has":170.0},{"nombre":"01_San Jose NS","cultivo":"SOJA 2da","has":170.0},{"nombre":"Dueño_San Jose NS","cultivo":"TRIGO","has":25.0},{"nombre":"Dueño_San Jose NS","cultivo":"SOJA 2da","has":25.0}]},"SAN LUIS RURAL":{"has_total":1521.5,"lotes":[{"nombre":"11_San Luis Rural","cultivo":"MAIZ 1ra","has":11.0},{"nombre":"10E_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":39.0},{"nombre":"11_San Luis Rural","cultivo":"MAIZ 1ra","has":39.0},{"nombre":"13_San Luis Rural","cultivo":"MAIZ 1ra","has":43.0},{"nombre":"15_San Luis Rural","cultivo":"MAIZ 1ra","has":65.0},{"nombre":"14_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":29.0},{"nombre":"9_San Luis Rural","cultivo":"MAIZ 1ra","has":24.0},{"nombre":"1R_San Luis Rural","cultivo":"MAIZ SEMILLA","has":90.0},{"nombre":"2R_San Luis Rural","cultivo":"TRIGO","has":100.0},{"nombre":"3R_San Luis Rural","cultivo":"TRIGO","has":100.0},{"nombre":"2R_San Luis Rural","cultivo":"SOJA 2da","has":100.0},{"nombre":"3S_San Luis Rural","cultivo":"TRIGO","has":82.0},{"nombre":"4R_San Luis Rural","cultivo":"MAIZ SEMILLA","has":100.0},{"nombre":"3R_San Luis Rural","cultivo":"SOJA 2da","has":100.0},{"nombre":"4S_San Luis Rural","cultivo":"TRIGO","has":35.0},{"nombre":"3S_San Luis Rural","cultivo":"SOJA 2da","has":82.0},{"nombre":"5_San Luis Rural","cultivo":"TRIGO","has":31.0},{"nombre":"6_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":6.0},{"nombre":"4S_San Luis Rural","cultivo":"SOJA 2da","has":35.0},{"nombre":"7_San Luis Rural","cultivo":"TRIGO","has":50.0},{"nombre":"5_San Luis Rural","cultivo":"SOJA 2da","has":31.0},{"nombre":"8_San Luis Rural","cultivo":"TRIGO","has":57.0},{"nombre":"Casco_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":5.0},{"nombre":"7_San Luis Rural","cultivo":"SOJA 2da","has":50.0},{"nombre":"8_San Luis Rural","cultivo":"SOJA 2da","has":57.0},{"nombre":"10W_San Luis Rural","cultivo":"SOJA 1ra","has":36.5},{"nombre":"12_San Luis Rural","cultivo":"SOJA 1ra","has":27.0},{"nombre":"1S_San Luis Rural","cultivo":"SOJA 1ra","has":40.0},{"nombre":"2S_San Luis Rural","cultivo":"SOJA 1ra","has":57.0}]},"SAN MARCOS":{"has_total":2282.4,"lotes":[{"nombre":"01_San Marcos","cultivo":"GIRASOL","has":106.9},{"nombre":"02_San Marcos","cultivo":"TRIGO","has":94.0},{"nombre":"04_San Marcos","cultivo":"MAIZ 1ra","has":55.3},{"nombre":"03_San Marcos","cultivo":"GIRASOL","has":28.5},{"nombre":"05_San Marcos","cultivo":"MAIZ 1ra","has":68.2},{"nombre":"11_San Marcos","cultivo":"MAIZ 1ra","has":115.7},{"nombre":"06_San Marcos","cultivo":"CEBADA","has":12.3},{"nombre":"02_San Marcos","cultivo":"SOJA 2da","has":94.0},{"nombre":"07_San Marcos","cultivo":"CEBADA","has":53.0},{"nombre":"06_San Marcos","cultivo":"SOJA 2da","has":12.3},{"nombre":"10_San Marcos","cultivo":"CEBADA","has":94.2},{"nombre":"07_San Marcos","cultivo":"SOJA 2da","has":53.0},{"nombre":"10_San Marcos","cultivo":"SOJA 2da","has":94.2},{"nombre":"12_San Marcos","cultivo":"TRIGO","has":40.2},{"nombre":"12_San Marcos","cultivo":"SOJA 2da","has":30.2},{"nombre":"14_San Marcos","cultivo":"GIRASOL","has":13.1},{"nombre":"15_San Marcos","cultivo":"TRIGO","has":56.1},{"nombre":"15_San Marcos","cultivo":"SOJA 2da","has":56.1},{"nombre":"16_San Marcos","cultivo":"CEBADA","has":34.6},{"nombre":"16_San Marcos","cultivo":"SOJA 2da","has":34.6},{"nombre":"17_San Marcos","cultivo":"CEBADA","has":47.6},{"nombre":"17_San Marcos","cultivo":"SOJA 2da","has":47.6},{"nombre":"18_San Marcos","cultivo":"TRIGO","has":8.1},{"nombre":"18_San Marcos","cultivo":"SOJA 2da","has":8.1},{"nombre":"19_San Marcos","cultivo":"TRIGO","has":7.1},{"nombre":"19_San Marcos","cultivo":"SOJA 2da","has":7.1},{"nombre":"20_San Marcos","cultivo":"CEBADA","has":32.1},{"nombre":"20_San Marcos","cultivo":"SOJA 2da","has":32.1},{"nombre":"21_San Marcos","cultivo":"TRIGO","has":30.2},{"nombre":"21_San Marcos","cultivo":"SOJA 2da","has":30.2},{"nombre":"22_San Marcos","cultivo":"GIRASOL","has":12.4},{"nombre":"23_San Marcos","cultivo":"TRIGO","has":127.4},{"nombre":"23_San Marcos","cultivo":"SOJA 2da","has":127.4},{"nombre":"24_San Marcos","cultivo":"GIRASOL","has":29.6},{"nombre":"25_San Marcos","cultivo":"GIRASOL","has":29.0},{"nombre":"26_San Marcos","cultivo":"TRIGO","has":86.3},{"nombre":"26_San Marcos","cultivo":"SOJA 2da","has":86.3},{"nombre":"27_San Marcos","cultivo":"GIRASOL","has":16.8},{"nombre":"28_San Marcos","cultivo":"TRIGO","has":159.9},{"nombre":"28_San Marcos","cultivo":"SOJA 2da","has":159.9},{"nombre":"Polo_San Marcos","cultivo":"TRIGO","has":10.2},{"nombre":"Polo_San Marcos","cultivo":"SOJA 2da","has":10.2},{"nombre":"TMB_San Marcos","cultivo":"TRIGO","has":15.2},{"nombre":"TMB_San Marcos","cultivo":"SOJA 2da","has":15.2}]},"SAN MAURICIO":{"has_total":580.0,"lotes":[{"nombre":"01_San Mauricio","cultivo":"CEBADA","has":115.0},{"nombre":"01_San Mauricio","cultivo":"CEBADA","has":125.0},{"nombre":"01_San Mauricio","cultivo":"SOJA 2da","has":115.0},{"nombre":"01_San Mauricio","cultivo":"SOJA 2da","has":125.0},{"nombre":"Riego A_San Mauricio","cultivo":"MAIZ SEMILLA","has":50.0},{"nombre":"Riego B_San Mauricio","cultivo":"MAIZ SEMILLA","has":50.0}]},"TERRITORIO":{"has_total":326.5,"lotes":[{"nombre":"01_Territorio","cultivo":"MAIZ 1ra","has":62.8},{"nombre":"02_Territorio","cultivo":"MAIZ 1ra","has":105.8},{"nombre":"03_Territorio","cultivo":"MAIZ 1ra","has":38.4},{"nombre":"04_Territorio","cultivo":"SOJA 1ra","has":119.5}]},"TRES COPETES":{"has_total":1169.9,"lotes":[{"nombre":"17-19_Tres Copetes","cultivo":"MAIZ 1ra","has":119.2},{"nombre":"04_Tres Copetes","cultivo":"GIRASOL","has":48.0},{"nombre":"08_Tres Copetes","cultivo":"GIRASOL","has":22.3},{"nombre":"22_Tres Copetes","cultivo":"MAIZ 1ra","has":75.5},{"nombre":"12_Tres Copetes","cultivo":"GIRASOL","has":63.2},{"nombre":"13/9A_Tres Copetes","cultivo":"SOJA 1ra ORGANICA","has":139.3},{"nombre":"18_Tres Copetes","cultivo":"SOJA 1ra ORGANICA","has":87.8},{"nombre":"20_Tres Copetes","cultivo":"SOJA 2da ORGANICA","has":88.4},{"nombre":"20_Tres Copetes","cultivo":"TRIGO","has":88.4},{"nombre":"11_Tres Copetes","cultivo":"SOJA 1ra","has":38.5},{"nombre":"21_Tres Copetes","cultivo":"SOJA 1ra","has":54.5},{"nombre":"23-24-25_Tres Copetes","cultivo":"SOJA 2da ORGANICA","has":172.4},{"nombre":"23-24-25_Tres Copetes","cultivo":"TRIGO","has":172.4}]}};
+
+// ══════════════════════════════════════════
+// STATE
+// ══════════════════════════════════════════
+const LS = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
+const LSset = (k,v) => { try { localStorage.setItem(k, typeof v==='string'?v:JSON.stringify(v)); } catch(e){} };
+
+let cfg = { url: LS('cfg_url')||'' };
+let maestros = JSON.parse(LS('maestros')||'null') || {
+  contratistas: ['García Hnos.','Ramírez SA','López & Cía.'],
+  patentes: [{chasis:'ABC 123',acoplado:'DEF 456'},{chasis:'GHI 789',acoplado:'JKL 012'}],
+  destinos: ['Acopio El Recuerdo','Planta Las Parejas','Puerto Rosario'],
+};
+let rCampo    = JSON.parse(LS('r_campo')    ||'[]');
+let rBalanza  = JSON.parse(LS('r_balanza')  ||'[]');
+let rLogistica= JSON.parse(LS('r_logistica')||'[]');
+// avance acumulado por lote: "CAMPO|lote|cultivo" => has cosechadas
+let avance    = JSON.parse(LS('r_avance')   ||'{}');
+
+let role = LS('role')||'campo';
+let curScr = 'scr-home';
+let expCampos = {};
+let selDest = '';
+let pendingPDFs = [];
+
+// ══════════════════════════════════════════
+// HELPERS
+// ══════════════════════════════════════════
+const today = () => new Date().toISOString().split('T')[0];
+const save = (k,v) => LSset(k,v);
+
+function toast(msg, type='ok') {
+  const t = document.getElementById('toast');
+  t.textContent=msg; t.className='toast show'+(type==='err'?' err':'');
+  setTimeout(()=>t.classList.remove('show'),2500);
+}
+
+function popSel(id, items, empty='— Seleccionar —') {
+  const el=document.getElementById(id); if(!el) return;
+  const cur=el.value;
+  el.innerHTML=`<option value="">${empty}</option>`;
+  items.forEach(i=>{ const o=document.createElement('option'); o.value=i; o.textContent=i; if(i===cur) o.selected=true; el.appendChild(o); });
+}
+
+function openModal(id){ document.getElementById(id).classList.add('open'); }
+function closeModal(id){ document.getElementById(id).classList.remove('open'); }
+function showSend(v){ document.getElementById('send-ov').classList.toggle('show',v); }
+function setSyncStatus(ok){ document.getElementById('sdot').className='sync-dot '+(ok?'ok':'err'); document.getElementById('slbl').textContent=ok?'sync':'local'; }
+
+function fmtCUIT(el){
+  let v=el.value.replace(/\D/g,'');
+  if(v.length>2) v=v.slice(0,2)+'-'+v.slice(2);
+  if(v.length>11) v=v.slice(0,11)+'-'+v.slice(11);
+  el.value=v.slice(0,13);
+}
+
+function avKey(campo,lote,cultivo){ return campo+'|'+lote+'|'+cultivo; }
+function getAv(campo,lote,cultivo){ return avance[avKey(campo,lote,cultivo)]||0; }
+function addAv(campo,lote,cultivo,has){
+  const k=avKey(campo,lote,cultivo);
+  avance[k]=(avance[k]||0)+has;
+  save('r_avance',avance);
+}
+
+// ══════════════════════════════════════════
+// SYNC
+// ══════════════════════════════════════════
+async function syncToSheets(sheet, row) {
+  if(!cfg.url) return false;
+  try {
+    showSend(true);
+    const r = await fetch(cfg.url,{ method:'POST', body:JSON.stringify({sheet,row}), headers:{'Content-Type':'application/json'} });
+    const d = await r.json();
+    showSend(false); setSyncStatus(true); return d.ok;
+  } catch(e){ showSend(false); setSyncStatus(false); return false; }
+}
+
+function saveConfig(){
+  const url=document.getElementById('cfg-url').value.trim();
+  if(!url){ toast('Ingresá la URL','err'); return; }
+  cfg.url=url; LSset('cfg_url',url);
+  mostrarConectado(true);
+  toast('✅ URL guardada');
+}
+
+function cambiarURL(){
+  mostrarConectado(false);
+}
+
+function mostrarConectado(ok){
+  document.getElementById('cfg-conectado').style.display=ok?'block':'none';
+  document.getElementById('cfg-form').style.display=ok?'none':'block';
+  if(!ok) document.getElementById('cfg-url').value=cfg.url||'';
+}
+
+// ══════════════════════════════════════════
+// NAV
+// ══════════════════════════════════════════
+const scrTitles={ 'scr-campo':'CARGAR CAMPO','scr-balanza':'CARGAR BALANZA','scr-logistica':'LOGÍSTICA','scr-avance':'VER AVANCE','scr-camiones':'VER CAMIONES','scr-obs':'OBSERVACIONES' };
+
+function goTo(id){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  document.getElementById('hdr-back').style.display='block';
+  document.getElementById('hdr-title').textContent=scrTitles[id]||'COSECHA 25/26';
+  curScr=id;
+  const inits={'scr-campo':initCampo,'scr-balanza':initBalanza,'scr-logistica':initLogistica,'scr-avance':renderAvance,'scr-camiones':renderCamiones,'scr-obs':renderObs};
+  if(inits[id]) inits[id]();
+  window.scrollTo(0,0);
+}
+
+function goHome(){
+  document.querySelectorAll('.scr').forEach(s=>s.classList.remove('active'));
+  document.getElementById('scr-home').classList.add('active');
+  document.getElementById('hdr-back').style.display='none';
+  document.getElementById('hdr-title').textContent='COSECHA 25/26';
+  updateHero();
+}
+
+// ══════════════════════════════════════════
+// ROLES
+// ══════════════════════════════════════════
+const roleBtns = {
+  campo:    [{ic:'🌾',lbl:'Cargar Campo',sub:'Avance del día',scr:'scr-campo',cls:'g'},{ic:'📊',lbl:'Ver Avance',sub:'Por campo y lote',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'Novedades',scr:'scr-obs',cls:'',wide:true}],
+  balanza:  [{ic:'⚖️',lbl:'Cargar Balanza',sub:'Pesaje de camiones',scr:'scr-balanza',cls:'o'},{ic:'🚛',lbl:'Ver Camiones',sub:'Historial',scr:'scr-camiones',cls:''},{ic:'📊',lbl:'Ver Avance',sub:'General',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
+  logistica:[{ic:'🚛',lbl:'Cargar Logística',sub:'Datos de camiones',scr:'scr-logistica',cls:'b'},{ic:'📦',lbl:'Ver Camiones',sub:'Movimientos',scr:'scr-camiones',cls:''},{ic:'📊',lbl:'Ver Avance',sub:'General',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
+  admin:    [{ic:'📊',lbl:'Ver Avance',sub:'Resumen global',scr:'scr-avance',cls:'g'},{ic:'🚛',lbl:'Ver Camiones',sub:'Con filtros',scr:'scr-camiones',cls:''},{ic:'🌾',lbl:'Cargar Campo',sub:'',scr:'scr-campo',cls:''},{ic:'⚖️',lbl:'Cargar Balanza',sub:'',scr:'scr-balanza',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
+};
+
+function setRole(r){
+  role=r; save('role',r);
+  document.querySelectorAll('.rbtn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('r-'+r).classList.add('active');
+  renderHomeBtns();
+}
+
+function renderHomeBtns(){
+  document.getElementById('home-btns').innerHTML=(roleBtns[role]||roleBtns.campo).map(b=>`
+    <button class="mbtn ${b.cls||''} ${b.wide?'wide':''}" onclick="goTo('${b.scr}')">
+      <div class="ic">${b.ic}</div><span class="lbl">${b.lbl}</span><span class="sub">${b.sub}</span>
+    </button>`).join('');
+}
+
+function updateHero(){
+  let totalHas=0,totalAv=0;
+  Object.values(CAMPOS).forEach(c=>{ c.lotes.forEach(l=>{ totalHas+=l.has; totalAv+=getAv(Object.keys(CAMPOS).find(k=>CAMPOS[k]===c)||'',l.nombre,l.cultivo); }); });
+  const pct=totalHas>0?Math.round(totalAv/totalHas*100):0;
+  const tn=(rBalanza.reduce((s,r)=>s+r.neto,0)/1000).toFixed(1);
+  document.getElementById('hero-stats').textContent=`${pct}% cosechado · ${Math.round(totalAv).toLocaleString('es')} has · ${tn}k Tn · ${rBalanza.length} camiones`;
+}
+
+// ══════════════════════════════════════════
+// FORM: CAMPO
+// ══════════════════════════════════════════
+function initCampo(){
+  document.getElementById('cf-fecha').value=today();
+  popSel('cf-campo',Object.keys(CAMPOS));
+  popSel('cf-lote',[]);
+  popSel('cf-cultivo',[]);
+  popSel('cf-contratista',maestros.contratistas);
+  ['cf-has','cf-humedad','cf-obs','cf-perdida-kgha','cf-perdida-total'].forEach(id=>document.getElementById(id).value='');
+  // recalc perdida when has changes
+  document.getElementById('cf-has').oninput=calcPerdidaTotal;
+  document.getElementById('cf-avance-info').style.display='none';
+  pendingPDFs=[]; document.getElementById('cf-pdf-list').innerHTML='';
+}
+
+function onCampoChange(prefix){
+  const campo=document.getElementById(prefix+'-campo').value;
+  const lotes=campo&&CAMPOS[campo]?[...new Set(CAMPOS[campo].lotes.map(l=>l.nombre))]:[];
+  popSel(prefix+'-lote',lotes);
+  if(prefix==='cf'){ popSel('cf-cultivo',[]); document.getElementById('cf-avance-info').style.display='none'; }
+}
+
+function onLoteChange(prefix){
+  if(prefix!=='cf') return;
+  const campo=document.getElementById('cf-campo').value;
+  const lote=document.getElementById('cf-lote').value;
+  if(!campo||!lote) return;
+  const cults=[...new Set((CAMPOS[campo]?.lotes||[]).filter(l=>l.nombre===lote).map(l=>l.cultivo))];
+  popSel('cf-cultivo',cults);
+  updateAvanceInfo();
+}
+
+function updateAvanceInfo(){
+  const campo=document.getElementById('cf-campo').value;
+  const lote=document.getElementById('cf-lote').value;
+  const cultivo=document.getElementById('cf-cultivo').value;
+  if(!campo||!lote) return;
+  const loteData=(CAMPOS[campo]?.lotes||[]).find(l=>l.nombre===lote&&(!cultivo||l.cultivo===cultivo));
+  if(!loteData){ document.getElementById('cf-avance-info').style.display='none'; return; }
+  const hasTot=loteData.has;
+  const hasYa=getAv(campo,lote,loteData.cultivo);
+  const resta=Math.max(0,hasTot-hasYa);
+  const pct=hasTot>0?Math.min(100,Math.round(hasYa/hasTot*100)):0;
+  document.getElementById('ci-total').textContent=hasTot.toFixed(1)+' ha';
+  document.getElementById('ci-ya').textContent=hasYa.toFixed(1)+' ha';
+  document.getElementById('ci-resta').textContent=resta.toFixed(1)+' ha restantes';
+  document.getElementById('ci-prog').style.width=pct+'%';
+  document.getElementById('cf-avance-info').style.display='block';
+}
+
+function calcPerdidaTotal(){
+  const kgha=parseFloat(document.getElementById('cf-perdida-kgha').value)||0;
+  const has=parseFloat(document.getElementById('cf-has').value)||0;
+  document.getElementById('cf-perdida-total').value=kgha>0&&has>0?(kgha*has).toFixed(0):'';
+}
+
+async function guardarCampo(){
+  const fecha=document.getElementById('cf-fecha').value;
+  const campo=document.getElementById('cf-campo').value;
+  const lote=document.getElementById('cf-lote').value;
+  const cultivo=document.getElementById('cf-cultivo').value;
+  const contra=document.getElementById('cf-contratista').value;
+  const has=parseFloat(document.getElementById('cf-has').value)||0;
+  const humedad=parseFloat(document.getElementById('cf-humedad').value)||0;
+  const obs=document.getElementById('cf-obs').value;
+  const perdidaKgha=parseFloat(document.getElementById('cf-perdida-kgha').value)||0;
+  const perdidaCausa=document.getElementById('cf-perdida-causa').value;
+  const perdidaTotal=perdidaKgha>0?perdidaKgha*has:0;
+  if(!fecha||!campo||!lote||!has){ toast('Completá fecha, campo, lote y has.','err'); return; }
+
+  // Verificar que no exceda el total
+  const loteData=(CAMPOS[campo]?.lotes||[]).find(l=>l.nombre===lote&&(!cultivo||l.cultivo===cultivo));
+  if(loteData){
+    const hasYa=getAv(campo,lote,loteData.cultivo);
+    if(hasYa+has>loteData.has+0.1){ toast(`⚠️ Superás las ${loteData.has} ha del lote`,'err'); return; }
+    addAv(campo,lote,loteData.cultivo,has);
+  }
+
+  const pdfNames=pendingPDFs.map(p=>p.name);
+  const rec={id:Date.now().toString(),fecha,campo,lote,cultivo,contratista:contra,has,humedad,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfs:pdfNames,ts:Date.now()};
+  rCampo.push(rec); save('r_campo',rCampo);
+
+  const row=[fecha,campo,lote,cultivo,contra,has,humedad,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfNames.join(';'),rec.id];
+  const synced=await syncToSheets('Campo',row);
+  toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
+  pendingPDFs=[]; setTimeout(goHome,1200);
+}
+
+// ══════════════════════════════════════════
+// FORM: BALANZA
+// ══════════════════════════════════════════
+let balSelLog = null; // logistica record selected
+
+function initBalanza(){
+  balSelLog = null;
+  document.getElementById('bal-paso1').style.display='block';
+  document.getElementById('bal-paso2').style.display='none';
+  document.getElementById('bf-buscar').value='';
+  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bal-cambio-pat').style.display='none';
+  renderBalanzaLista();
+}
+
+function renderBalanzaLista(){
+  const q=document.getElementById('bf-buscar').value.toLowerCase();
+  // Get today's logistica records, sorted newest first
+  const todayStr=today();
+  let regs=[...rLogistica].filter(l=>l.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
+  // also show last 3 days if nothing today
+  if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,20);
+
+  if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer+r.campo+r.lote).toLowerCase().includes(q));
+
+  const lista=document.getElementById('bal-log-lista');
+  if(!regs.length){
+    lista.innerHTML='<div class="empty" style="padding:24px 0;"><div class="ei">🚛</div><p>No hay camiones de logística para hoy.<br>Usá "Cargar sin logística" abajo.</p></div>';
+    return;
+  }
+
+  lista.innerHTML=regs.map(r=>{
+    // check if already weighed today
+    const pesado=rBalanza.some(b=>b.logisticaId===r.id);
+    return `<div class="blog-card ${pesado?'pesado':''}" onclick="${pesado?'':' balSeleccionar(\''+r.id+'\')'}">
+      <div style="display:flex;align-items:center;justify-content:space-between;">
+        <span class="blog-patente">${r.patenteChasis}</span>
+        <span class="blog-badge ${pesado?'':'pend'}">${pesado?'✓ Pesado':'Pendiente'}</span>
+      </div>
+      <div class="blog-meta">👤 ${r.chofer||'—'} &nbsp;·&nbsp; 🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</div>
+      ${r.destino?`<div class="blog-meta">📍 ${r.destino}</div>`:''}
+      ${pesado?'<div class="blog-meta" style="color:var(--greenl);margin-top:2px;">Ya tiene peso cargado</div>':''}
+    </div>`;
+  }).join('');
+}
+
+function balSeleccionar(logId){
+  const reg=rLogistica.find(r=>r.id===logId);
+  if(!reg) return;
+  balSelLog=reg;
+  document.getElementById('bal-paso1').style.display='none';
+  document.getElementById('bal-paso2').style.display='block';
+  document.getElementById('bal-info-pat').textContent=reg.patenteChasis+(reg.patenteAcoplado?' / '+reg.patenteAcoplado:'');
+  document.getElementById('bal-info-detalle').textContent=`${reg.chofer||'—'} · ${reg.campo||'—'}${reg.lote?' · '+reg.lote:''} · ${reg.destino||'sin destino'}`;
+  document.getElementById('bal-cambio-pat').style.display='none';
+  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+}
+
+function balSinLogistica(){
+  // create a blank pseudo-record
+  balSelLog={ id:null, fecha:today(), patenteChasis:'', campo:'', lote:'', chofer:'', destino:'' };
+  document.getElementById('bal-paso1').style.display='none';
+  document.getElementById('bal-paso2').style.display='block';
+  document.getElementById('bal-info-pat').textContent='Sin registro de logística';
+  document.getElementById('bal-info-detalle').textContent='Seleccioná la patente manualmente';
+  // force show patente selector
+  popSel('bf-patente-nueva',maestros.patentes.map(p=>p.chasis));
+  document.getElementById('bal-cambio-pat').style.display='block';
+  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+}
+
+function balVolver(){
+  document.getElementById('bal-paso1').style.display='block';
+  document.getElementById('bal-paso2').style.display='none';
+  balSelLog=null;
+}
+
+function balCambiarPatente(){
+  const wrap=document.getElementById('bal-cambio-pat');
+  const open=wrap.style.display==='block';
+  if(!open){ popSel('bf-patente-nueva',maestros.patentes.map(p=>p.chasis)); }
+  wrap.style.display=open?'none':'block';
+}
+
+function calcNeto(){
+  const b=parseFloat(document.getElementById('bf-bruto').value)||0;
+  const t=parseFloat(document.getElementById('bf-tara').value)||0;
+  document.getElementById('bf-neto').value=(b-t)>0?(b-t):'';
+}
+
+async function guardarBalanza(){
+  if(!balSelLog){ toast('Seleccioná un camión primero','err'); return; }
+  const tara=parseFloat(document.getElementById('bf-tara').value)||0;
+  const bruto=parseFloat(document.getElementById('bf-bruto').value)||0;
+  const neto=bruto-tara;
+  const obs=document.getElementById('bf-obs').value;
+  if(!bruto){ toast('Ingresá el peso bruto','err'); return; }
+
+  // patente: usar la del registro de logística, o la seleccionada manualmente
+  let patente=balSelLog.patenteChasis;
+  const patNueva=document.getElementById('bf-patente-nueva').value;
+  if(patNueva) patente=patNueva;
+
+  const rec={
+    id:Date.now().toString(),
+    logisticaId:balSelLog.id,
+    fecha:balSelLog.fecha||today(),
+    campo:balSelLog.campo,
+    lote:balSelLog.lote,
+    patente,
+    chofer:balSelLog.chofer,
+    destino:balSelLog.destino,
+    tara,bruto,neto,obs,ts:Date.now()
+  };
+  rBalanza.push(rec); save('r_balanza',rBalanza);
+  const row=[rec.fecha,rec.campo,rec.lote,patente,tara,bruto,neto,obs,rec.id,balSelLog.id||''];
+  const synced=await syncToSheets('Balanza',row);
+  toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
+  setTimeout(goHome,1200);
+}
+
+// ══════════════════════════════════════════
+// FORM: LOGÍSTICA
+// ══════════════════════════════════════════
+function initLogistica(){
+  document.getElementById('lf-fecha').value=today();
+  popSel('lf-campo',Object.keys(CAMPOS));
+  popSel('lf-lote',[]);
+  popSel('lf-ch',maestros.patentes.map(p=>p.chasis));
+  ['lf-ac','lf-chofer','lf-cuit-ch','lf-transp','lf-cuit-tr','lf-obs'].forEach(id=>document.getElementById(id).value='');
+  selDest=''; renderDestChips();
+}
+
+function renderDestChips(){
+  document.getElementById('dest-chips').innerHTML=maestros.destinos.map(d=>`<span class="dest-chip ${d===selDest?'sel':''}" onclick="selDestino('${d.replace(/'/g,"\\'")}')">${d}</span>`).join('');
+}
+function selDestino(d){ selDest=d; renderDestChips(); }
+function addDestino(){
+  const v=document.getElementById('lf-nuevo-dest').value.trim(); if(!v) return;
+  if(!maestros.destinos.includes(v)) maestros.destinos.push(v);
+  save('maestros',maestros); selDest=v;
+  document.getElementById('lf-nuevo-dest').value='';
+  renderDestChips();
+}
+
+async function guardarLogistica(){
+  const fecha=document.getElementById('lf-fecha').value;
+  const ch=document.getElementById('lf-ch').value;
+  const ac=document.getElementById('lf-ac').value;
+  const chofer=document.getElementById('lf-chofer').value;
+  const cuitCh=document.getElementById('lf-cuit-ch').value;
+  const transp=document.getElementById('lf-transp').value;
+  const cuitTr=document.getElementById('lf-cuit-tr').value;
+  const campo=document.getElementById('lf-campo').value;
+  const lote=document.getElementById('lf-lote').value;
+  const cultivo=document.getElementById('lf-cultivo').value;
+  const obs=document.getElementById('lf-obs').value;
+  if(!fecha||!ch||!chofer){ toast('Completá fecha, patente y chofer','err'); return; }
+  const rec={id:Date.now().toString(),fecha,patenteChasis:ch,patenteAcoplado:ac,chofer,cuitChofer:cuitCh,transporte:transp,cuitTransporte:cuitTr,destino:selDest,campo,lote,cultivo,obs,ts:Date.now()};
+  rLogistica.push(rec); save('r_logistica',rLogistica);
+  const row=[fecha,ch,ac,chofer,cuitCh,transp,cuitTr,selDest,campo,lote,cultivo,obs,rec.id];
+  const synced=await syncToSheets('Logistica',row);
+  toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
+  setTimeout(goHome,1200);
+}
+
+// ══════════════════════════════════════════
+// NUEVA PATENTE
+// ══════════════════════════════════════════
+function saveNewPat(){
+  const ch=document.getElementById('np-ch').value.trim().toUpperCase();
+  const ac=document.getElementById('np-ac').value.trim().toUpperCase();
+  if(!ch){ toast('Ingresá patente chasis','err'); return; }
+  if(!maestros.patentes.find(p=>p.chasis===ch)) maestros.patentes.push({chasis:ch,acoplado:ac});
+  save('maestros',maestros);
+  document.getElementById('np-ch').value=''; document.getElementById('np-ac').value='';
+  closeModal('modal-pat'); toast('✅ Patente agregada');
+  if(curScr==='scr-balanza'){ popSel('bf-patente-nueva',maestros.patentes.map(p=>p.chasis)); }
+  if(curScr==='scr-logistica') popSel('lf-ch',maestros.patentes.map(p=>p.chasis));
+}
+
+// ══════════════════════════════════════════
+// PDF
+// ══════════════════════════════════════════
+function handlePDF(input, prefix){
+  Array.from(input.files).forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=e=>{ pendingPDFs.push({name:f.name,size:f.size,b64:e.target.result}); renderPDFList(prefix); };
+    reader.readAsDataURL(f);
+  });
+  input.value='';
+}
+function renderPDFList(prefix){
+  document.getElementById(prefix+'-pdf-list').innerHTML=pendingPDFs.map((p,i)=>`
+    <div class="pdf-item"><span>📄</span><span class="pn">${p.name}</span><span style="font-size:11px;color:var(--mut);">${(p.size/1024).toFixed(0)}kb</span><button class="pd" onclick="pendingPDFs.splice(${i},1);renderPDFList('${prefix}')">×</button></div>`).join('');
+}
+
+// ══════════════════════════════════════════
+// VER AVANCE
+// ══════════════════════════════════════════
+function renderAvance(){
+  const filtCult=document.getElementById('av-fil-cult').value;
+  const buscar=document.getElementById('av-buscar').value.toLowerCase();
+
+  // populate cultivo filter
+  const sel=document.getElementById('av-fil-cult');
+  if(sel.options.length===1){
+    const cults=[...new Set(Object.values(CAMPOS).flatMap(c=>c.lotes.map(l=>l.cultivo)))].sort();
+    cults.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
+    sel.value=filtCult;
+  }
+
+  let tHas=0,tAv=0;
+  Object.entries(CAMPOS).forEach(([est,data])=>{
+    data.lotes.forEach(l=>{
+      if(!filtCult||l.cultivo===filtCult){ tHas+=l.has; tAv+=getAv(est,l.nombre,l.cultivo); }
+    });
+  });
+  const pct=tHas>0?Math.round(tAv/tHas*100):0;
+
+  document.getElementById('av-sum').innerHTML=`
+    <div class="sc"><div class="sv">${pct}%</div><div class="sl">Avance</div></div>
+    <div class="sc"><div class="sv">${Math.round(tAv).toLocaleString('es')}</div><div class="sl">Has cosech.</div></div>
+    <div class="sc"><div class="sv">${Math.round(tHas-tAv).toLocaleString('es')}</div><div class="sl">Has rest.</div></div>
+    <div class="sc"><div class="sv">${rBalanza.length}</div><div class="sl">Camiones</div></div>`;
+
+  const list=document.getElementById('av-list');
+  const entries=Object.entries(CAMPOS).filter(([est])=>!buscar||est.toLowerCase().includes(buscar));
+
+  list.innerHTML=entries.map(([est,data])=>{
+    let cHas=0,cAv=0;
+    data.lotes.forEach(l=>{ if(!filtCult||l.cultivo===filtCult){ cHas+=l.has; cAv+=getAv(est,l.nombre,l.cultivo); } });
+    if(filtCult&&cHas===0) return '';
+    const cPct=cHas>0?Math.min(100,Math.round(cAv/cHas*100)):0;
+    const isExp=expCampos[est];
+
+    const lotesHTML=data.lotes.map(l=>{
+      if(filtCult&&l.cultivo!==filtCult) return '';
+      const lAv=getAv(est,l.nombre,l.cultivo);
+      const lPct=l.has>0?Math.min(100,Math.round(lAv/l.has*100)):0;
+      const lResta=Math.max(0,l.has-lAv);
+      return `<div class="lote-row">
+        <span class="lote-name">${l.nombre}</span>
+        <span class="lote-cult">${l.cultivo}</span>
+        <div class="lote-pbg"><div class="lote-pfill" style="width:${lPct}%"></div></div>
+        <span class="lote-pct">${lPct}%</span>
+        <span class="lote-has">${lAv.toFixed(1)}/${l.has} ha</span>
+      </div>`;
+    }).join('');
+
+    return `<div class="campo-card" onclick="toggleCampo('${est}')">
+      <div class="campo-hdr">
+        <span class="campo-name">${est}</span>
+        <div style="display:flex;align-items:center;gap:6px;">
+          <span class="campo-pct">${cPct}%</span>
+          <span class="chevron ${isExp?'open':''}">▼</span>
+        </div>
+      </div>
+      <div class="prog-bg"><div class="prog-fill" style="width:${cPct}%"></div></div>
+      <div class="campo-meta">${cAv.toFixed(1)} cosechadas · ${(cHas-cAv).toFixed(1)} restantes · ${cHas.toFixed(1)} ha total</div>
+      <div class="lote-expand ${isExp?'open':''}">${lotesHTML}</div>
+    </div>`;
+  }).join('');
+}
+
+function toggleCampo(est){ expCampos[est]=!expCampos[est]; renderAvance(); }
+
+// ══════════════════════════════════════════
+// VER CAMIONES
+// ══════════════════════════════════════════
+function renderCamiones(){
+  const fechas=[...new Set(rBalanza.map(r=>r.fecha))].sort().reverse();
+  const campos=[...new Set(rBalanza.map(r=>r.campo))];
+  const lotes=[...new Set(rBalanza.map(r=>r.lote))];
+  const ff=document.getElementById('fc-fecha').value;
+  const fc=document.getElementById('fc-campo').value;
+  const fl=document.getElementById('fc-lote').value;
+  popSel('fc-fecha',fechas,'Todas fechas'); popSel('fc-campo',campos,'Todos campos'); popSel('fc-lote',lotes,'Todos lotes');
+  if(ff) document.getElementById('fc-fecha').value=ff;
+  if(fc) document.getElementById('fc-campo').value=fc;
+  if(fl) document.getElementById('fc-lote').value=fl;
+
+  let regs=[...rBalanza].sort((a,b)=>b.ts-a.ts);
+  if(ff) regs=regs.filter(r=>r.fecha===ff);
+  if(fc) regs=regs.filter(r=>r.campo===fc);
+  if(fl) regs=regs.filter(r=>r.lote===fl);
+  const tn=regs.reduce((s,r)=>s+r.neto,0);
+
+  document.getElementById('cam-sum').innerHTML=`
+    <div class="sc"><div class="sv">${regs.length}</div><div class="sl">Camiones</div></div>
+    <div class="sc"><div class="sv">${(tn/1000).toFixed(2)}k</div><div class="sl">Tn neto</div></div>
+    <div class="sc"><div class="sv">${regs.length>0?(tn/regs.length/1000).toFixed(1):'—'}</div><div class="sl">Prom/cam</div></div>
+    <div class="sc"><div class="sv">${[...new Set(regs.map(r=>r.campo))].length}</div><div class="sl">Campos</div></div>`;
+
+  const list=document.getElementById('cam-list');
+  if(!regs.length){ list.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones para este filtro</p></div>'; return; }
+
+  list.innerHTML=regs.map(r=>{
+    const log=rLogistica.find(l=>l.patenteChasis===r.patente&&l.fecha===r.fecha);
+    return `<div class="row-card">
+      <div class="row-top"><span class="pat">${r.patente}</span><span class="tn">${(r.neto/1000).toFixed(2)} Tn</span></div>
+      <div class="row-meta">
+        <span>📅 ${r.fecha}</span>
+        <span>🌾 ${r.campo}${r.lote?' · '+r.lote:''}</span>
+        ${log?`<span>👤 ${log.chofer}</span>`:''}
+        ${log&&log.destino?`<span>📍 ${log.destino}</span>`:''}
+      </div>
+      ${log?`<div class="row-meta" style="margin-top:4px;"><span>🏢 ${log.transporte||'—'}</span><span>CUIT: ${log.cuitChofer||'—'}</span></div>`:''}
+      ${r.obs?`<div class="row-obs">💬 ${r.obs}</div>`:''}
+    </div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// OBSERVACIONES
+// ══════════════════════════════════════════
+const obsKW={humedad:['humedad','mojado','seco','húmedo'],demora:['demora','retraso','espera','tarde','parado'],maquina:['cosechadora','máquina','falla','mecánico','roto','motor'],camion:['camión','camion','patente','transporte','chofer'],lote:['lote','campo','zona']};
+const obsLbl={humedad:'Humedad',demora:'Demora',maquina:'Máquina',camion:'Camión',lote:'Lote',general:'General'};
+function classObs(t){ const tl=t.toLowerCase(); for(const[tag,words] of Object.entries(obsKW)) if(words.some(w=>tl.includes(w))) return tag; return 'general'; }
+
+function renderObs(){
+  const all=[];
+  rCampo.forEach(r=>{ if(r.obs?.trim()) all.push({text:r.obs,campo:r.campo,lote:r.lote,fecha:r.fecha,ts:r.ts}); });
+  rBalanza.forEach(r=>{ if(r.obs?.trim()) all.push({text:r.obs,campo:r.campo,lote:r.lote,fecha:r.fecha,ts:r.ts}); });
+  rLogistica.forEach(r=>{ if(r.obs?.trim()) all.push({text:r.obs,campo:r.campo,lote:r.lote,fecha:r.fecha,ts:r.ts}); });
+  all.sort((a,b)=>b.ts-a.ts);
+  const list=document.getElementById('obs-list');
+  if(!all.length){ list.innerHTML='<div class="empty"><div class="ei">📋</div><p>Sin observaciones cargadas</p></div>'; return; }
+  list.innerHTML=all.map(o=>{
+    const tag=classObs(o.text);
+    return `<div class="row-card"><span class="badge b-${tag}">${obsLbl[tag]}</span><div style="font-size:13px;margin:5px 0;line-height:1.5;">${o.text}</div><div class="row-meta"><span>📅 ${o.fecha}</span><span>🌾 ${o.campo||'—'}${o.lote?' · '+o.lote:''}</span></div></div>`;
+  }).join('');
+}
+
+// ══════════════════════════════════════════
+// INIT
+// ══════════════════════════════════════════
+(function init(){
+  document.getElementById('r-'+role).classList.add('active');
+  renderHomeBtns(); updateHero();
+  if(cfg.url){
+    mostrarConectado(true);
+  } else {
+    mostrarConectado(false);
+  }
+})();
+</script>
+</body>
+</html>
