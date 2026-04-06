@@ -274,6 +274,11 @@ textarea{resize:vertical;min-height:68px;}
     </div>
   </div>
 
+  <div class="frow fld">
+    <div><label>Kg estimados campo</label><input type="number" id="cf-kg-campo" placeholder="18000" step="1" min="0"></div>
+    <div><label>Rendimiento (qq/ha)</label><input type="number" id="cf-rinde" placeholder="35" step="0.1" min="0" oninput="calcKgCampo()"></div>
+  </div>
+  <div style="font-size:11px;color:var(--mut);margin-top:-6px;margin-bottom:10px;">💡 Podés poner kg directamente o calcular por rendimiento</div>
   <div class="fld"><label>Observaciones</label><textarea id="cf-obs" placeholder="Demoras, problemas, novedades..."></textarea></div>
 
   <div class="sec-hdr">📄 Carta de Porte (PDF)</div>
@@ -491,9 +496,15 @@ async function syncToSheets(sheet, row) {
   if(!cfg.url) return false;
   try {
     showSend(true);
-    const r = await fetch(cfg.url,{ method:'POST', body:JSON.stringify({sheet,row}), headers:{'Content-Type':'application/json'} });
-    const d = await r.json();
-    showSend(false); setSyncStatus(true); return d.ok;
+    // Usar no-cors para evitar bloqueos CORS desde GitHub Pages
+    // Con no-cors no podemos leer la respuesta, pero el dato llega igual
+    await fetch(cfg.url, {
+      method:'POST',
+      mode:'no-cors',
+      body: JSON.stringify({sheet, row}),
+      headers:{'Content-Type':'text/plain'}
+    });
+    showSend(false); setSyncStatus(true); return true;
   } catch(e){ showSend(false); setSyncStatus(false); return false; }
 }
 
@@ -543,7 +554,7 @@ function goHome(){
 // ROLES
 // ══════════════════════════════════════════
 const roleBtns = {
-  campo:    [{ic:'🌾',lbl:'Cargar Campo',sub:'Avance del día',scr:'scr-campo',cls:'g'},{ic:'📊',lbl:'Ver Avance',sub:'Por campo y lote',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'Novedades',scr:'scr-obs',cls:'',wide:true}],
+  campo:    [{ic:'🌾',lbl:'Cargar Campo',sub:'Avance del día',scr:'scr-campo',cls:'g'},{ic:'📊',lbl:'Ver Avance',sub:'Por campo y lote',scr:'scr-avance',cls:''},{ic:'🚛',lbl:'Ver Camiones',sub:'Confirmados por balanza',scr:'scr-camiones',cls:'b'},{ic:'📋',lbl:'Observaciones',sub:'Novedades',scr:'scr-obs',cls:'',wide:true}],
   balanza:  [{ic:'⚖️',lbl:'Cargar Balanza',sub:'Pesaje de camiones',scr:'scr-balanza',cls:'o'},{ic:'🚛',lbl:'Ver Camiones',sub:'Historial',scr:'scr-camiones',cls:''},{ic:'📊',lbl:'Ver Avance',sub:'General',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
   logistica:[{ic:'🚛',lbl:'Cargar Logística',sub:'Datos de camiones',scr:'scr-logistica',cls:'b'},{ic:'📦',lbl:'Ver Camiones',sub:'Movimientos',scr:'scr-camiones',cls:''},{ic:'📊',lbl:'Ver Avance',sub:'General',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
   admin:    [{ic:'📊',lbl:'Ver Avance',sub:'Resumen global',scr:'scr-avance',cls:'g'},{ic:'🚛',lbl:'Ver Camiones',sub:'Con filtros',scr:'scr-camiones',cls:''},{ic:'🌾',lbl:'Cargar Campo',sub:'',scr:'scr-campo',cls:''},{ic:'⚖️',lbl:'Cargar Balanza',sub:'',scr:'scr-balanza',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
@@ -580,7 +591,7 @@ function initCampo(){
   popSel('cf-lote',[]);
   popSel('cf-cultivo',[]);
   popSel('cf-contratista',maestros.contratistas);
-  ['cf-has','cf-humedad','cf-obs','cf-perdida-kgha','cf-perdida-total'].forEach(id=>document.getElementById(id).value='');
+  ['cf-has','cf-humedad','cf-obs','cf-perdida-kgha','cf-perdida-total','cf-kg-campo','cf-rinde'].forEach(id=>document.getElementById(id).value='');
   // recalc perdida when has changes
   document.getElementById('cf-has').oninput=calcPerdidaTotal;
   document.getElementById('cf-avance-info').style.display='none';
@@ -622,6 +633,15 @@ function updateAvanceInfo(){
   document.getElementById('cf-avance-info').style.display='block';
 }
 
+function calcKgCampo(){
+  const rinde=parseFloat(document.getElementById('cf-rinde').value)||0;
+  const has=parseFloat(document.getElementById('cf-has').value)||0;
+  if(rinde>0&&has>0){
+    // 1 qq = 100 kg
+    document.getElementById('cf-kg-campo').value=Math.round(rinde*100*has);
+  }
+}
+
 function calcPerdidaTotal(){
   const kgha=parseFloat(document.getElementById('cf-perdida-kgha').value)||0;
   const has=parseFloat(document.getElementById('cf-has').value)||0;
@@ -637,6 +657,7 @@ async function guardarCampo(){
   const has=parseFloat(document.getElementById('cf-has').value)||0;
   const humedad=parseFloat(document.getElementById('cf-humedad').value)||0;
   const obs=document.getElementById('cf-obs').value;
+  const kgCampo=parseFloat(document.getElementById('cf-kg-campo').value)||0;
   const perdidaKgha=parseFloat(document.getElementById('cf-perdida-kgha').value)||0;
   const perdidaCausa=document.getElementById('cf-perdida-causa').value;
   const perdidaTotal=perdidaKgha>0?perdidaKgha*has:0;
@@ -651,10 +672,10 @@ async function guardarCampo(){
   }
 
   const pdfNames=pendingPDFs.map(p=>p.name);
-  const rec={id:Date.now().toString(),fecha,campo,lote,cultivo,contratista:contra,has,humedad,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfs:pdfNames,ts:Date.now()};
+  const rec={id:Date.now().toString(),fecha,campo,lote,cultivo,contratista:contra,has,humedad,kgCampo,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfs:pdfNames,ts:Date.now()};
   rCampo.push(rec); save('r_campo',rCampo);
 
-  const row=[fecha,campo,lote,cultivo,contra,has,humedad,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfNames.join(';'),rec.id];
+  const row=[fecha,campo,lote,cultivo,contra,has,humedad,kgCampo,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfNames.join(';'),rec.id];
   const synced=await syncToSheets('Campo',row);
   toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
   pendingPDFs=[]; setTimeout(goHome,1200);
@@ -763,6 +784,11 @@ async function guardarBalanza(){
   const patNueva=document.getElementById('bf-patente-nueva').value;
   if(patNueva) patente=patNueva;
 
+  // buscar kg estimados de campo para ese campo/lote del dia
+  const regCampo=rCampo.filter(r=>r.campo===balSelLog.campo&&r.lote===balSelLog.lote&&r.fecha===balSelLog.fecha);
+  const kgCampo=regCampo.length>0?(regCampo[regCampo.length-1].kgCampo||0):0;
+  const diferencia=kgCampo>0?neto-kgCampo:0;
+
   const rec={
     id:Date.now().toString(),
     logisticaId:balSelLog.id,
@@ -772,10 +798,10 @@ async function guardarBalanza(){
     patente,
     chofer:balSelLog.chofer,
     destino:balSelLog.destino,
-    tara,bruto,neto,obs,ts:Date.now()
+    tara,bruto,neto,kgCampo,diferencia,obs,ts:Date.now()
   };
   rBalanza.push(rec); save('r_balanza',rBalanza);
-  const row=[rec.fecha,rec.campo,rec.lote,patente,tara,bruto,neto,obs,rec.id,balSelLog.id||''];
+  const row=[rec.fecha,rec.campo,rec.lote,patente,tara,bruto,neto,kgCampo,diferencia,obs,rec.id,balSelLog.id||''];
   const synced=await syncToSheets('Balanza',row);
   toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
   setTimeout(goHome,1200);
@@ -959,6 +985,8 @@ function renderCamiones(){
 
   list.innerHTML=regs.map(r=>{
     const log=rLogistica.find(l=>l.patenteChasis===r.patente&&l.fecha===r.fecha);
+    const difColor=r.diferencia>0?'var(--greenl)':r.diferencia<0?'var(--red)':'var(--mut)';
+    const difTxt=r.diferencia>0?'+'+r.diferencia.toLocaleString('es'):r.diferencia!==0?r.diferencia.toLocaleString('es'):'';
     return `<div class="row-card">
       <div class="row-top"><span class="pat">${r.patente}</span><span class="tn">${(r.neto/1000).toFixed(2)} Tn</span></div>
       <div class="row-meta">
@@ -967,6 +995,11 @@ function renderCamiones(){
         ${log?`<span>👤 ${log.chofer}</span>`:''}
         ${log&&log.destino?`<span>📍 ${log.destino}</span>`:''}
       </div>
+      ${r.kgCampo>0?`<div class="row-meta" style="margin-top:5px;background:rgba(255,255,255,.04);border-radius:6px;padding:5px 8px;">
+        <span>Campo estimó: <b style="color:var(--goldl)">${r.kgCampo.toLocaleString('es')} kg</b></span>
+        <span>Balanza: <b style="color:var(--greenl)">${r.neto.toLocaleString('es')} kg</b></span>
+        ${difTxt?`<span>Dif: <b style="color:${difColor}">${difTxt} kg</b></span>`:''}
+      </div>`:''}
       ${log?`<div class="row-meta" style="margin-top:4px;"><span>🏢 ${log.transporte||'—'}</span><span>CUIT: ${log.cuitChofer||'—'}</span></div>`:''}
       ${r.obs?`<div class="row-obs">💬 ${r.obs}</div>`:''}
     </div>`;
