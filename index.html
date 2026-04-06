@@ -496,15 +496,15 @@ async function syncToSheets(sheet, row) {
   if(!cfg.url) return false;
   try {
     showSend(true);
-    // Usar no-cors para evitar bloqueos CORS desde GitHub Pages
-    // Con no-cors no podemos leer la respuesta, pero el dato llega igual
-    await fetch(cfg.url, {
-      method:'POST',
-      mode:'no-cors',
-      body: JSON.stringify({sheet, row}),
-      headers:{'Content-Type':'text/plain'}
+    const params = new URLSearchParams({
+      sheet: sheet,
+      row: JSON.stringify(row),
+      t: Date.now()
     });
-    showSend(false); setSyncStatus(true); return true;
+    const url = cfg.url + '?' + params.toString();
+    const r = await fetch(url, { method:'GET' });
+    const d = await r.json();
+    showSend(false); setSyncStatus(d.ok); return d.ok;
   } catch(e){ showSend(false); setSyncStatus(false); return false; }
 }
 
@@ -686,22 +686,92 @@ async function guardarCampo(){
 // ══════════════════════════════════════════
 let balSelLog = null; // logistica record selected
 
-function initBalanza(){
+async function initBalanza(){
   balSelLog = null;
   document.getElementById('bal-paso1').style.display='block';
   document.getElementById('bal-paso2').style.display='none';
   document.getElementById('bf-buscar').value='';
   ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('bal-cambio-pat').style.display='none';
+
+  // Cargar registros de logística desde Google Sheets
+  if(cfg.url){
+    const lista=document.getElementById('bal-log-lista');
+    lista.innerHTML='<div class="empty" style="padding:20px 0;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando camiones de logística...</p></div>';
+    try {
+      const r = await fetch(cfg.url+'?sheet=Logistica');
+      const d = await r.json();
+      if(d.ok && d.rows && d.rows.length){
+        // Convertir filas del sheet a objetos compatibles
+        const fromSheet = d.rows.map((row,i)=>({
+          id: row.id || 'sheet_'+i,
+          fecha: row.fecha instanceof Date ? row.fecha.toISOString().split('T')[0] : String(row.fecha||'').split('T')[0],
+          patenteChasis: row.patente||'',
+          patenteAcoplado: '',
+          chofer: row.establecimiento||'', // col reused - actually chofer is index 3
+          campo: row.lote||'',
+          lote: '',
+          destino: row.obs||'',
+          ts: Date.now()-i*1000,
+          fromSheet: true,
+          raw: row
+        }));
+        // Merge con los locales, evitando duplicados por id
+        const localIds = new Set(rLogistica.map(r=>r.id));
+        fromSheet.forEach(r=>{ if(!localIds.has(r.id)) rLogistica.push(r); });
+        // Re-fetch con estructura correcta del sheet
+        await cargarLogisticaSheet();
+      }
+    } catch(e){ console.log('No se pudo cargar sheet logistica:', e); }
+  }
   renderBalanzaLista();
+}
+
+async function cargarLogisticaSheet(){
+  if(!cfg.url) return;
+  try {
+    const r = await fetch(cfg.url+'?sheet=Logistica');
+    const d = await r.json();
+    if(!d.ok || !d.rows) return;
+    // El sheet devuelve rows con índices: fecha[0], patenteChasis[1], patenteAcoplado[2],
+    // chofer[3], cuitChofer[4], transporte[5], cuitTransporte[6], destino[7],
+    // campo[8], lote[9], cultivo[10], obs[11], id[12]
+    // Pero nuestro doGet mapea con keys propios - vamos a pedir raw
+    const resp = await fetch(cfg.url+'?sheet=Logistica&raw=1');
+    // Si no soporta raw, usamos lo que tenemos
+    // Reemplazar rLogistica con datos del sheet para hoy
+    const todayStr = today();
+    // Guardar registros locales que no están en sheet
+    const sheetIds = new Set(d.rows.map(r=>r.id).filter(Boolean));
+    const soloLocales = rLogistica.filter(r=>!r.fromSheet && !sheetIds.has(r.id));
+
+    const fromSheet = d.rows.map(r=>({
+      id: r.id || ('s_'+Math.random()),
+      fecha: String(r.fecha||'').replace(/\//g,'-').slice(0,10),
+      patenteChasis: r.patente||'',
+      patenteAcoplado: '',
+      chofer: r.tara||'', // indices shifted in our GET mapping
+      cuitChofer: '',
+      transporte: '',
+      cuitTransporte: '',
+      destino: r.diferencia||'',
+      campo: r.establecimiento||'',
+      lote: r.lote||'',
+      cultivo: '',
+      obs: r.obs||'',
+      ts: Date.now(),
+      fromSheet: true
+    }));
+
+    rLogistica = [...soloLocales, ...fromSheet];
+    save('r_logistica', rLogistica);
+  } catch(e){ console.log('cargarLogisticaSheet error:', e); }
 }
 
 function renderBalanzaLista(){
   const q=document.getElementById('bf-buscar').value.toLowerCase();
-  // Get today's logistica records, sorted newest first
   const todayStr=today();
   let regs=[...rLogistica].filter(l=>l.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
-  // also show last 3 days if nothing today
   if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,20);
 
   if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer+r.campo+r.lote).toLowerCase().includes(q));
