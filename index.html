@@ -684,7 +684,7 @@ async function guardarCampo(){
 // ══════════════════════════════════════════
 // FORM: BALANZA
 // ══════════════════════════════════════════
-let balSelLog = null; // logistica record selected
+let balSelLog = null;
 
 async function initBalanza(){
   balSelLog = null;
@@ -697,75 +697,41 @@ async function initBalanza(){
   // Cargar registros de logística desde Google Sheets
   if(cfg.url){
     const lista=document.getElementById('bal-log-lista');
-    lista.innerHTML='<div class="empty" style="padding:20px 0;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando camiones de logística...</p></div>';
+    lista.innerHTML='<div class="empty" style="padding:20px 0;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando camiones...</p></div>';
     try {
-      const r = await fetch(cfg.url+'?sheet=Logistica');
+      const r = await fetch(cfg.url + '?sheet=Logistica&t=' + Date.now());
       const d = await r.json();
       if(d.ok && d.rows && d.rows.length){
-        // Convertir filas del sheet a objetos compatibles
-        const fromSheet = d.rows.map((row,i)=>({
-          id: row.id || 'sheet_'+i,
-          fecha: row.fecha instanceof Date ? row.fecha.toISOString().split('T')[0] : String(row.fecha||'').split('T')[0],
-          patenteChasis: row.patente||'',
-          patenteAcoplado: '',
-          chofer: row.establecimiento||'', // col reused - actually chofer is index 3
-          campo: row.lote||'',
-          lote: '',
-          destino: row.obs||'',
-          ts: Date.now()-i*1000,
-          fromSheet: true,
-          raw: row
+        // El sheet devuelve filas con estos índices (según HEADERS de Apps Script):
+        // 0:Fecha, 1:PatenteChasis, 2:PatenteAcoplado, 3:Chofer, 4:CUITChofer,
+        // 5:EmpresaTransporte, 6:CUITTransporte, 7:Destino,
+        // 8:Establecimiento, 9:Lote, 10:Cultivo, 11:Observaciones, 12:ID
+        const fromSheet = d.rows.map((row, i) => ({
+          id: row[12] || ('s_' + i),
+          fecha: String(row[0]||'').split('T')[0].replace(/\//g,'-'),
+          patenteChasis: String(row[1]||''),
+          patenteAcoplado: String(row[2]||''),
+          chofer: String(row[3]||''),
+          cuitChofer: String(row[4]||''),
+          transporte: String(row[5]||''),
+          cuitTransporte: String(row[6]||''),
+          destino: String(row[7]||''),
+          campo: String(row[8]||''),
+          lote: String(row[9]||''),
+          cultivo: String(row[10]||''),
+          obs: String(row[11]||''),
+          ts: Date.now() - i * 1000,
+          fromSheet: true
         }));
-        // Merge con los locales, evitando duplicados por id
-        const localIds = new Set(rLogistica.map(r=>r.id));
-        fromSheet.forEach(r=>{ if(!localIds.has(r.id)) rLogistica.push(r); });
-        // Re-fetch con estructura correcta del sheet
-        await cargarLogisticaSheet();
+        // Merge: locales propios + sheet, sin duplicados por id
+        const sheetIds = new Set(fromSheet.map(r=>r.id));
+        const soloLocales = rLogistica.filter(r=>!sheetIds.has(r.id));
+        rLogistica = [...soloLocales, ...fromSheet];
+        save('r_logistica', rLogistica);
       }
-    } catch(e){ console.log('No se pudo cargar sheet logistica:', e); }
+    } catch(e){ console.log('Error cargando logistica:', e); }
   }
   renderBalanzaLista();
-}
-
-async function cargarLogisticaSheet(){
-  if(!cfg.url) return;
-  try {
-    const r = await fetch(cfg.url+'?sheet=Logistica');
-    const d = await r.json();
-    if(!d.ok || !d.rows) return;
-    // El sheet devuelve rows con índices: fecha[0], patenteChasis[1], patenteAcoplado[2],
-    // chofer[3], cuitChofer[4], transporte[5], cuitTransporte[6], destino[7],
-    // campo[8], lote[9], cultivo[10], obs[11], id[12]
-    // Pero nuestro doGet mapea con keys propios - vamos a pedir raw
-    const resp = await fetch(cfg.url+'?sheet=Logistica&raw=1');
-    // Si no soporta raw, usamos lo que tenemos
-    // Reemplazar rLogistica con datos del sheet para hoy
-    const todayStr = today();
-    // Guardar registros locales que no están en sheet
-    const sheetIds = new Set(d.rows.map(r=>r.id).filter(Boolean));
-    const soloLocales = rLogistica.filter(r=>!r.fromSheet && !sheetIds.has(r.id));
-
-    const fromSheet = d.rows.map(r=>({
-      id: r.id || ('s_'+Math.random()),
-      fecha: String(r.fecha||'').replace(/\//g,'-').slice(0,10),
-      patenteChasis: r.patente||'',
-      patenteAcoplado: '',
-      chofer: r.tara||'', // indices shifted in our GET mapping
-      cuitChofer: '',
-      transporte: '',
-      cuitTransporte: '',
-      destino: r.diferencia||'',
-      campo: r.establecimiento||'',
-      lote: r.lote||'',
-      cultivo: '',
-      obs: r.obs||'',
-      ts: Date.now(),
-      fromSheet: true
-    }));
-
-    rLogistica = [...soloLocales, ...fromSheet];
-    save('r_logistica', rLogistica);
-  } catch(e){ console.log('cargarLogisticaSheet error:', e); }
 }
 
 function renderBalanzaLista(){
