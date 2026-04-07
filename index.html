@@ -155,6 +155,7 @@ textarea{resize:vertical;min-height:68px;}
 .tilde-btn{width:32px;height:32px;border-radius:50%;border:2px solid var(--brd);background:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;}
 .tilde-btn.on{background:var(--green);border-color:var(--green);}
 </style>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -762,10 +763,35 @@ async function guardarCampo(){
 function handlePDF(input){
   Array.from(input.files).forEach(f=>{
     const reader=new FileReader();
-    reader.onload=e=>{
+    reader.onload=async e=>{
       const b64=e.target.result;
-      const text=atob(b64.split(',')[1]);
-      const cpe=extraerCPE(text,f.name);
+      let cpe=null;
+      try{
+        // Use PDF.js to extract text properly
+        pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+        const arr=new Uint8Array(atob(b64.split(',')[1]).split('').map(c=>c.charCodeAt(0)));
+        const pdf=await pdfjsLib.getDocument({data:arr}).promise;
+        let fullText='';
+        for(let p=1;p<=pdf.numPages;p++){
+          const page=await pdf.getPage(p);
+          const tc=await page.getTextContent();
+          // Sort items by y position then x to maintain reading order
+          const items=tc.items.sort((a,b)=>b.transform[5]-a.transform[5]||a.transform[4]-b.transform[4]);
+          let lastY=null;
+          for(const item of items){
+            const y=Math.round(item.transform[5]);
+            if(lastY!==null&&Math.abs(y-lastY)>3)fullText+='\n';
+            fullText+=item.str;
+            lastY=y;
+          }
+          fullText+='\n';
+        }
+        cpe=extraerCPE(fullText,f.name);
+      }catch(err){
+        console.log('PDF.js error:',err);
+        // fallback: try binary read
+        try{const text=atob(b64.split(',')[1]);cpe=extraerCPE(text,f.name);}catch(e2){}
+      }
       pendingPDFs.push({name:f.name,size:f.size,b64,cpe});
       renderPDFList();
     };
@@ -775,116 +801,164 @@ function handlePDF(input){
 }
 
 function extraerCPE(text,fname){
-  // PDF text has values on lines AFTER label, separated by blank lines
-  // Helper: get value on next non-empty line after a label
+  const lines = text.split('\n');
+
+  // Get next non-empty non-label line after a label
   function gNext(label){
-    const lines=text.split('\n');
+    const labelRe = new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&') + '\\s*:?\\s*$','i');
     for(let i=0;i<lines.length;i++){
-      if(lines[i].trim().match(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*:?\\s*$','i'))){
-        for(let j=i+1;j<Math.min(i+5,lines.length);j++){
+      if(labelRe.test(lines[i].trim())){
+        for(let j=i+1;j<Math.min(i+6,lines.length);j++){
           const v=lines[j].trim();
-          if(v&&!v.match(/^[A-Z][\w\s]+:$/)&&v!=='-')return v;
+          if(v && !/^[A-ZÁÉÍÓÚÑ][\w\s\/\.]+:\s*$/.test(v) && v!=='-')return v;
         }
       }
     }
     return '';
   }
-  // Helper: get value by inline pattern
-  function g(pat){
-    const m=text.match(new RegExp(pat,'i'));
-    return m?m[1].trim():'';
-  }
-  // Helper: get Nth non-empty line after label
+
+  // Get Nth non-empty line after label (exact search)
   function gNth(label,n){
-    const lines=text.split('\n');
+    const re=new RegExp(label,'i');
     for(let i=0;i<lines.length;i++){
-      if(lines[i].trim().match(new RegExp(label,'i'))){
+      if(re.test(lines[i])){
         let cnt=0;
-        for(let j=i+1;j<Math.min(i+20,lines.length);j++){
-          const v=lines[j].trim();
-          if(v){cnt++;if(cnt===n)return v;}
+        for(let j=i+1;j<Math.min(i+25,lines.length);j++){
+          if(lines[j].trim()){cnt++;if(cnt===n)return lines[j].trim();}
         }
       }
     }
     return '';
   }
 
-  const lines=text.split('\n');
+  // Inline pattern
+  function g(pat){ const m=text.match(new RegExp(pat,'i')); return m?m[1].trim():''; }
 
-  // N° CPE: line 4 is "N° CPE:" then line 5 is the value
+  // N° CPE and CTG
   const nCPE = gNext('N° CPE');
   const ctg  = g('CTG:\\s*(\\d+)');
-  const fecha= g('Fecha:\\s*(\\d{2}/\\d{2}/\\d{4})');
-  const venc = gNext('Vencimiento');
-
-  // Intervinientes
-  const titular      = gNext('Titular Carta de Porte');
-  const remVentaPrim = gNext('Rte\\. Comercial Venta Primaria');
-  const destinatario = gNext('Destinatario');
-  const destino      = gNext('Destino');
-  const transportista= gNext('Empresa Transportista');
-  const fleteStr     = gNext('Flete pagador');
-  const intermediario= gNext('Intermediario de flete');
-
-  // Chofer: label + Intermediario are on same block, value is 2 lines after Chofer
-  const chofer = gNext('Chofer');
-
-  // Grano/Tipo
+  const fecha = g('Fecha:\\s*(\\d{2}/\\d{2}/\\d{4})');
+  const vencimiento = gNext('Vencimiento');
+  const campaña = gNth('Campa[ñn]a', 1);
   const grano = g('Tipo:\\s*([^\\n]+)');
-  const campaña = gNext('Campaña');
 
-  // Pesos - Bruto is line 60, Neto is line 61 (after "Peso Bruto\nPeso Neto\n\nCondicional\n\n")
+  // Pesos (sección B): Peso Bruto en línea 55, Peso Neto en 56
+  // Valores: línea 60=52300 (bruto), línea 61=35980 (neto)
   let pesoBruto='', pesoNeto='', pesoTara='';
   for(let i=0;i<lines.length;i++){
-    if(lines[i].trim()==='Peso Bruto'){
-      // next non-empty after "Peso Neto" and "Condicional" block
-      let foundPesoNeto=false;
-      for(let j=i+1;j<Math.min(i+15,lines.length);j++){
-        const v=lines[j].trim();
-        if(v==='Peso Neto'){foundPesoNeto=true;continue;}
-        if(foundPesoNeto&&v&&v.match(/^\d+$/)){
-          if(!pesoBruto)pesoBruto=v;
-          else if(!pesoNeto)pesoNeto=v;
-          if(pesoBruto&&pesoNeto)break;
-        }
+    if(lines[i].trim()==='Peso Bruto' && lines[i+1]?.trim()==='Peso Neto'){
+      // skip blank and "Condicional", get two numbers
+      let nums=[];
+      for(let j=i+2;j<Math.min(i+15,lines.length);j++){
+        if(/^\d+$/.test(lines[j].trim())) nums.push(lines[j].trim());
+        if(nums.length>=2) break;
       }
+      pesoBruto=nums[0]||'';
+      pesoNeto=nums[1]||'';
       break;
     }
   }
   pesoTara = gNext('Peso Tara');
 
-  // Procedencia
-  const locOrigen  = gNth('C - PROCEDENCIA',3); // Si, LAS ROSAS
-  const provOrigen = gNext('Provincia');
+  // Intervinientes
+  const titular = gNext('Titular Carta de Porte');
 
-  // Destino mercadería - CHACABUCO is after "Dirección:" block
-  const locDestino = gNext('Dirección');
+  // Rte VP: check if next line is ALSO a label (empty field)
+  let remVentaPrim='';
+  for(let i=0;i<lines.length;i++){
+    if(/Rte\.\s*Comercial Venta Primaria\s*:?\s*$/i.test(lines[i].trim())){
+      for(let j=i+1;j<Math.min(i+4,lines.length);j++){
+        const v=lines[j].trim();
+        if(v){
+          // if it's another label, field is empty
+          if(/^Rte\.|^Mercado|^Corredor|^Representante/i.test(v)) break;
+          remVentaPrim=v; break;
+        }
+      }
+      break;
+    }
+  }
 
-  // Transporte
+  const destinatario = gNext('Destinatario');
+  const destino = gNext('Destino');
+
+  // Localidad Destino (sección D) = after "Dirección:"
+  const locDestino = gNext('Direcci[oó]n');
+
+  const transportista = gNext('Empresa Transportista');
+  const flete = gNext('Flete pagador');
+
+  // Chofer y Intermediario: están en bloque compartido
+  // línea 40: "Chofer :", línea 41: "Intermediario de flete :"
+  // línea 42: "", línea 43: CHOFER_VALUE, línea 44: INTERMEDIARIO_VALUE
+  let chofer='', intermediario='';
+  for(let i=0;i<lines.length;i++){
+    if(/Chofer\s*:\s*$/i.test(lines[i].trim())){
+      // next non-empty is chofer
+      for(let j=i+1;j<Math.min(i+8,lines.length);j++){
+        const v=lines[j].trim();
+        if(v && !/Intermediario/i.test(v) && !/:\s*$/.test(v)){chofer=v;break;}
+      }
+    }
+    if(/Intermediario de flete\s*:\s*$/i.test(lines[i].trim())){
+      // values are 2 lines: chofer CUIT, intermediario CUIT
+      let vals=[];
+      for(let j=i+1;j<Math.min(i+6,lines.length);j++){
+        const v=lines[j].trim();
+        if(v) vals.push(v);
+        if(vals.length>=2) break;
+      }
+      // vals[0] = chofer, vals[1] = intermediario
+      if(!chofer && vals[0]) chofer=vals[0];
+      intermediario=vals[1]||vals[0]||'';
+      break;
+    }
+  }
+
+  // Dominios
   const dominiosFull = gNext('Dominios');
   const domParts = dominiosFull.split(/\s*-\s*/);
-  const domCamion  = domParts[0]||'';
-  const domAcoplado= domParts[1]||'';
+  const dominioCamion   = domParts[0]?.trim()||'';
+  const dominioAcoplado = domParts[1]?.trim()||'';
 
-  // Kms: after "Kms. a recorrer:" skip date line, then value
-  const kms = gNth('Kms\\.\\s*a recorrer',2);
-  const tarifa = gNext('Tarifa');
+  // Kms: línea 116 "Kms. a recorrer:", 117=fecha partida, 118=label, 119=tarifa ref, 120="", 121=330
+  let kms='';
+  for(let i=0;i<lines.length;i++){
+    if(/Kms\.\s*a recorrer/i.test(lines[i])){
+      // skip date and "Tarifa de Referencia:", get first number
+      for(let j=i+1;j<Math.min(i+8,lines.length);j++){
+        const v=lines[j].trim();
+        if(v && /^\d+$/.test(v)){kms=v;break;}
+      }
+      break;
+    }
+  }
 
-  // Descarga
-  const pesoNetoDesc  = gNext('Peso Neto \\(kg\\)');
+  // Tarifa (not Tarifa de Referencia)
+  let tarifa='';
+  for(let i=0;i<lines.length;i++){
+    if(/^Tarifa:\s*$/i.test(lines[i].trim())){
+      for(let j=i+1;j<Math.min(i+4,lines.length);j++){
+        const v=lines[j].trim();
+        if(v){tarifa=v;break;}
+      }
+      break;
+    }
+  }
+
+  // Sección G - Descarga
   const pesoBrutoDesc = gNext('Peso Bruto \\(kg\\)');
+  const pesoNetoDesc  = gNext('Peso Neto \\(kg\\)');
   const pesoTaraDesc  = gNext('Peso Tara \\(kg\\)');
   const fechaArribo   = gNext('Fecha Arribo');
   const fechaDescarga = gNext('Fecha Descarga');
 
   return {
-    nCPE, ctg, fecha, vencimiento:venc,
-    titular, remVentaPrim, destinatario, destino, locDestino,
-    transportista, flete:fleteStr, intermediario, chofer,
-    grano, campaña,
+    nCPE, ctg, fecha, vencimiento, campaña, grano,
     pesoBruto, pesoNeto, pesoTara,
-    locOrigen, provOrigen,
-    dominios:dominiosFull, dominioCamion:domCamion, dominioAcoplado:domAcoplado,
+    titular, remVentaPrim, destinatario, destino, locDestino,
+    transportista, flete, chofer, intermediario,
+    dominios:dominiosFull, dominioCamion, dominioAcoplado,
     kms, tarifa,
     pesoBrutoDesc, pesoNetoDesc, pesoTaraDesc,
     fechaArribo, fechaDescarga,
