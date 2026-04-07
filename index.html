@@ -6,47 +6,26 @@
 <title>Control Cosecha 25/26</title>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@400;600;700&family=Nunito:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-:root {
-  --bg:    #181C14;
-  --bg2:   #20261A;
-  --bg3:   #272E20;
-  --card:  #2D3526;
-  --brd:   rgba(255,255,255,0.08);
-  --gold:  #C9A84C;
-  --goldl: #E4C97A;
-  --green: #5A9A3E;
-  --greenl:#7DC05A;
-  --red:   #C0392B;
-  --blue:  #3A7BD5;
-  --wh:    #F5F5F0;
-  --mut:   #7A8270;
-  --r:     14px;
-}
+:root{--bg:#181C14;--bg2:#20261A;--bg3:#272E20;--card:#2D3526;--brd:rgba(255,255,255,0.08);--gold:#C9A84C;--goldl:#E4C97A;--green:#5A9A3E;--greenl:#7DC05A;--red:#C0392B;--blue:#3A7BD5;--wh:#F5F5F0;--mut:#7A8270;--r:14px;}
 *{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
 html,body{height:100%;overscroll-behavior:none;}
 body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--wh);max-width:500px;margin:0 auto;min-height:100vh;}
-
-/* HEADER */
 .hdr{position:sticky;top:0;z-index:200;background:var(--bg);border-bottom:1.5px solid var(--gold);display:flex;align-items:center;padding:10px 16px;gap:10px;}
 .hdr-back{background:none;border:none;color:var(--gold);font-size:24px;cursor:pointer;padding:2px 6px;display:none;line-height:1;}
 .hdr-title{font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:2px;color:var(--gold);flex:1;}
-.sync-wrap{display:flex;align-items:center;gap:5px;}
 .sync-dot{width:8px;height:8px;border-radius:50%;background:#444;flex-shrink:0;transition:.3s;}
 .sync-dot.ok{background:var(--greenl);box-shadow:0 0 5px var(--green);}
 .sync-dot.err{background:var(--red);}
 .sync-lbl{font-size:10px;color:var(--mut);}
-
-/* SCREENS */
 .scr{display:none;padding:16px;}
 .scr.active{display:block;}
-
 /* HOME */
 .hero{background:linear-gradient(135deg,#364428,#1F2A18);border-radius:var(--r);padding:20px;margin-bottom:16px;border:1px solid rgba(201,168,76,.25);position:relative;overflow:hidden;}
 .hero::after{content:'🌾';position:absolute;right:14px;top:50%;transform:translateY(-50%);font-size:56px;opacity:.12;}
 .hero h2{font-family:'Barlow Condensed',sans-serif;font-size:24px;letter-spacing:2px;color:var(--gold);}
 .hero-stats{font-size:12px;color:var(--mut);margin-top:3px;}
 .role-bar{display:flex;gap:6px;margin-bottom:14px;}
-.rbtn{flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid var(--brd);background:var(--bg3);color:var(--mut);font-size:11px;font-family:'Nunito',sans-serif;font-weight:600;cursor:pointer;text-align:center;transition:.15s;letter-spacing:.3px;}
+.rbtn{flex:1;padding:7px 4px;border-radius:8px;border:1.5px solid var(--brd);background:var(--bg3);color:var(--mut);font-size:11px;font-family:'Nunito',sans-serif;font-weight:600;cursor:pointer;text-align:center;transition:.15s;}
 .rbtn.active{border-color:var(--gold);color:var(--gold);background:rgba(201,168,76,.1);}
 .btn-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
 .mbtn{background:var(--card);border:1.5px solid var(--brd);border-radius:var(--r);padding:16px 14px;cursor:pointer;text-align:left;color:var(--wh);transition:.15s;}
@@ -58,7 +37,6 @@ body{font-family:'Nunito',sans-serif;background:var(--bg);color:var(--wh);max-wi
 .mbtn .ic{font-size:24px;margin-bottom:5px;}
 .mbtn .lbl{font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;color:var(--goldl);display:block;}
 .mbtn .sub{font-size:11px;color:var(--mut);margin-top:1px;}
-
 /* FORMS */
 .sec-hdr{font-family:'Barlow Condensed',sans-serif;font-size:12px;letter-spacing:2px;color:var(--gold);margin:16px 0 8px;display:flex;align-items:center;gap:8px;}
 .sec-hdr::after{content:'';flex:1;height:1px;background:rgba(201,168,76,.2);}
@@ -72,64 +50,72 @@ textarea{resize:vertical;min-height:68px;}
 .frow3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;}
 .fld{margin-bottom:10px;}
 .neto{background:rgba(90,154,62,.15)!important;border-color:var(--green)!important;color:var(--greenl)!important;font-weight:700;font-size:16px!important;}
-.save-btn{width:100%;background:var(--gold);color:#181C14;border:none;border-radius:12px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:19px;letter-spacing:2px;cursor:pointer;margin-top:18px;transition:.15s;font-weight:700;}
+.save-btn{width:100%;background:var(--gold);color:#181C14;border:none;border-radius:12px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:19px;letter-spacing:2px;cursor:pointer;margin-top:18px;font-weight:700;}
 .save-btn:active{transform:scale(.98);}
-.add-btn{background:none;border:1.5px dashed rgba(201,168,76,.3);border-radius:8px;color:var(--gold);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'Nunito',sans-serif;margin-top:3px;}
-
-/* VIEWS */
+.add-btn{background:none;border:1.5px dashed rgba(201,168,76,.3);border-radius:8px;color:var(--gold);font-size:12px;padding:5px 12px;cursor:pointer;font-family:'Nunito',sans-serif;}
+/* LOTE MULTI */
+.lote-item{background:var(--bg3);border:1px solid var(--brd);border-radius:10px;padding:12px;margin-bottom:8px;}
+.lote-item.sel{border-color:var(--gold);background:rgba(201,168,76,.06);}
+.lote-item-hdr{display:flex;align-items:center;gap:10px;cursor:pointer;}
+.lote-chk{width:20px;height:20px;border-radius:5px;border:2px solid var(--brd);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;transition:.15s;}
+.lote-chk.on{background:var(--gold);border-color:var(--gold);color:#181C14;}
+.lote-item-name{font-size:14px;font-weight:600;flex:1;}
+.lote-item-cult{font-size:11px;color:var(--mut);}
+.lote-inputs{display:none;margin-top:10px;padding-top:10px;border-top:1px solid var(--brd);}
+.lote-inputs.open{display:block;}
+/* CONTRATISTAS */
+.contra-row{display:flex;align-items:center;gap:8px;margin-bottom:8px;}
+.contra-row input{flex:1;}
+.contra-row .rm{background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;flex-shrink:0;}
+/* CHIPS */
+.chip{padding:5px 10px;border-radius:6px;font-size:12px;cursor:pointer;border:1px solid var(--brd);background:var(--bg3);color:var(--mut);transition:.15s;display:inline-block;margin:3px;}
+.chip.sel{background:rgba(201,168,76,.15);border-color:var(--gold);color:var(--gold);font-weight:700;}
+.chip.dest{background:rgba(201,168,76,.08);border-color:rgba(201,168,74,.25);}
+.chip.dest.sel{background:var(--gold);color:#181C14;}
+/* BADGES */
+.badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:2px 7px;border-radius:20px;}
+.b-ok{background:rgba(90,154,62,.2);color:var(--greenl);}
+.b-pend{background:rgba(201,168,76,.2);color:var(--goldl);}
+.b-red{background:rgba(192,57,43,.2);color:#ff7675;}
+.b-blue{background:rgba(58,123,213,.2);color:#74b9ff;}
+/* AVANCE */
 .sum-strip{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-bottom:14px;}
 .sc{background:var(--card);border:1px solid var(--brd);border-radius:10px;padding:10px 6px;text-align:center;}
 .sv{font-family:'Barlow Condensed',sans-serif;font-size:22px;color:var(--gold);line-height:1;}
 .sl{font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.4px;margin-top:2px;}
-.campo-card{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;cursor:pointer;}
-.campo-hdr{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;}
+.campo-card{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:14px 16px;margin-bottom:10px;}
+.campo-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;cursor:pointer;}
 .campo-name{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gold);}
-.campo-pct{font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--goldl);}
-.prog-bg{background:rgba(255,255,255,.08);border-radius:5px;height:6px;margin-bottom:8px;overflow:hidden;}
+.prog-bg{background:rgba(255,255,255,.08);border-radius:5px;height:6px;margin-bottom:6px;overflow:hidden;}
 .prog-fill{height:6px;border-radius:5px;background:linear-gradient(90deg,var(--green),var(--gold));transition:width .4s;}
-.campo-meta{font-size:11px;color:var(--mut);}
-.lote-expand{display:none;border-top:1px solid var(--brd);margin-top:10px;padding-top:10px;}
+.lote-expand{display:none;border-top:1px solid var(--brd);margin-top:10px;padding-top:8px;}
 .lote-expand.open{display:block;}
-.lote-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid rgba(255,255,255,.04);}
-.lote-row:last-child{border-bottom:none;}
-.lote-name{font-size:12px;color:var(--wh);flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
-.lote-cult{font-size:10px;color:var(--mut);background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
-.lote-pbg{width:60px;flex-shrink:0;background:rgba(255,255,255,.08);border-radius:3px;height:4px;}
-.lote-pfill{height:4px;border-radius:3px;background:var(--green);}
-.lote-pct{font-size:11px;color:var(--mut);width:28px;text-align:right;flex-shrink:0;}
-.lote-has{font-size:11px;color:var(--mut);width:82px;text-align:right;flex-shrink:0;white-space:nowrap;}
-.chevron{font-size:10px;color:var(--mut);transition:.2s;margin-left:4px;}
-.chevron.open{transform:rotate(180deg);}
-.filter-bar{display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;}
-.fsel{background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--wh);font-size:12px;font-family:'Nunito',sans-serif;min-width:100px;flex-shrink:0;-webkit-appearance:none;}
+.lote-av-row{padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);}
+.lote-av-row:last-child{border-bottom:none;}
+.lote-av-name{font-size:12px;color:var(--wh);margin-bottom:4px;}
+.lote-av-meta{display:flex;justify-content:space-between;font-size:11px;color:var(--mut);}
+.contra-av{font-size:11px;color:var(--mut);margin-top:3px;padding-left:8px;border-left:2px solid rgba(201,168,76,.3);}
+/* CAMIONES */
+.blog-card{background:var(--card);border:1.5px solid var(--brd);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.15s;}
+.blog-card:active{transform:scale(.98);}
+.blog-card.done{border-color:rgba(90,154,62,.4);opacity:.6;}
+.blog-card.llego{border-color:rgba(201,168,76,.5);}
+.blog-patente{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);}
+.blog-meta{font-size:11px;color:var(--mut);margin-top:3px;}
+/* CUPOS */
+.cupo-card{background:var(--card);border:1px solid rgba(201,168,76,.2);border-radius:12px;padding:14px;margin-bottom:8px;}
+.cupo-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+.cupo-campo{font-family:'Barlow Condensed',sans-serif;font-size:17px;color:var(--gold);}
+.cupo-nums{display:flex;gap:16px;}
+.cupo-n{text-align:center;}
+.cupo-v{font-family:'Barlow Condensed',sans-serif;font-size:22px;color:var(--goldl);}
+.cupo-l{font-size:10px;color:var(--mut);text-transform:uppercase;}
+/* ROW CARDS */
 .row-card{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:12px 14px;margin-bottom:8px;}
 .row-top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:5px;}
 .pat{font-family:'Barlow Condensed',sans-serif;font-size:17px;letter-spacing:2px;color:var(--gold);}
 .tn{font-weight:700;font-size:15px;color:var(--greenl);}
 .row-meta{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--mut);}
-.row-obs{font-size:11px;color:rgba(245,245,240,.4);margin-top:4px;font-style:italic;}
-.badge{display:inline-block;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;padding:2px 7px;border-radius:20px;margin-bottom:5px;}
-.b-hum{background:rgba(52,152,219,.2);color:#74b9ff;}
-.b-dem{background:rgba(230,126,34,.2);color:#fab46a;}
-.b-maq{background:rgba(192,57,43,.2);color:#ff7675;}
-.b-cam{background:rgba(142,68,173,.2);color:#d7a8f0;}
-.b-lot{background:rgba(90,154,62,.2);color:#95e085;}
-.b-gen{background:rgba(255,255,255,.1);color:var(--mut);}
-.empty{text-align:center;padding:40px 20px;color:var(--mut);}
-.empty .ei{font-size:40px;margin-bottom:8px;}
-.empty p{font-size:13px;}
-
-/* MODAL */
-.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:flex-end;}
-.modal-bg.open{display:flex;}
-.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:75vh;overflow-y:auto;border-top:2px solid var(--gold);}
-.modal h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gold);margin-bottom:14px;}
-.modal-close{float:right;background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;}
-
-/* DESTINO CHIPS */
-.dest-chip{display:inline-block;background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.25);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer;margin:3px;transition:.15s;}
-.dest-chip.sel{background:var(--gold);color:#181C14;font-weight:700;}
-
 /* PDF */
 .pdf-zone{border:2px dashed rgba(201,168,76,.25);border-radius:10px;padding:16px;text-align:center;cursor:pointer;position:relative;margin-bottom:4px;}
 .pdf-zone input{position:absolute;inset:0;opacity:0;cursor:pointer;width:100%;height:100%;}
@@ -137,36 +123,37 @@ textarea{resize:vertical;min-height:68px;}
 .pdf-item{display:flex;align-items:center;gap:8px;background:rgba(58,123,213,.1);border:1px solid rgba(58,123,213,.2);border-radius:8px;padding:7px 10px;margin-top:6px;}
 .pdf-item .pn{flex:1;font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
 .pdf-item .pd{background:none;border:none;color:var(--mut);cursor:pointer;font-size:16px;}
-
-/* SENDING */
-.send-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
-.send-ov.show{display:flex;}
-.spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;}
-@keyframes spin{to{transform:rotate(360deg)}}
-
-/* TOAST */
-.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:10px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;transition:.3s;white-space:nowrap;box-shadow:0 4px 18px rgba(0,0,0,.5);}
-.toast.show{transform:translateX(-50%) translateY(0);}
-.toast.err{background:var(--red);}
-
+.pe-box{background:rgba(90,154,62,.08);border:1px solid rgba(90,154,62,.2);border-radius:8px;padding:10px 12px;margin-top:4px;}
+.pe-title{font-weight:700;color:var(--greenl);margin-bottom:6px;font-size:12px;}
+.pe-grid{display:grid;grid-template-columns:1fr 1fr;gap:2px 8px;}
+.pe-lbl{font-size:10px;color:var(--mut);}
+.pe-val{font-size:11px;color:var(--wh);font-weight:600;margin-bottom:4px;}
+/* MODAL */
+.modal-bg{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);z-index:500;align-items:flex-end;}
+.modal-bg.open{display:flex;}
+.modal{background:var(--bg2);border-radius:20px 20px 0 0;padding:20px;width:100%;max-height:82vh;overflow-y:auto;border-top:2px solid var(--gold);}
+.modal h3{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gold);margin-bottom:14px;}
+.modal-close{float:right;background:none;border:none;color:var(--mut);font-size:22px;cursor:pointer;}
+.info-box{background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;}
+.info-row{display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:3px;}
+.info-val{color:var(--goldl);font-weight:600;}
 /* CONFIG */
 .cfg-box{background:var(--card);border:1px solid var(--brd);border-radius:var(--r);padding:14px;margin-bottom:14px;}
 .cfg-box h4{font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;color:var(--gold);margin-bottom:10px;}
 .cfg-input{width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:8px;padding:9px 11px;color:var(--wh);font-family:'Nunito',sans-serif;font-size:12px;outline:none;}
 .cfg-input:focus{border-color:var(--gold);}
 .cfg-save{margin-top:8px;background:var(--gold);color:#181C14;border:none;border-radius:8px;padding:9px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;width:100%;}
-
-/* CUIT */
-.cuit-hint{font-size:10px;color:var(--mut);margin-top:2px;}
-
-/* BALANZA LOG CARD */
-.blog-card{background:var(--card);border:1.5px solid var(--brd);border-radius:12px;padding:12px 14px;margin-bottom:8px;cursor:pointer;transition:.15s;}
-.blog-card:active{transform:scale(.98);}
-.blog-card.pesado{border-color:rgba(90,154,62,.4);opacity:.6;}
-.blog-patente{font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:2px;color:var(--gold);}
-.blog-badge{display:inline-block;font-size:10px;font-weight:700;padding:2px 7px;border-radius:12px;margin-left:8px;background:rgba(90,154,62,.2);color:var(--greenl);}
-.blog-badge.pend{background:rgba(201,168,76,.2);color:var(--goldl);}
-.blog-meta{font-size:11px;color:var(--mut);margin-top:3px;}
+.send-ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:600;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+.send-ov.show{display:flex;}
+.spinner{width:28px;height:28px;border:3px solid rgba(255,255,255,.2);border-top-color:var(--gold);border-radius:50%;animation:spin .6s linear infinite;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.toast{position:fixed;bottom:22px;left:50%;transform:translateX(-50%) translateY(80px);background:var(--green);color:#fff;padding:10px 22px;border-radius:30px;font-weight:700;font-size:13px;z-index:999;transition:.3s;white-space:nowrap;}
+.toast.show{transform:translateX(-50%) translateY(0);}
+.toast.err{background:var(--red);}
+.empty{text-align:center;padding:36px 16px;color:var(--mut);}
+.empty .ei{font-size:38px;margin-bottom:8px;}
+.tilde-btn{width:32px;height:32px;border-radius:50%;border:2px solid var(--brd);background:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;}
+.tilde-btn.on{background:var(--green);border-color:var(--green);}
 </style>
 </head>
 <body>
@@ -174,195 +161,153 @@ textarea{resize:vertical;min-height:68px;}
 <div class="hdr">
   <button class="hdr-back" id="hdr-back" onclick="goHome()">←</button>
   <div class="hdr-title" id="hdr-title">COSECHA 25/26</div>
-  <div class="sync-wrap">
+  <div style="display:flex;align-items:center;gap:5px;">
     <div class="sync-dot" id="sdot"></div>
     <span class="sync-lbl" id="slbl">local</span>
   </div>
 </div>
 
-<!-- ═══════ HOME ═══════ -->
+<!-- HOME -->
 <div class="scr active" id="scr-home">
-  <div class="hero">
-    <h2>CONTROL DE COSECHA</h2>
-    <div class="hero-stats" id="hero-stats">Cargando...</div>
-  </div>
-
+  <div class="hero"><h2>CONTROL DE COSECHA</h2><div class="hero-stats" id="hero-stats">...</div></div>
   <div id="cfg-wrap">
     <div class="cfg-box">
       <h4>⚙ CONECTAR GOOGLE SHEETS</h4>
-      <div id="cfg-conectado" style="display:none;margin-bottom:8px;">
-        <div style="display:flex;align-items:center;gap:8px;background:rgba(90,154,62,.15);border:1px solid rgba(90,154,62,.3);border-radius:8px;padding:8px 12px;">
-          <span style="font-size:16px;">✅</span>
-          <span style="font-size:12px;color:var(--greenl);flex:1;">Google Sheets conectado</span>
-          <button onclick="cambiarURL()" style="background:none;border:none;color:var(--mut);font-size:11px;cursor:pointer;text-decoration:underline;">Cambiar URL</button>
-        </div>
+      <div id="cfg-ok" style="display:none;background:rgba(90,154,62,.15);border:1px solid rgba(90,154,62,.3);border-radius:8px;padding:8px 12px;margin-bottom:8px;align-items:center;gap:8px;">
+        <span>✅</span><span style="font-size:12px;color:var(--greenl);flex:1;">Conectado</span>
+        <button onclick="showCfgForm()" style="background:none;border:none;color:var(--mut);font-size:11px;cursor:pointer;text-decoration:underline;">Cambiar</button>
       </div>
       <div id="cfg-form">
-        <label>URL del Web App (Apps Script)</label>
+        <label>URL Web App</label>
         <input class="cfg-input" id="cfg-url" type="url" placeholder="https://script.google.com/macros/s/...">
         <button class="cfg-save" onclick="saveConfig()">GUARDAR Y CONECTAR</button>
       </div>
     </div>
   </div>
-
   <p style="font-size:11px;color:var(--mut);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;">¿Quién sos?</p>
   <div class="role-bar">
-    <button class="rbtn" id="r-campo"    onclick="setRole('campo')">🌾 Campo</button>
-    <button class="rbtn" id="r-balanza"  onclick="setRole('balanza')">⚖️ Balanza</button>
-    <button class="rbtn" id="r-logistica"onclick="setRole('logistica')">🚛 Logística</button>
-    <button class="rbtn" id="r-admin"    onclick="setRole('admin')">📊 Admin</button>
+    <button class="rbtn" id="r-campo"     onclick="setRole('campo')">🌾 Campo</button>
+    <button class="rbtn" id="r-balanza"   onclick="setRole('balanza')">⚖️ Balanza</button>
+    <button class="rbtn" id="r-logistica" onclick="setRole('logistica')">🚛 Logística</button>
+    <button class="rbtn" id="r-admin"     onclick="setRole('admin')">📊 Admin</button>
   </div>
   <div class="btn-grid" id="home-btns"></div>
 </div>
 
-<!-- ═══════ CARGAR CAMPO ═══════ -->
+<!-- CARGAR CAMPO -->
 <div class="scr" id="scr-campo">
-  <div class="sec-hdr">📅 Identificación</div>
+  <div class="sec-hdr">📅 Fecha y Establecimiento</div>
   <div class="frow fld">
     <div><label>Fecha</label><input type="date" id="cf-fecha"></div>
-    <div><label>Establecimiento</label>
-      <select id="cf-campo" onchange="onCampoChange('cf')"><option value="">— Seleccionar —</option></select>
-    </div>
+    <div><label>Establecimiento</label><select id="cf-campo" onchange="onCampoChangeCF()"><option value="">— Seleccionar —</option></select></div>
   </div>
-  <div class="frow fld">
-    <div><label>Lote</label><select id="cf-lote" onchange="onLoteChange('cf')"><option value="">—</option></select></div>
-    <div><label>Cultivo</label><select id="cf-cultivo"><option value="">—</option></select></div>
-  </div>
-  <div class="fld"><label>Contratista</label><select id="cf-contratista"><option value="">—</option></select></div>
 
-  <div class="sec-hdr">📈 Avance del día</div>
+  <div class="sec-hdr">🗂 Lotes y Hectáreas</div>
+  <div id="cf-lotes-wrap"><div class="empty" style="padding:16px;"><p>Seleccioná un establecimiento</p></div></div>
+
+  <div class="sec-hdr">👷 Contratistas</div>
+  <div id="cf-contratistas-wrap"></div>
+  <button class="add-btn" onclick="addContratista()" style="width:100%;margin-bottom:8px;">+ Agregar contratista</button>
+
+  <div class="sec-hdr">📊 Datos adicionales</div>
   <div class="frow fld">
-    <div><label>Has. cosechadas hoy</label><input type="number" id="cf-has" placeholder="50" step="0.1" min="0"></div>
-    <div><label>Humedad (%)</label><input type="number" id="cf-humedad" placeholder="18.5" step="0.1" min="0" max="40"></div>
-  </div>
-  <div class="sec-hdr">⚠️ Pérdida de cosecha</div>
-  <div class="frow fld">
+    <div><label>Humedad promedio (%)</label><input type="number" id="cf-humedad" placeholder="18.5" step="0.1"></div>
     <div>
       <label>Pérdida (kg/ha)</label>
-      <input type="number" id="cf-perdida-kgha" placeholder="0" step="0.1" min="0" oninput="calcPerdidaTotal()">
-    </div>
-    <div>
-      <label>Total pérdida (kg)</label>
-      <input type="number" id="cf-perdida-total" class="neto" readonly placeholder="—">
+      <input type="number" id="cf-perdida" placeholder="0" step="0.1" oninput="calcPerdida()">
     </div>
   </div>
-  <div class="fld">
-    <label>Causa de pérdida</label>
-    <select id="cf-perdida-causa">
-      <option value="">— Sin pérdida —</option>
-      <option>Velocidad de cosechadora</option>
-      <option>Altura de corte</option>
-      <option>Vuelco / encamado</option>
-      <option>Desgrane previo</option>
-      <option>Falla mecánica</option>
-      <option>Otra</option>
-    </select>
-  </div>
-  <!-- avance restante display -->
-  <div id="cf-avance-info" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:10px 14px;margin-bottom:10px;display:none;">
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mut);">
-      <span>Has. del lote</span><span id="ci-total">—</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--mut);margin-top:4px;">
-      <span>Ya cosechadas</span><span id="ci-ya">—</span>
-    </div>
-    <div style="display:flex;justify-content:space-between;font-size:13px;color:var(--goldl);margin-top:6px;font-weight:600;">
-      <span>Restante</span><span id="ci-resta">—</span>
-    </div>
-    <div class="prog-bg" style="margin-top:8px;margin-bottom:0;">
-      <div class="prog-fill" id="ci-prog" style="width:0%"></div>
-    </div>
-  </div>
-
   <div class="frow fld">
-    <div><label>Kg estimados campo</label><input type="number" id="cf-kg-campo" placeholder="18000" step="1" min="0"></div>
-    <div><label>Rendimiento (qq/ha)</label><input type="number" id="cf-rinde" placeholder="35" step="0.1" min="0" oninput="calcKgCampo()"></div>
+    <div>
+      <label>Causa pérdida</label>
+      <select id="cf-perdida-causa">
+        <option value="">— Sin pérdida —</option>
+        <option>Velocidad cosechadora</option><option>Altura de corte</option>
+        <option>Vuelco / encamado</option><option>Desgrane previo</option>
+        <option>Falla mecánica</option><option>Otra</option>
+      </select>
+    </div>
+    <div><label>Total pérdida (kg)</label><input type="number" id="cf-perdida-tot" class="neto" readonly placeholder="—"></div>
   </div>
-  <div style="font-size:11px;color:var(--mut);margin-top:-6px;margin-bottom:10px;">💡 Podés poner kg directamente o calcular por rendimiento</div>
   <div class="fld"><label>Observaciones</label><textarea id="cf-obs" placeholder="Demoras, problemas, novedades..."></textarea></div>
 
-  <div class="sec-hdr">📄 Carta de Porte (PDF)</div>
+  <div class="sec-hdr">📄 Cartas de Porte CPE</div>
   <div class="pdf-zone">
-    <input type="file" accept="application/pdf" multiple id="cf-pdf" onchange="handlePDF(this,'cf')">
-    <div style="font-size:24px;margin-bottom:4px;">📄</div>
-    <p>Tocá para adjuntar carta de porte</p>
+    <input type="file" accept="application/pdf" multiple id="cf-pdf" onchange="handlePDF(this)">
+    <div style="font-size:28px;margin-bottom:4px;">📄</div>
+    <p>Tocá para adjuntar una o más CPE (PDF)</p>
   </div>
   <div id="cf-pdf-list"></div>
-
   <button class="save-btn" onclick="guardarCampo()">GUARDAR REGISTRO</button>
 </div>
 
-<!-- ═══════ CARGAR BALANZA ═══════ -->
-<div class="scr" id="scr-balanza">
+<!-- CAMIONES EN CAMPO -->
+<div class="scr" id="scr-campo-cam">
+  <div style="margin-bottom:12px;">
+    <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="cc-buscar" placeholder="Buscar patente o campo..." oninput="renderCampoCam()">
+  </div>
+  <div id="cc-lista"></div>
+</div>
 
-  <!-- PASO 1: seleccionar camión de logística -->
-  <div id="bal-paso1">
-    <div class="sec-hdr">🚛 Seleccionar camión</div>
-    <div style="display:flex;gap:8px;margin-bottom:10px;">
-      <input style="flex:1;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="bf-buscar" placeholder="Buscar patente, campo o chofer..." oninput="renderBalanzaLista()">
-    </div>
-    <div id="bal-log-lista"></div>
-    <div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--brd);">
-      <p style="font-size:11px;color:var(--mut);margin-bottom:6px;">¿Camión sin registro de logística?</p>
-      <button class="add-btn" onclick="balSinLogistica()">+ Cargar sin logística</button>
+<!-- BALANZA -->
+<div class="scr" id="scr-balanza">
+  <div id="bal-p1">
+    <div class="sec-hdr" style="margin-top:0;">🚛 Seleccionar camión de logística</div>
+    <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;margin-bottom:10px;" id="bf-buscar" placeholder="Buscar patente, campo, chofer..." oninput="renderBalLista()">
+    <div id="bal-lista"></div>
+    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--brd);">
+      <button class="add-btn" onclick="balSinLog()">+ Cargar sin logística</button>
     </div>
   </div>
-
-  <!-- PASO 2: cargar pesos -->
-  <div id="bal-paso2" style="display:none;">
-    <!-- info del camión seleccionado -->
-    <div id="bal-camion-info" style="background:rgba(201,168,76,.08);border:1px solid rgba(201,168,76,.2);border-radius:10px;padding:12px 14px;margin-bottom:14px;">
-      <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--gold);" id="bal-info-pat">—</div>
-      <div style="font-size:12px;color:var(--mut);margin-top:3px;" id="bal-info-detalle">—</div>
-      <button class="add-btn" style="margin-top:8px;font-size:11px;" onclick="balCambiarPatente()">✏ Cambiar patente</button>
-    </div>
-
-    <!-- cambio de patente (oculto por defecto) -->
-    <div id="bal-cambio-pat" style="display:none;" class="fld">
-      <label>Nueva patente chasis</label>
-      <select id="bf-patente-nueva"><option value="">—</option></select>
-      <button class="add-btn" onclick="openModal('modal-pat')" style="margin-top:4px;">+ Nueva patente</button>
-    </div>
-
+  <div id="bal-p2" style="display:none;">
+    <div class="info-box" id="bal-cam-info"></div>
     <div class="sec-hdr">⚖️ Pesajes</div>
     <div class="frow3 fld">
       <div><label>Tara (kg)</label><input type="number" id="bf-tara" placeholder="10000" oninput="calcNeto()"></div>
       <div><label>Bruto (kg)</label><input type="number" id="bf-bruto" placeholder="28000" oninput="calcNeto()"></div>
       <div><label>Neto (kg)</label><input type="number" id="bf-neto" class="neto" readonly placeholder="—"></div>
     </div>
+    <div class="sec-hdr">🎯 Cupo / Puerto</div>
+    <div class="fld">
+      <label>Asignar cupo disponible</label>
+      <select id="bf-cupo"><option value="">— Sin cupo / no va a puerto —</option></select>
+    </div>
+    <div id="bal-devolver" style="display:none;margin-bottom:10px;">
+      <button class="add-btn" style="color:var(--red);border-color:rgba(192,57,43,.4);width:100%;" onclick="abrirDevolver()">↩ Devolver cupo asignado</button>
+    </div>
     <div class="fld"><label>Observaciones</label><textarea id="bf-obs" placeholder="Novedades..."></textarea></div>
-
     <div style="display:flex;gap:10px;">
       <button class="add-btn" onclick="balVolver()" style="padding:12px 16px;">← Volver</button>
-      <button class="save-btn" style="flex:1;margin-top:0;" onclick="guardarBalanza()">GUARDAR BALANZA</button>
+      <button class="save-btn" style="flex:1;margin-top:0;" onclick="guardarBalanza()">GUARDAR</button>
     </div>
   </div>
 </div>
 
-<!-- ═══════ LOGÍSTICA ═══════ -->
+<!-- LOGÍSTICA -->
 <div class="scr" id="scr-logistica">
-  <div class="sec-hdr">🚛 Camión</div>
+  <div class="sec-hdr">🚛 Datos del Camión</div>
   <div class="frow fld">
-    <div><label>Patente Chasis</label><select id="lf-ch"><option value="">—</option></select></div>
-    <div><label>Patente Acoplado</label><input type="text" id="lf-ac" placeholder="ABC 001" style="text-transform:uppercase;"></div>
+    <div><label>Patente Chasis</label><input type="text" id="lf-ch" placeholder="ABC 123" oninput="this.value=this.value.toUpperCase()"></div>
+    <div><label>Patente Acoplado</label><input type="text" id="lf-ac" placeholder="DEF 456" oninput="this.value=this.value.toUpperCase()"></div>
   </div>
   <div class="sec-hdr">👤 Chofer</div>
   <div class="frow fld">
     <div><label>Nombre</label><input type="text" id="lf-chofer" placeholder="Juan Pérez"></div>
-    <div><label>CUIT Chofer</label><input type="text" id="lf-cuit-ch" placeholder="20-12345678-9" maxlength="13" oninput="fmtCUIT(this)"><div class="cuit-hint">20-XXXXXXXX-X</div></div>
+    <div><label>CUIT</label><input type="text" id="lf-cuit-ch" placeholder="20-12345678-9" maxlength="13" oninput="fmtCUIT(this)">
+      <div style="font-size:10px;color:var(--mut);margin-top:2px;">20-XXXXXXXX-X</div></div>
   </div>
   <div class="sec-hdr">🏢 Transporte</div>
   <div class="frow fld">
     <div><label>Empresa</label><input type="text" id="lf-transp" placeholder="Trans. García SA"></div>
-    <div><label>CUIT Transporte</label><input type="text" id="lf-cuit-tr" placeholder="30-12345678-9" maxlength="13" oninput="fmtCUIT(this)"></div>
+    <div><label>CUIT</label><input type="text" id="lf-cuit-tr" placeholder="30-12345678-9" maxlength="13" oninput="fmtCUIT(this)"></div>
   </div>
   <div class="sec-hdr">📍 Destino</div>
-  <div id="dest-chips"></div>
-  <div class="frow fld" style="margin-top:8px;">
+  <div id="dest-chips" style="margin-bottom:8px;"></div>
+  <div style="display:flex;gap:8px;" class="fld">
     <input type="text" id="lf-nuevo-dest" placeholder="Nuevo destino...">
     <button class="add-btn" style="white-space:nowrap;" onclick="addDestino()">+ Agregar</button>
   </div>
-  <div class="sec-hdr">🌾 Cultivo</div>
+  <div class="sec-hdr">🌾 Campo / Cultivo</div>
   <div class="frow fld">
     <div><label>Establecimiento</label><select id="lf-campo" onchange="onCampoChange('lf')"><option value="">—</option></select></div>
     <div><label>Lote</label><select id="lf-lote"><option value="">—</option></select></div>
@@ -377,171 +322,170 @@ textarea{resize:vertical;min-height:68px;}
   <button class="save-btn" onclick="guardarLogistica()">GUARDAR LOGÍSTICA</button>
 </div>
 
-<!-- ═══════ VER AVANCE ═══════ -->
-<div class="scr" id="scr-avance">
-  <div class="sum-strip" id="av-sum"></div>
-  <div class="filter-bar">
-    <select class="fsel" id="av-fil-cult" onchange="renderAvance()"><option value="">Todos los cultivos</option></select>
-    <input style="flex:1;min-width:100px;background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--wh);font-size:12px;font-family:Nunito,sans-serif;outline:none;" id="av-buscar" placeholder="Buscar..." oninput="renderAvance()">
+<!-- CUPOS -->
+<div class="scr" id="scr-cupos">
+  <div class="sec-hdr" style="margin-top:0;">➕ Cargar cupos del día</div>
+  <div class="frow fld">
+    <div><label>Fecha</label><input type="date" id="cupo-fecha"></div>
+    <div><label>Establecimiento</label><select id="cupo-campo"><option value="">—</option></select></div>
   </div>
+  <div class="frow fld">
+    <div><label>Cantidad de cupos</label><input type="number" id="cupo-cant" placeholder="8" min="1"></div>
+    <div><label>Destino / Puerto</label><input type="text" id="cupo-destino" placeholder="Puerto Rosario"></div>
+  </div>
+  <button class="save-btn" onclick="guardarCupo()">GUARDAR CUPO</button>
+  <div class="sec-hdr">📋 Cupos de hoy</div>
+  <div id="cupos-lista"></div>
+</div>
+
+<!-- VER AVANCE -->
+<div class="scr" id="scr-avance">
+  <div class="sec-hdr" style="margin-top:0;">🌱 Filtrar por cultivo</div>
+  <div id="cult-filter" style="margin-bottom:10px;"></div>
+  <div class="sum-strip" id="av-sum"></div>
+  <input style="width:100%;background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:7px 10px;color:var(--wh);font-size:12px;font-family:Nunito,sans-serif;outline:none;margin-bottom:12px;" id="av-buscar" placeholder="Buscar establecimiento..." oninput="renderAvance()">
   <div id="av-list"></div>
 </div>
 
-<!-- ═══════ VER CAMIONES ═══════ -->
+<!-- VER CAMIONES -->
 <div class="scr" id="scr-camiones">
-  <div class="filter-bar">
-    <select class="fsel" id="fc-fecha" onchange="renderCamiones()"><option value="">Todas fechas</option></select>
-    <select class="fsel" id="fc-campo" onchange="renderCamiones()"><option value="">Todos campos</option></select>
-    <select class="fsel" id="fc-lote"  onchange="renderCamiones()"><option value="">Todos lotes</option></select>
+  <div style="display:flex;gap:8px;overflow-x:auto;padding-bottom:4px;margin-bottom:12px;">
+    <select style="background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--wh);font-size:12px;font-family:Nunito,sans-serif;min-width:110px;flex-shrink:0;-webkit-appearance:none;" id="fc-fecha" onchange="renderCamiones()"><option value="">Todas fechas</option></select>
+    <select style="background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--wh);font-size:12px;font-family:Nunito,sans-serif;min-width:110px;flex-shrink:0;-webkit-appearance:none;" id="fc-campo" onchange="renderCamiones()"><option value="">Todos campos</option></select>
+    <select style="background:rgba(255,255,255,.06);border:1px solid var(--brd);border-radius:8px;padding:6px 10px;color:var(--wh);font-size:12px;font-family:Nunito,sans-serif;min-width:90px;flex-shrink:0;-webkit-appearance:none;" id="fc-estado" onchange="renderCamiones()"><option value="">Todos</option><option value="pesado">Pesados</option><option value="pendiente">Pendientes</option></select>
   </div>
   <div class="sum-strip" id="cam-sum"></div>
   <div id="cam-list"></div>
 </div>
 
-<!-- ═══════ OBSERVACIONES ═══════ -->
-<div class="scr" id="scr-obs">
-  <div id="obs-list"></div>
+<!-- EXPORTAR CPE -->
+<div class="scr" id="scr-export">
+  <div class="info-box">
+    <div style="font-size:13px;color:var(--wh);margin-bottom:4px;">📊 Base de datos de Cartas de Porte</div>
+    <div style="font-size:11px;color:var(--mut);">Exporta todos los datos extraídos de las CPE adjuntadas en campo.</div>
+  </div>
+  <div class="sum-strip" id="export-sum"></div>
+  <div id="export-preview"></div>
+  <button class="save-btn" onclick="exportarExcel()" style="margin-top:8px;">⬇ EXPORTAR EXCEL</button>
 </div>
 
-<!-- ═══════ MODAL: NUEVA PATENTE ═══════ -->
-<div class="modal-bg" id="modal-pat">
+<!-- MODAL KG ESTIMADOS -->
+<div class="modal-bg" id="modal-kg">
   <div class="modal">
-    <button class="modal-close" onclick="closeModal('modal-pat')">×</button>
-    <h3>NUEVA PATENTE</h3>
-    <div class="fld"><label>Chasis</label><input type="text" id="np-ch" placeholder="ABC 123" style="text-transform:uppercase;"></div>
-    <div class="fld"><label>Acoplado</label><input type="text" id="np-ac" placeholder="DEF 456" style="text-transform:uppercase;"></div>
-    <button class="save-btn" onclick="saveNewPat()" style="margin-top:8px;">AGREGAR</button>
+    <button class="modal-close" onclick="closeModal('modal-kg')">×</button>
+    <h3>KG ESTIMADOS</h3>
+    <div id="modal-kg-info" style="font-size:12px;color:var(--mut);margin-bottom:12px;"></div>
+    <div class="fld"><label>Kg estimados cargados en este camión</label><input type="number" id="mk-kg" placeholder="18000" step="100"></div>
+    <div class="fld"><label>Observaciones</label><textarea id="mk-obs" rows="2" placeholder="Humedad, condiciones..."></textarea></div>
+    <button class="save-btn" onclick="guardarKg()" style="margin-top:8px;">GUARDAR</button>
   </div>
 </div>
 
-<div class="send-ov" id="send-ov">
-  <div class="spinner"></div>
-  <span style="color:var(--wh);font-size:14px;font-weight:600;">Guardando...</span>
+<!-- MODAL DEVOLVER CUPO -->
+<div class="modal-bg" id="modal-dev">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal('modal-dev')">×</button>
+    <h3>DEVOLVER CUPO</h3>
+    <div id="modal-dev-info" style="font-size:13px;color:var(--mut);margin-bottom:16px;"></div>
+    <button class="save-btn" onclick="confirmarDevolver()" style="background:var(--red);margin-top:0;">DEVOLVER CUPO</button>
+  </div>
 </div>
+
+<div class="send-ov" id="send-ov"><div class="spinner"></div><span style="color:var(--wh);font-size:14px;font-weight:600;">Guardando...</span></div>
 <div class="toast" id="toast"></div>
 
 <script>
-// ══════════════════════════════════════════
-// DATOS MAESTROS — Plan de Siembra 25/26
-// ══════════════════════════════════════════
+// ════════════════════════════════════
+// CAMPOS MAESTROS (Plan Siembra 25/26)
+// ════════════════════════════════════
 const CAMPOS = {"CAM":{"has_total":1006.0,"lotes":[{"nombre":"1_Cloquell","cultivo":"SOJA 2da","has":45.0},{"nombre":"1_JAC","cultivo":"SOJA 2da","has":48.0},{"nombre":"3_4_La Angela","cultivo":"SOJA 2da","has":177.0},{"nombre":"1_Landaburu","cultivo":"SOJA 2da","has":42.0},{"nombre":"1_Los Cuises","cultivo":"SOJA 1ra","has":14.0},{"nombre":"1_Ramos","cultivo":"MAIZ 1ra","has":105.0},{"nombre":"2_La Angela","cultivo":"MAIZ 1ra","has":117.0},{"nombre":"2_Los Cuises","cultivo":"SOJA 2da","has":94.0},{"nombre":"1A_La Angela","cultivo":"SOJA 1ra","has":54.0},{"nombre":"3_Los Cuises","cultivo":"SOJA 2da","has":133.0},{"nombre":"1_La Angela","cultivo":"SOJA 2da","has":50.0},{"nombre":"4_Los Cuises","cultivo":"MAIZ 1ra","has":127.0}]},"CARYJUAN":{"has_total":1877.7,"lotes":[{"nombre":"01S_Caryjuan","cultivo":"TRIGO","has":96.8},{"nombre":"01S_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":93.2},{"nombre":"02S_Caryjuan","cultivo":"TRIGO","has":184.9},{"nombre":"01S_Caryjuan","cultivo":"SOJA 2da ORGANICA","has":96.8},{"nombre":"03S_Caryjuan","cultivo":"TRIGO","has":135.5},{"nombre":"02S_Caryjuan","cultivo":"SOJA 2da ORGANICA","has":184.9},{"nombre":"03S_Caryjuan","cultivo":"SOJA 2da ORGANICA","has":135.5},{"nombre":"04S_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":123.5},{"nombre":"04S_Caryjuan","cultivo":"COBERTURA","has":123.5},{"nombre":"05_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":32.1},{"nombre":"05_Caryjuan","cultivo":"COBERTURA","has":32.1},{"nombre":"05A_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":35.5},{"nombre":"05A_Caryjuan","cultivo":"COBERTURA","has":35.5},{"nombre":"06_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":78.0},{"nombre":"06_Caryjuan","cultivo":"COBERTURA","has":78.0},{"nombre":"07_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":83.0},{"nombre":"07_Caryjuan","cultivo":"COBERTURA","has":83.0},{"nombre":"08_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":33.5},{"nombre":"12_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":25.0},{"nombre":"13_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":22.8},{"nombre":"14_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":28.5},{"nombre":"15_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":37.0},{"nombre":"16_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":34.3},{"nombre":"17_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":32.5},{"nombre":"18_Caryjuan","cultivo":"SOJA 1ra ORGANICA","has":32.3}]},"DON CARLOS":{"has_total":329.0,"lotes":[{"nombre":"01_Don Carlos","cultivo":"CAMELINA","has":164.5},{"nombre":"01_Don Carlos","cultivo":"SOJA 2da NO GMO","has":164.5}]},"EL CARDENAL":{"has_total":576.0,"lotes":[{"nombre":"El_Largo_El Cardenal","cultivo":"SOJA 2da","has":217.0},{"nombre":"El_Largo_El Cardenal","cultivo":"TRIGO","has":217.0},{"nombre":"San_Luis_ El Cardenal","cultivo":"SOJA 2da","has":71.0},{"nombre":"San_Luis_ El Cardenal","cultivo":"TRIGO","has":71.0}]},"EL FORTIN":{"has_total":117.6,"lotes":[{"nombre":"01_El Fortín","cultivo":"SOJA 1ra","has":117.6}]},"EL GRILLO":{"has_total":276.2,"lotes":[{"nombre":"05-06_El Grillo","cultivo":"COBERTURA","has":52.5},{"nombre":"05-06_El Grillo","cultivo":"SOJA 1ra ORGANICA","has":52.5},{"nombre":"10_El Grillo","cultivo":"COBERTURA","has":85.6},{"nombre":"10_El Grillo","cultivo":"SOJA 1ra ORGANICA","has":85.6}]},"EL HARAS":{"has_total":655.4,"lotes":[{"nombre":"10H_El Haras","cultivo":"MAIZ 1ra","has":16.3},{"nombre":"11H_El Haras","cultivo":"MAIZ 1ra","has":24.3},{"nombre":"1G_El Haras","cultivo":"MAIZ 1ra","has":45.2},{"nombre":"01_02El Haras","cultivo":"SOJA 1ra","has":93.8},{"nombre":"02_03_04H_El Haras","cultivo":"SOJA 1ra","has":66.0},{"nombre":"03_04El Haras","cultivo":"SOJA 1ra","has":119.5},{"nombre":"05_06_07H_El Haras","cultivo":"SOJA 1ra","has":60.3},{"nombre":"05_06El Haras","cultivo":"SOJA 1ra","has":92.6},{"nombre":"08H_El Haras","cultivo":"SOJA 1ra","has":2.4},{"nombre":"09H_El Haras","cultivo":"SOJA 1ra","has":11.4},{"nombre":"11B/C_El Haras","cultivo":"SOJA 1ra","has":10.8},{"nombre":"12A_El Haras","cultivo":"SOJA 1ra","has":44.9},{"nombre":"12B_CEl Haras","cultivo":"SOJA 1ra","has":47.8},{"nombre":"1H_El Haras","cultivo":"SOJA 1ra","has":20.0}]},"EL INFIERNO DRIBEL":{"has_total":424.3,"lotes":[{"nombre":"1_El Infierno Dribel","cultivo":"SOJA 1ra NO GMO","has":27.1},{"nombre":"2_El Infierno Dribel","cultivo":"SOJA 1ra NO GMO","has":33.5},{"nombre":"22_El Infierno Dribel","cultivo":"TRIGO","has":45.0},{"nombre":"22_El Infierno Dribel","cultivo":"SOJA 2da ORGANICA","has":45.0},{"nombre":"3I_El Infierno Dribel","cultivo":"TRIGO","has":73.0},{"nombre":"3I_El Infierno Dribel","cultivo":"SOJA 2da ORGANICA","has":73.0},{"nombre":"8_El Infierno Drible","cultivo":"SOJA 1ra","has":79.5},{"nombre":"9_El Infierno Drible","cultivo":"SOJA 1ra","has":48.1}]},"EL RECUERDO":{"has_total":956.7,"lotes":[{"nombre":"01_El Recuerdo","cultivo":"SOJA 2da NO GMO","has":45.4},{"nombre":"01_El Recuerdo","cultivo":"TRIGO","has":45.4},{"nombre":"02_El Recuerdo","cultivo":"MAIZ 1ra","has":51.8},{"nombre":"03A_El Recuerdo","cultivo":"MAIZ 1ra","has":79.4},{"nombre":"04_El Recuerdo","cultivo":"MAIZ 1ra","has":219.5},{"nombre":"05_El Recuerdo","cultivo":"SOJA 2da NO GMO","has":86.9},{"nombre":"05_El Recuerdo","cultivo":"TRIGO","has":86.9},{"nombre":"06_El Recuerdo","cultivo":"SOJA 2da NO GMO","has":122.8},{"nombre":"06_El Recuerdo","cultivo":"TRIGO","has":122.8},{"nombre":"07_El Recuerdo","cultivo":"GIRASOL","has":47.8},{"nombre":"07_El Recuerdo","cultivo":"COBERTURA","has":47.8}]},"EL TEJADO":{"has_total":598.3,"lotes":[{"nombre":"01_El Tejado","cultivo":"TRIGO","has":78.0},{"nombre":"01_El Tejado","cultivo":"SOJA 2da NO GMO","has":78.0},{"nombre":"02_El Tejado","cultivo":"TRIGO","has":16.3},{"nombre":"02_El Tejado","cultivo":"SOJA 2da NO GMO","has":16.3},{"nombre":"03_El Tejado","cultivo":"TRIGO","has":27.0},{"nombre":"03_El Tejado","cultivo":"SOJA 2da NO GMO","has":27.0},{"nombre":"Platano_El Tejado","cultivo":"TRIGO","has":105.2},{"nombre":"Platano_El Tejado","cultivo":"SOJA 2da","has":105.2},{"nombre":"Puesto_Lopez_El Tejado","cultivo":"MAIZ 1ra","has":145.3}]},"FRERS":{"has_total":248.6,"lotes":[{"nombre":"01_FRERS","cultivo":"SOJA 1ra","has":149.3},{"nombre":"02_FRERS","cultivo":"SOJA 1ra","has":99.3}]},"JUANCITO":{"has_total":1454.3,"lotes":[{"nombre":"01_Juancito","cultivo":"MAIZ FLINT","has":101.0},{"nombre":"02_Juancito","cultivo":"SOJA 2da ORGANICA","has":106.2},{"nombre":"03_Juancito","cultivo":"SOJA 1ra ORGANICA","has":50.8},{"nombre":"03_Juancito","cultivo":"COBERTURA","has":50.8},{"nombre":"04_Juancito","cultivo":"MAIZ FLINT","has":72.0},{"nombre":"06_Juancito","cultivo":"SOJA 1ra ORGANICA","has":86.0},{"nombre":"07_Juancito","cultivo":"SOJA 1ra ORGANICA","has":108.8},{"nombre":"07_Juancito","cultivo":"COBERTURA","has":108.8},{"nombre":"02_Juancito","cultivo":"TRIGO","has":106.2},{"nombre":"08_Juancito","cultivo":"SOJA 1ra ORGANICA","has":55.7},{"nombre":"09/10/11_Juancito","cultivo":"SOJA 2da ORGANICA","has":244.5},{"nombre":"12/13_Juancito","cultivo":"MAIZ FLINT","has":119.0},{"nombre":"09/10/11_Juancito","cultivo":"TRIGO","has":244.5}]},"LA CELINA":{"has_total":72.4,"lotes":[{"nombre":"Esquina La Celina","cultivo":"MAIZ 2da FLINT","has":36.2},{"nombre":"Esquina La Celina","cultivo":"ARVEJA VERDE","has":36.2}]},"LA CIRCUNSTANCIA":{"has_total":1173.9,"lotes":[{"nombre":"Campamento_La Circunstacia","cultivo":"MAIZ 1ra","has":92.0},{"nombre":"Corrales_La Circunstacia","cultivo":"MAIZ 1ra","has":162.9},{"nombre":"Entrada_La Circunstacia","cultivo":"SOJA 2da","has":60.0},{"nombre":"Entrada_La Circunstacia","cultivo":"TRIGO","has":60.0},{"nombre":"La Beba 1_La Circunstacia","cultivo":"MAIZ 1ra","has":111.0},{"nombre":"La Beba 2_La Circunstacia","cultivo":"SOJA 2da","has":106.0},{"nombre":"La Beba 2_La Circunstacia","cultivo":"TRIGO","has":106.0},{"nombre":"Las Moras_La Circunstacia","cultivo":"SOJA 2da","has":120.0},{"nombre":"Las Moras_La Circunstacia","cultivo":"TRIGO","has":120.0},{"nombre":"Monte Redondo_La Circunstacia","cultivo":"SOJA 2da","has":24.0},{"nombre":"Monte Redondo_La Circunstacia","cultivo":"TRIGO","has":24.0},{"nombre":"Pastura_La Circunstacia","cultivo":"SOJA 2da","has":94.0},{"nombre":"Pastura_La Circunstacia","cultivo":"TRIGO","has":94.0}]},"LA MATILDE":{"has_total":1247.0,"lotes":[{"nombre":"01_La Matilde","cultivo":"TRIGO","has":33.8},{"nombre":"01_La Matilde","cultivo":"SOJA 2da NO GMO","has":33.8},{"nombre":"02_La Matilde","cultivo":"TRIGO","has":70.0},{"nombre":"02_La Matilde","cultivo":"SOJA 2da NO GMO","has":70.0},{"nombre":"03_La Matilde","cultivo":"TRIGO","has":105.0},{"nombre":"03_La Matilde","cultivo":"SOJA 2da NO GMO","has":105.0},{"nombre":"04_La Matilde","cultivo":"TRIGO","has":106.5},{"nombre":"04_La Matilde","cultivo":"SOJA 2da NO GMO","has":106.5},{"nombre":"23_La Matilde","cultivo":"TRIGO","has":64.5},{"nombre":"23_La Matilde","cultivo":"SOJA 2da NO GMO","has":64.5},{"nombre":"25_La Matilde","cultivo":"TRIGO","has":42.0},{"nombre":"25_La Matilde","cultivo":"SOJA 2da NO GMO","has":42.0},{"nombre":"28_La Matilde","cultivo":"MAIZ 1ra","has":121.2},{"nombre":"31_La Matilde","cultivo":"MAIZ 1ra","has":81.5},{"nombre":"32_La Matilde","cultivo":"SOJA 1ra","has":75.3},{"nombre":"33a_La Matilde","cultivo":"SOJA 1ra","has":70.0},{"nombre":"33b_La Matilde","cultivo":"SOJA 1ra","has":55.5}]},"LA NUEVA DRIBEL":{"has_total":1163.3,"lotes":[{"nombre":"15A_La Nueva Dribel","cultivo":"MAIZ FLINT","has":55.2},{"nombre":"15B_La Nueva Dribel","cultivo":"MAIZ FLINT","has":48.9},{"nombre":"01N_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":64.1},{"nombre":"01S_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":43.2},{"nombre":"07N_La Nueva Dribel","cultivo":"TRIGO","has":55.0},{"nombre":"02_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":15.4},{"nombre":"07N_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":55.0},{"nombre":"07S_La Nueva Dribel","cultivo":"SOJA 1ra NO GMO","has":54.8},{"nombre":"10_La Nueva Dribel","cultivo":"SOJA 1ra NO GMO","has":64.9},{"nombre":"11N_La Nueva Dribel","cultivo":"SOJA 1ra","has":13.4},{"nombre":"13_La Nueva Dribel","cultivo":"SOJA 1ra ORGANICA","has":90.4},{"nombre":"15C_La Nueva Dribel","cultivo":"SOJA 1ra","has":60.7},{"nombre":"17N_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":44.4},{"nombre":"17N_La Nueva Dribel","cultivo":"TRIGO","has":44.4},{"nombre":"18_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":74.8},{"nombre":"18_La Nueva Dribel","cultivo":"TRIGO","has":74.8},{"nombre":"19_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":83.3},{"nombre":"19_La Nueva Dribel","cultivo":"TRIGO","has":83.3},{"nombre":"20N_La Nueva Dribel","cultivo":"SOJA 1ra NO GMO","has":49.6},{"nombre":"20S_La Nueva Dribel","cultivo":"SOJA 2da ORGANICA","has":37.2},{"nombre":"20S_La Nueva Dribel","cultivo":"TRIGO","has":36.0},{"nombre":"Pista_La Nueva Drible","cultivo":"SOJA 2da ORGANICA","has":7.2},{"nombre":"Pista_La Nueva Drible","cultivo":"TRIGO","has":7.2}]},"LA PEREGRINA":{"has_total":354.0,"lotes":[{"nombre":"01_LA PEREGRINA","cultivo":"SOJA 2da","has":177.0},{"nombre":"01_LA PEREGRINA","cultivo":"TRIGO","has":177.0}]},"LAS PEPITAS DRIBEL":{"has_total":1231.5,"lotes":[{"nombre":"10_La Pepita Dribel","cultivo":"TRIGO","has":53.0},{"nombre":"13_La Pepita Dribel","cultivo":"GIRASOL","has":60.6},{"nombre":"8_La Pepita Dribel","cultivo":"MAIZ FLINT","has":93.2},{"nombre":"11_La Pepita Dribel","cultivo":"SOJA 1ra","has":89.1},{"nombre":"15_La Pepita Dribel","cultivo":"SOJA 1ra","has":114.3},{"nombre":"14_La Pepita Dribel","cultivo":"TRIGO","has":97.0},{"nombre":"20_La Pepita Dribel","cultivo":"SOJA 1ra","has":46.9},{"nombre":"23_La Pepita Dribel","cultivo":"SOJA 1ra","has":46.6},{"nombre":"22_La Pepita Dribel","cultivo":"TRIGO","has":50.0},{"nombre":"3_La Pepita Dribel","cultivo":"SOJA 1ra","has":84.0},{"nombre":"4_La Pepita Dribel","cultivo":"SOJA 1ra","has":48.7},{"nombre":"5_La Pepita Dribel","cultivo":"SOJA 1ra","has":81.0},{"nombre":"6_La Pepita Dribel","cultivo":"SOJA 1ra","has":129.7},{"nombre":"9_La Pepita Dribel","cultivo":"SOJA 1ra","has":37.2},{"nombre":"10_La Pepita Dribel","cultivo":"SOJA 2da ORGANICA","has":53.0},{"nombre":"14_La Pepita Dribel","cultivo":"SOJA 2da ORGANICA","has":97.0},{"nombre":"22_La Pepita Dribel","cultivo":"SOJA 2da ORGANICA","has":50.0}]},"LIMA":{"has_total":86.0,"lotes":[{"nombre":"01_Lima","cultivo":"SOJA 2da","has":86.0}]},"LOS SOJALES":{"has_total":831.7,"lotes":[{"nombre":"01_Los Sojales","cultivo":"SOJA 2da","has":62.0},{"nombre":"01_Los Sojales","cultivo":"TRIGO","has":62.0},{"nombre":"02_Los Sojales","cultivo":"SOJA 2da","has":104.6},{"nombre":"02_Los Sojales","cultivo":"TRIGO","has":104.6},{"nombre":"03_Los Sojales","cultivo":"MAIZ SEMILLA","has":70.0},{"nombre":"04_Los Sojales","cultivo":"MAIZ SEMILLA","has":40.4},{"nombre":"05_Los Sojales","cultivo":"ARVEJA VERDE","has":66.6},{"nombre":"05_Los Sojales","cultivo":"SOJA 2da","has":66.6},{"nombre":"06_Los Sojales","cultivo":"ARVEJA VERDE","has":68.9},{"nombre":"06_Los Sojales","cultivo":"SOJA 2da","has":68.9},{"nombre":"07_Los Sojales","cultivo":"ARVEJA VERDE","has":19.5},{"nombre":"07_Los Sojales","cultivo":"SOJA 2da","has":19.5},{"nombre":"08_Los Sojales","cultivo":"ARVEJA VERDE","has":39.1},{"nombre":"08_Los Sojales","cultivo":"SOJA 2da","has":39.1}]},"MAHFUD":{"has_total":404.5,"lotes":[{"nombre":"MF_Arroyo Dulce","cultivo":"MAIZ 1ra","has":38.5},{"nombre":"MF_Hunter","cultivo":"MAIZ POP","has":99.9},{"nombre":"MF_La Vigia","cultivo":"SOJA 1ra NO GMO","has":195.4},{"nombre":"MF_Las Polvaredas","cultivo":"MAIZ 1ra","has":58.0},{"nombre":"MF_Las Polvaredas","cultivo":"MAIZ 1ra","has":12.7}]},"MARIA JOSEFINA":{"has_total":414.0,"lotes":[{"nombre":"01_Maria Josefina","cultivo":"TRIGO","has":207.0},{"nombre":"01_Maria Josefina","cultivo":"SOJA 2da","has":207.0}]},"NAZARENAS":{"has_total":711.8,"lotes":[{"nombre":"Anexo Camarasa_Nazarena","cultivo":"ARVEJA VERDE","has":17.8},{"nombre":"Palmera_Nazarena","cultivo":"MAIZ 2da FLINT","has":56.0},{"nombre":"Cholo Parra_Nazarena","cultivo":"ARVEJA VERDE","has":23.4},{"nombre":"Porteria - Tango_Nazarena","cultivo":"MAIZ 2da FLINT","has":86.1},{"nombre":"Loma_Nazarena","cultivo":"ARVEJA VERDE","has":21.5},{"nombre":"Sanchez - Tapera_Nazarena","cultivo":"MAIZ 2da FLINT","has":62.0},{"nombre":"Ombu/Gajo_Nazarena","cultivo":"ARVEJA VERDE","has":47.1},{"nombre":"Tala_Nazarena","cultivo":"MAIZ 2da FLINT","has":42.0},{"nombre":"Palmera_Nazarena","cultivo":"ARVEJA VERDE","has":56.0},{"nombre":"Anexo Camarasa_Nazarena","cultivo":"SOJA 2da NO GMO","has":17.8},{"nombre":"Porteria - Tango_Nazarena","cultivo":"ARVEJA VERDE","has":86.1},{"nombre":"Cholo Parra_Nazarena","cultivo":"SOJA 2da NO GMO","has":23.4},{"nombre":"Sanchez - Tapera_Nazarena","cultivo":"ARVEJA VERDE","has":62.0},{"nombre":"Loma_Nazarena","cultivo":"SOJA 2da NO GMO","has":21.5},{"nombre":"Tala_Nazarena","cultivo":"ARVEJA VERDE","has":42.0},{"nombre":"Ombu/Gajo_Nazarena","cultivo":"SOJA 2da NO GMO","has":47.1}]},"PUESTO LAS MULAS":{"has_total":462.0,"lotes":[{"nombre":"02_Puesto Las Mulas","cultivo":"CAMELINA","has":89.0},{"nombre":"1A_Puesto Las Mulas","cultivo":"CAMELINA","has":121.0},{"nombre":"04_Puesto Las Mulas","cultivo":"SOJA 1ra","has":42.0},{"nombre":"02_Puesto Las Mulas","cultivo":"SOJA 2da NO GMO","has":89.0},{"nombre":"1A_Puesto Las Mulas","cultivo":"SOJA 2da NO GMO","has":121.0}]},"SAN CARLOS":{"has_total":718.2,"lotes":[{"nombre":"01_Maria","cultivo":"TRIGO","has":239.4},{"nombre":"01_Matilde","cultivo":"SOJA 1ra NO GMO","has":226.8},{"nombre":"02_Matilde","cultivo":"SOJA 1ra NO GMO","has":13.0},{"nombre":"Banquina_San Carlos","cultivo":"SOJA 1ra NO GMO","has":2.7},{"nombre":"01_Maria","cultivo":"SOJA 2da NO GMO","has":236.4}]},"SAN EUGENIO":{"has_total":612.4,"lotes":[{"nombre":"01_San Eugenio","cultivo":"MAIZ 1ra","has":28.0},{"nombre":"10_San Eugenio","cultivo":"MAIZ 1ra","has":95.8},{"nombre":"12_San Eugenio","cultivo":"MAIZ 1ra","has":91.9},{"nombre":"13_San Eugenio","cultivo":"MAIZ 1ra","has":97.0},{"nombre":"11_San Eugenio","cultivo":"SOJA 2da","has":74.9},{"nombre":"11_San Eugenio","cultivo":"TRIGO","has":74.9},{"nombre":"9_San Eugenio","cultivo":"SOJA 2da","has":75.0},{"nombre":"9_San Eugenio","cultivo":"TRIGO","has":75.0}]},"SAN FRANCISCO DE ASIS":{"has_total":767.8,"lotes":[{"nombre":"01-02_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":52.7},{"nombre":"05_San Francisco de Asis Riego","cultivo":"MAIZ 1ra","has":90.0},{"nombre":"03_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":20.8},{"nombre":"05_San Francisco de Asis Secano","cultivo":"MAIZ 1ra","has":26.2},{"nombre":"04_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":55.8},{"nombre":"01-02_San Francisco de Asis","cultivo":"MAIZ 2da","has":52.7},{"nombre":"03_San Francisco de Asis","cultivo":"MAIZ 2da","has":20.8},{"nombre":"04_San Francisco de Asis","cultivo":"MAIZ 2da","has":55.8},{"nombre":"05_San Francisco de Asis Riego.","cultivo":"TRIGO","has":90.0},{"nombre":"05_San Francisco de Asis Secano","cultivo":"ARVEJA VERDE","has":46.4},{"nombre":"05_San Francisco de Asis Secano","cultivo":"SOJA 2da NO GMO","has":46.4},{"nombre":"05_San Francisco de Asis Secano","cultivo":"SOJA 2da NO GMO","has":6.1},{"nombre":"06_San Francisco de Asis","cultivo":"SOJA 2da NO GMO","has":54.0},{"nombre":"05_San Francisco de Asis Secano","cultivo":"TRIGO","has":6.1},{"nombre":"06_San Francisco de Asis","cultivo":"ARVEJA VERDE","has":54.0},{"nombre":"05_San Francisco de Asis Riego.","cultivo":"SOJA 2da NO GMO Riego","has":90.0}]},"SAN JOSE NS":{"has_total":390.0,"lotes":[{"nombre":"01_San Jose NS","cultivo":"TRIGO","has":170.0},{"nombre":"01_San Jose NS","cultivo":"SOJA 2da","has":170.0},{"nombre":"Dueño_San Jose NS","cultivo":"TRIGO","has":25.0},{"nombre":"Dueño_San Jose NS","cultivo":"SOJA 2da","has":25.0}]},"SAN LUIS RURAL":{"has_total":1521.5,"lotes":[{"nombre":"11_San Luis Rural","cultivo":"MAIZ 1ra","has":11.0},{"nombre":"10E_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":39.0},{"nombre":"11_San Luis Rural","cultivo":"MAIZ 1ra","has":39.0},{"nombre":"13_San Luis Rural","cultivo":"MAIZ 1ra","has":43.0},{"nombre":"15_San Luis Rural","cultivo":"MAIZ 1ra","has":65.0},{"nombre":"14_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":29.0},{"nombre":"9_San Luis Rural","cultivo":"MAIZ 1ra","has":24.0},{"nombre":"1R_San Luis Rural","cultivo":"MAIZ SEMILLA","has":90.0},{"nombre":"2R_San Luis Rural","cultivo":"TRIGO","has":100.0},{"nombre":"3R_San Luis Rural","cultivo":"TRIGO","has":100.0},{"nombre":"2R_San Luis Rural","cultivo":"SOJA 2da","has":100.0},{"nombre":"3S_San Luis Rural","cultivo":"TRIGO","has":82.0},{"nombre":"4R_San Luis Rural","cultivo":"MAIZ SEMILLA","has":100.0},{"nombre":"3R_San Luis Rural","cultivo":"SOJA 2da","has":100.0},{"nombre":"4S_San Luis Rural","cultivo":"TRIGO","has":35.0},{"nombre":"3S_San Luis Rural","cultivo":"SOJA 2da","has":82.0},{"nombre":"5_San Luis Rural","cultivo":"TRIGO","has":31.0},{"nombre":"6_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":6.0},{"nombre":"4S_San Luis Rural","cultivo":"SOJA 2da","has":35.0},{"nombre":"7_San Luis Rural","cultivo":"TRIGO","has":50.0},{"nombre":"5_San Luis Rural","cultivo":"SOJA 2da","has":31.0},{"nombre":"8_San Luis Rural","cultivo":"TRIGO","has":57.0},{"nombre":"Casco_San Luis Rural","cultivo":"PASTURA EN PRODUCCION","has":5.0},{"nombre":"7_San Luis Rural","cultivo":"SOJA 2da","has":50.0},{"nombre":"8_San Luis Rural","cultivo":"SOJA 2da","has":57.0},{"nombre":"10W_San Luis Rural","cultivo":"SOJA 1ra","has":36.5},{"nombre":"12_San Luis Rural","cultivo":"SOJA 1ra","has":27.0},{"nombre":"1S_San Luis Rural","cultivo":"SOJA 1ra","has":40.0},{"nombre":"2S_San Luis Rural","cultivo":"SOJA 1ra","has":57.0}]},"SAN MARCOS":{"has_total":2282.4,"lotes":[{"nombre":"01_San Marcos","cultivo":"GIRASOL","has":106.9},{"nombre":"02_San Marcos","cultivo":"TRIGO","has":94.0},{"nombre":"04_San Marcos","cultivo":"MAIZ 1ra","has":55.3},{"nombre":"03_San Marcos","cultivo":"GIRASOL","has":28.5},{"nombre":"05_San Marcos","cultivo":"MAIZ 1ra","has":68.2},{"nombre":"11_San Marcos","cultivo":"MAIZ 1ra","has":115.7},{"nombre":"06_San Marcos","cultivo":"CEBADA","has":12.3},{"nombre":"02_San Marcos","cultivo":"SOJA 2da","has":94.0},{"nombre":"07_San Marcos","cultivo":"CEBADA","has":53.0},{"nombre":"06_San Marcos","cultivo":"SOJA 2da","has":12.3},{"nombre":"10_San Marcos","cultivo":"CEBADA","has":94.2},{"nombre":"07_San Marcos","cultivo":"SOJA 2da","has":53.0},{"nombre":"10_San Marcos","cultivo":"SOJA 2da","has":94.2},{"nombre":"12_San Marcos","cultivo":"TRIGO","has":40.2},{"nombre":"12_San Marcos","cultivo":"SOJA 2da","has":30.2},{"nombre":"14_San Marcos","cultivo":"GIRASOL","has":13.1},{"nombre":"15_San Marcos","cultivo":"TRIGO","has":56.1},{"nombre":"15_San Marcos","cultivo":"SOJA 2da","has":56.1},{"nombre":"16_San Marcos","cultivo":"CEBADA","has":34.6},{"nombre":"16_San Marcos","cultivo":"SOJA 2da","has":34.6},{"nombre":"17_San Marcos","cultivo":"CEBADA","has":47.6},{"nombre":"17_San Marcos","cultivo":"SOJA 2da","has":47.6},{"nombre":"18_San Marcos","cultivo":"TRIGO","has":8.1},{"nombre":"18_San Marcos","cultivo":"SOJA 2da","has":8.1},{"nombre":"19_San Marcos","cultivo":"TRIGO","has":7.1},{"nombre":"19_San Marcos","cultivo":"SOJA 2da","has":7.1},{"nombre":"20_San Marcos","cultivo":"CEBADA","has":32.1},{"nombre":"20_San Marcos","cultivo":"SOJA 2da","has":32.1},{"nombre":"21_San Marcos","cultivo":"TRIGO","has":30.2},{"nombre":"21_San Marcos","cultivo":"SOJA 2da","has":30.2},{"nombre":"22_San Marcos","cultivo":"GIRASOL","has":12.4},{"nombre":"23_San Marcos","cultivo":"TRIGO","has":127.4},{"nombre":"23_San Marcos","cultivo":"SOJA 2da","has":127.4},{"nombre":"24_San Marcos","cultivo":"GIRASOL","has":29.6},{"nombre":"25_San Marcos","cultivo":"GIRASOL","has":29.0},{"nombre":"26_San Marcos","cultivo":"TRIGO","has":86.3},{"nombre":"26_San Marcos","cultivo":"SOJA 2da","has":86.3},{"nombre":"27_San Marcos","cultivo":"GIRASOL","has":16.8},{"nombre":"28_San Marcos","cultivo":"TRIGO","has":159.9},{"nombre":"28_San Marcos","cultivo":"SOJA 2da","has":159.9},{"nombre":"Polo_San Marcos","cultivo":"TRIGO","has":10.2},{"nombre":"Polo_San Marcos","cultivo":"SOJA 2da","has":10.2},{"nombre":"TMB_San Marcos","cultivo":"TRIGO","has":15.2},{"nombre":"TMB_San Marcos","cultivo":"SOJA 2da","has":15.2}]},"SAN MAURICIO":{"has_total":580.0,"lotes":[{"nombre":"01_San Mauricio","cultivo":"CEBADA","has":115.0},{"nombre":"01_San Mauricio","cultivo":"CEBADA","has":125.0},{"nombre":"01_San Mauricio","cultivo":"SOJA 2da","has":115.0},{"nombre":"01_San Mauricio","cultivo":"SOJA 2da","has":125.0},{"nombre":"Riego A_San Mauricio","cultivo":"MAIZ SEMILLA","has":50.0},{"nombre":"Riego B_San Mauricio","cultivo":"MAIZ SEMILLA","has":50.0}]},"TERRITORIO":{"has_total":326.5,"lotes":[{"nombre":"01_Territorio","cultivo":"MAIZ 1ra","has":62.8},{"nombre":"02_Territorio","cultivo":"MAIZ 1ra","has":105.8},{"nombre":"03_Territorio","cultivo":"MAIZ 1ra","has":38.4},{"nombre":"04_Territorio","cultivo":"SOJA 1ra","has":119.5}]},"TRES COPETES":{"has_total":1169.9,"lotes":[{"nombre":"17-19_Tres Copetes","cultivo":"MAIZ 1ra","has":119.2},{"nombre":"04_Tres Copetes","cultivo":"GIRASOL","has":48.0},{"nombre":"08_Tres Copetes","cultivo":"GIRASOL","has":22.3},{"nombre":"22_Tres Copetes","cultivo":"MAIZ 1ra","has":75.5},{"nombre":"12_Tres Copetes","cultivo":"GIRASOL","has":63.2},{"nombre":"13/9A_Tres Copetes","cultivo":"SOJA 1ra ORGANICA","has":139.3},{"nombre":"18_Tres Copetes","cultivo":"SOJA 1ra ORGANICA","has":87.8},{"nombre":"20_Tres Copetes","cultivo":"SOJA 2da ORGANICA","has":88.4},{"nombre":"20_Tres Copetes","cultivo":"TRIGO","has":88.4},{"nombre":"11_Tres Copetes","cultivo":"SOJA 1ra","has":38.5},{"nombre":"21_Tres Copetes","cultivo":"SOJA 1ra","has":54.5},{"nombre":"23-24-25_Tres Copetes","cultivo":"SOJA 2da ORGANICA","has":172.4},{"nombre":"23-24-25_Tres Copetes","cultivo":"TRIGO","has":172.4}]}};
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // STATE
-// ══════════════════════════════════════════
-const LS = k => { try { return localStorage.getItem(k); } catch(e){ return null; } };
-const LSset = (k,v) => { try { localStorage.setItem(k, typeof v==='string'?v:JSON.stringify(v)); } catch(e){} };
+// ════════════════════════════════════
+const LS=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
+const LSset=(k,v)=>{try{localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));}catch(e){}};
+let cfg={url:LS('cfg_url')||''};
+let maestros=JSON.parse(LS('maestros')||'null')||{contratistas:['García Hnos.','Ramírez SA','López & Cía.'],destinos:['Acopio El Recuerdo','Planta Las Parejas','Puerto Rosario']};
+let rCampo=JSON.parse(LS('r_campo')||'[]');
+let rBalanza=JSON.parse(LS('r_balanza')||'[]');
+let rLogistica=JSON.parse(LS('r_logistica')||'[]');
+let rCupos=JSON.parse(LS('r_cupos')||'[]');
+let rCPE=JSON.parse(LS('r_cpe')||'[]'); // extracted CPE data
+let avance=JSON.parse(LS('r_avance')||'{}');
+let camLlegados=JSON.parse(LS('r_llegados')||'{}'); // logisticaId => {llegado, kg, obs}
+let role=LS('role')||'campo';
+let expCampos={};
+let selDest='';
+let pendingPDFs=[];
+let balSelLog=null;
+let balDevolverId=null;
+let mkLogId=null;
+let selCultivos=new Set();
 
-let cfg = { url: LS('cfg_url')||'' };
-let maestros = JSON.parse(LS('maestros')||'null') || {
-  contratistas: ['García Hnos.','Ramírez SA','López & Cía.'],
-  patentes: [{chasis:'ABC 123',acoplado:'DEF 456'},{chasis:'GHI 789',acoplado:'JKL 012'}],
-  destinos: ['Acopio El Recuerdo','Planta Las Parejas','Puerto Rosario'],
-};
-let rCampo    = JSON.parse(LS('r_campo')    ||'[]');
-let rBalanza  = JSON.parse(LS('r_balanza')  ||'[]');
-let rLogistica= JSON.parse(LS('r_logistica')||'[]');
-// avance acumulado por lote: "CAMPO|lote|cultivo" => has cosechadas
-let avance    = JSON.parse(LS('r_avance')   ||'{}');
-
-let role = LS('role')||'campo';
-let curScr = 'scr-home';
-let expCampos = {};
-let selDest = '';
-let pendingPDFs = [];
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // HELPERS
-// ══════════════════════════════════════════
-const today = () => new Date().toISOString().split('T')[0];
-const save = (k,v) => LSset(k,v);
+// ════════════════════════════════════
+const today=()=>new Date().toISOString().split('T')[0];
+const save=(k,v)=>LSset(k,v);
+function toast(msg,type='ok'){const t=document.getElementById('toast');t.textContent=msg;t.className='toast show'+(type==='err'?' err':'');setTimeout(()=>t.classList.remove('show'),2500);}
+function popSel(id,items,empty='— Seleccionar —'){const el=document.getElementById(id);if(!el)return;const cur=el.value;el.innerHTML=`<option value="">${empty}</option>`;items.forEach(i=>{const o=document.createElement('option');o.value=i;o.textContent=i;if(i===cur)o.selected=true;el.appendChild(o);});}
+function openModal(id){document.getElementById(id).classList.add('open');}
+function closeModal(id){document.getElementById(id).classList.remove('open');}
+function showSend(v){document.getElementById('send-ov').classList.toggle('show',v);}
+function setSyncStatus(ok){document.getElementById('sdot').className='sync-dot '+(ok?'ok':'err');document.getElementById('slbl').textContent=ok?'sync':'local';}
+function fmtCUIT(el){let v=el.value.replace(/\D/g,'');if(v.length>2)v=v.slice(0,2)+'-'+v.slice(2);if(v.length>11)v=v.slice(0,11)+'-'+v.slice(11);el.value=v.slice(0,13);}
+function avKey(campo,lote,cultivo){return campo+'|'+lote+'|'+cultivo;}
+function getAv(campo,lote,cultivo){return avance[avKey(campo,lote,cultivo)]||0;}
+function addAv(campo,lote,cultivo,has){const k=avKey(campo,lote,cultivo);avance[k]=(avance[k]||0)+has;save('r_avance',avance);}
 
-function toast(msg, type='ok') {
-  const t = document.getElementById('toast');
-  t.textContent=msg; t.className='toast show'+(type==='err'?' err':'');
-  setTimeout(()=>t.classList.remove('show'),2500);
-}
-
-function popSel(id, items, empty='— Seleccionar —') {
-  const el=document.getElementById(id); if(!el) return;
-  const cur=el.value;
-  el.innerHTML=`<option value="">${empty}</option>`;
-  items.forEach(i=>{ const o=document.createElement('option'); o.value=i; o.textContent=i; if(i===cur) o.selected=true; el.appendChild(o); });
-}
-
-function openModal(id){ document.getElementById(id).classList.add('open'); }
-function closeModal(id){ document.getElementById(id).classList.remove('open'); }
-function showSend(v){ document.getElementById('send-ov').classList.toggle('show',v); }
-function setSyncStatus(ok){ document.getElementById('sdot').className='sync-dot '+(ok?'ok':'err'); document.getElementById('slbl').textContent=ok?'sync':'local'; }
-
-function fmtCUIT(el){
-  let v=el.value.replace(/\D/g,'');
-  if(v.length>2) v=v.slice(0,2)+'-'+v.slice(2);
-  if(v.length>11) v=v.slice(0,11)+'-'+v.slice(11);
-  el.value=v.slice(0,13);
-}
-
-function avKey(campo,lote,cultivo){ return campo+'|'+lote+'|'+cultivo; }
-function getAv(campo,lote,cultivo){ return avance[avKey(campo,lote,cultivo)]||0; }
-function addAv(campo,lote,cultivo,has){
-  const k=avKey(campo,lote,cultivo);
-  avance[k]=(avance[k]||0)+has;
-  save('r_avance',avance);
-}
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // SYNC
-// ══════════════════════════════════════════
-async function syncToSheets(sheet, row) {
-  if(!cfg.url) return false;
-  try {
+// ════════════════════════════════════
+async function syncToSheets(sheet,row){
+  if(!cfg.url)return false;
+  try{
     showSend(true);
-    const params = new URLSearchParams({
-      sheet: sheet,
-      row: JSON.stringify(row),
-      t: Date.now()
-    });
-    const url = cfg.url + '?' + params.toString();
-    const r = await fetch(url, { method:'GET' });
-    const d = await r.json();
-    showSend(false); setSyncStatus(d.ok); return d.ok;
-  } catch(e){ showSend(false); setSyncStatus(false); return false; }
+    const params=new URLSearchParams({sheet,row:JSON.stringify(row),t:Date.now()});
+    const r=await fetch(cfg.url+'?'+params.toString(),{method:'GET'});
+    const d=await r.json();
+    showSend(false);setSyncStatus(d.ok);return d.ok;
+  }catch(e){showSend(false);setSyncStatus(false);return false;}
 }
 
+// ════════════════════════════════════
+// CONFIG
+// ════════════════════════════════════
 function saveConfig(){
   const url=document.getElementById('cfg-url').value.trim();
-  if(!url){ toast('Ingresá la URL','err'); return; }
-  cfg.url=url; LSset('cfg_url',url);
-  mostrarConectado(true);
-  toast('✅ URL guardada');
+  if(!url){toast('Ingresá la URL','err');return;}
+  cfg.url=url;LSset('cfg_url',url);
+  showCfgOk();toast('✅ URL guardada');
+}
+function showCfgOk(){
+  const ok=document.getElementById('cfg-ok');
+  const form=document.getElementById('cfg-form');
+  ok.style.display='flex';form.style.display='none';
+}
+function showCfgForm(){
+  document.getElementById('cfg-ok').style.display='none';
+  document.getElementById('cfg-form').style.display='block';
+  document.getElementById('cfg-url').value=cfg.url||'';
 }
 
-function cambiarURL(){
-  mostrarConectado(false);
-}
-
-function mostrarConectado(ok){
-  document.getElementById('cfg-conectado').style.display=ok?'block':'none';
-  document.getElementById('cfg-form').style.display=ok?'none':'block';
-  if(!ok) document.getElementById('cfg-url').value=cfg.url||'';
-}
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // NAV
-// ══════════════════════════════════════════
-const scrTitles={ 'scr-campo':'CARGAR CAMPO','scr-balanza':'CARGAR BALANZA','scr-logistica':'LOGÍSTICA','scr-avance':'VER AVANCE','scr-camiones':'VER CAMIONES','scr-obs':'OBSERVACIONES' };
-
+// ════════════════════════════════════
+const scrTitles={'scr-campo':'CARGAR CAMPO','scr-campo-cam':'CAMIONES EN CAMPO','scr-balanza':'CARGAR BALANZA','scr-logistica':'LOGÍSTICA','scr-cupos':'CUPOS','scr-avance':'VER AVANCE','scr-camiones':'VER CAMIONES','scr-export':'EXPORTAR CPE'};
 function goTo(id){
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('active'));
   document.getElementById(id).classList.add('active');
   document.getElementById('hdr-back').style.display='block';
   document.getElementById('hdr-title').textContent=scrTitles[id]||'COSECHA 25/26';
-  curScr=id;
-  const inits={'scr-campo':initCampo,'scr-balanza':initBalanza,'scr-logistica':initLogistica,'scr-avance':renderAvance,'scr-camiones':renderCamiones,'scr-obs':renderObs};
-  if(inits[id]) inits[id]();
+  const inits={'scr-campo':initCampo,'scr-campo-cam':initCampoCam,'scr-balanza':initBalanza,'scr-logistica':initLogistica,'scr-cupos':initCupos,'scr-avance':renderAvance,'scr-camiones':renderCamiones,'scr-export':renderExport};
+  if(inits[id])inits[id]();
   window.scrollTo(0,0);
 }
-
 function goHome(){
   document.querySelectorAll('.scr').forEach(s=>s.classList.remove('active'));
   document.getElementById('scr-home').classList.add('active');
@@ -550,255 +494,448 @@ function goHome(){
   updateHero();
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // ROLES
-// ══════════════════════════════════════════
-const roleBtns = {
-  campo:    [{ic:'🌾',lbl:'Cargar Campo',sub:'Avance del día',scr:'scr-campo',cls:'g'},{ic:'📊',lbl:'Ver Avance',sub:'Por campo y lote',scr:'scr-avance',cls:''},{ic:'🚛',lbl:'Ver Camiones',sub:'Confirmados por balanza',scr:'scr-camiones',cls:'b'},{ic:'📋',lbl:'Observaciones',sub:'Novedades',scr:'scr-obs',cls:'',wide:true}],
-  balanza:  [{ic:'⚖️',lbl:'Cargar Balanza',sub:'Pesaje de camiones',scr:'scr-balanza',cls:'o'},{ic:'🚛',lbl:'Ver Camiones',sub:'Historial',scr:'scr-camiones',cls:''},{ic:'📊',lbl:'Ver Avance',sub:'General',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
-  logistica:[{ic:'🚛',lbl:'Cargar Logística',sub:'Datos de camiones',scr:'scr-logistica',cls:'b'},{ic:'📦',lbl:'Ver Camiones',sub:'Movimientos',scr:'scr-camiones',cls:''},{ic:'📊',lbl:'Ver Avance',sub:'General',scr:'scr-avance',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
-  admin:    [{ic:'📊',lbl:'Ver Avance',sub:'Resumen global',scr:'scr-avance',cls:'g'},{ic:'🚛',lbl:'Ver Camiones',sub:'Con filtros',scr:'scr-camiones',cls:''},{ic:'🌾',lbl:'Cargar Campo',sub:'',scr:'scr-campo',cls:''},{ic:'⚖️',lbl:'Cargar Balanza',sub:'',scr:'scr-balanza',cls:''},{ic:'📋',lbl:'Observaciones',sub:'',scr:'scr-obs',cls:'',wide:true}],
+// ════════════════════════════════════
+const roleBtns={
+  campo:[
+    {ic:'🌾',lbl:'Cargar Campo',sub:'Avance + CPE',scr:'scr-campo',cls:'g'},
+    {ic:'🚛',lbl:'Camiones en Campo',sub:'Tildar llegada + kg',scr:'scr-campo-cam',cls:'b'},
+    {ic:'📊',lbl:'Ver Avance',sub:'Por campo y lote',scr:'scr-avance',cls:''},
+  ],
+  balanza:[
+    {ic:'⚖️',lbl:'Cargar Balanza',sub:'Tara + bruto + cupo',scr:'scr-balanza',cls:'o'},
+    {ic:'🚛',lbl:'Ver Camiones',sub:'Historial',scr:'scr-camiones',cls:''},
+    {ic:'📊',lbl:'Ver Avance',sub:'General',scr:'scr-avance',cls:''},
+  ],
+  logistica:[
+    {ic:'🚛',lbl:'Cargar Logística',sub:'Datos del camión',scr:'scr-logistica',cls:'b'},
+    {ic:'🎯',lbl:'Cupos',sub:'Cargar y ver',scr:'scr-cupos',cls:'o'},
+    {ic:'📦',lbl:'Ver Camiones',sub:'Movimientos',scr:'scr-camiones',cls:''},
+  ],
+  admin:[
+    {ic:'📊',lbl:'Ver Avance',sub:'Resumen global',scr:'scr-avance',cls:'g',wide:true},
+    {ic:'🚛',lbl:'Ver Camiones',sub:'Confirmados y cargados',scr:'scr-camiones',cls:''},
+    {ic:'📄',lbl:'Exportar CPE',sub:'Excel cartas de porte',scr:'scr-export',cls:'b'},
+  ],
 };
-
-function setRole(r){
-  role=r; save('role',r);
-  document.querySelectorAll('.rbtn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('r-'+r).classList.add('active');
-  renderHomeBtns();
-}
-
-function renderHomeBtns(){
-  document.getElementById('home-btns').innerHTML=(roleBtns[role]||roleBtns.campo).map(b=>`
-    <button class="mbtn ${b.cls||''} ${b.wide?'wide':''}" onclick="goTo('${b.scr}')">
-      <div class="ic">${b.ic}</div><span class="lbl">${b.lbl}</span><span class="sub">${b.sub}</span>
-    </button>`).join('');
-}
-
+function setRole(r){role=r;save('role',r);document.querySelectorAll('.rbtn').forEach(b=>b.classList.remove('active'));document.getElementById('r-'+r).classList.add('active');renderHomeBtns();}
+function renderHomeBtns(){document.getElementById('home-btns').innerHTML=(roleBtns[role]||roleBtns.campo).map(b=>`<button class="mbtn ${b.cls||''} ${b.wide?'wide':''}" onclick="goTo('${b.scr}')"><div class="ic">${b.ic}</div><span class="lbl">${b.lbl}</span><span class="sub">${b.sub}</span></button>`).join('');}
 function updateHero(){
-  let totalHas=0,totalAv=0;
-  Object.values(CAMPOS).forEach(c=>{ c.lotes.forEach(l=>{ totalHas+=l.has; totalAv+=getAv(Object.keys(CAMPOS).find(k=>CAMPOS[k]===c)||'',l.nombre,l.cultivo); }); });
-  const pct=totalHas>0?Math.round(totalAv/totalHas*100):0;
-  const tn=(rBalanza.reduce((s,r)=>s+r.neto,0)/1000).toFixed(1);
-  document.getElementById('hero-stats').textContent=`${pct}% cosechado · ${Math.round(totalAv).toLocaleString('es')} has · ${tn}k Tn · ${rBalanza.length} camiones`;
+  let tHas=0,tAv=0;
+  Object.entries(CAMPOS).forEach(([est,d])=>d.lotes.forEach(l=>{tHas+=l.has;tAv+=getAv(est,l.nombre,l.cultivo);}));
+  const pct=tHas>0?Math.round(tAv/tHas*100):0;
+  const tn=(rBalanza.reduce((s,r)=>s+(r.neto||0),0)/1000).toFixed(1);
+  document.getElementById('hero-stats').textContent=`${pct}% cosechado · ${Math.round(tAv).toLocaleString('es')} has · ${tn}k Tn · ${rBalanza.length} camiones`;
 }
 
-// ══════════════════════════════════════════
-// FORM: CAMPO
-// ══════════════════════════════════════════
+// ════════════════════════════════════
+// FORM: CARGAR CAMPO
+// ════════════════════════════════════
 function initCampo(){
   document.getElementById('cf-fecha').value=today();
   popSel('cf-campo',Object.keys(CAMPOS));
-  popSel('cf-lote',[]);
-  popSel('cf-cultivo',[]);
-  popSel('cf-contratista',maestros.contratistas);
-  ['cf-has','cf-humedad','cf-obs','cf-perdida-kgha','cf-perdida-total','cf-kg-campo','cf-rinde'].forEach(id=>document.getElementById(id).value='');
-  // recalc perdida when has changes
-  document.getElementById('cf-has').oninput=calcPerdidaTotal;
-  document.getElementById('cf-avance-info').style.display='none';
-  pendingPDFs=[]; document.getElementById('cf-pdf-list').innerHTML='';
+  document.getElementById('cf-lotes-wrap').innerHTML='<div class="empty" style="padding:16px;"><p>Seleccioná un establecimiento</p></div>';
+  document.getElementById('cf-contratistas-wrap').innerHTML='';
+  ['cf-humedad','cf-perdida','cf-perdida-tot','cf-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('cf-perdida-causa').value='';
+  pendingPDFs=[];document.getElementById('cf-pdf-list').innerHTML='';
+  addContratista();
 }
 
-function onCampoChange(prefix){
-  const campo=document.getElementById(prefix+'-campo').value;
-  const lotes=campo&&CAMPOS[campo]?[...new Set(CAMPOS[campo].lotes.map(l=>l.nombre))]:[];
-  popSel(prefix+'-lote',lotes);
-  if(prefix==='cf'){ popSel('cf-cultivo',[]); document.getElementById('cf-avance-info').style.display='none'; }
-}
-
-function onLoteChange(prefix){
-  if(prefix!=='cf') return;
+function onCampoChangeCF(){
   const campo=document.getElementById('cf-campo').value;
-  const lote=document.getElementById('cf-lote').value;
-  if(!campo||!lote) return;
-  const cults=[...new Set((CAMPOS[campo]?.lotes||[]).filter(l=>l.nombre===lote).map(l=>l.cultivo))];
-  popSel('cf-cultivo',cults);
-  updateAvanceInfo();
+  const wrap=document.getElementById('cf-lotes-wrap');
+  if(!campo||!CAMPOS[campo]){wrap.innerHTML='<div class="empty" style="padding:16px;"><p>Seleccioná un establecimiento</p></div>';return;}
+  const lotes=CAMPOS[campo].lotes;
+  wrap.innerHTML=lotes.map((l,i)=>`
+    <div class="lote-item" id="li-${i}">
+      <div class="lote-item-hdr" onclick="toggleLote(${i})">
+        <div class="lote-chk" id="lchk-${i}"></div>
+        <div style="flex:1;">
+          <div class="lote-item-name">${l.nombre}</div>
+          <div class="lote-item-cult">${l.cultivo} · ${l.has} ha</div>
+        </div>
+      </div>
+      <div class="lote-inputs" id="linputs-${i}">
+        <div class="frow">
+          <div><label>Has. cosechadas hoy</label><input type="number" id="lhas-${i}" placeholder="0" step="0.1" min="0" max="${l.has}" oninput="calcPerdida()"></div>
+          <div><label>Has. ya cosechadas</label><input type="number" readonly value="${getAv(document.getElementById('cf-campo').value,l.nombre,l.cultivo).toFixed(1)}" style="opacity:.6;"></div>
+        </div>
+        <div style="font-size:11px;color:var(--mut);margin-top:2px;">Restante: ${Math.max(0,l.has-getAv(document.getElementById('cf-campo').value,l.nombre,l.cultivo)).toFixed(1)} ha</div>
+      </div>
+    </div>`).join('');
 }
 
-function updateAvanceInfo(){
+function toggleLote(i){
+  const chk=document.getElementById('lchk-'+i);
+  const item=document.getElementById('li-'+i);
+  const inputs=document.getElementById('linputs-'+i);
+  const on=chk.classList.toggle('on');
+  chk.textContent=on?'✓':'';
+  item.classList.toggle('sel',on);
+  inputs.classList.toggle('open',on);
+}
+
+function addContratista(){
+  const wrap=document.getElementById('cf-contratistas-wrap');
+  const idx=wrap.children.length;
+  const div=document.createElement('div');
+  div.className='contra-row';
+  div.innerHTML=`
+    <select style="flex:1;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:14px;outline:none;" id="contra-${idx}">
+      <option value="">— Contratista —</option>
+      ${maestros.contratistas.map(c=>`<option>${c}</option>`).join('')}
+      <option value="__nuevo">+ Nuevo contratista...</option>
+    </select>
+    <button class="rm" onclick="this.parentElement.remove()">×</button>`;
+  wrap.appendChild(div);
+  const sel=div.querySelector('select');
+  sel.onchange=()=>{
+    if(sel.value==='__nuevo'){
+      const n=prompt('Nombre del contratista:');
+      if(n){
+        if(!maestros.contratistas.includes(n))maestros.contratistas.push(n);
+        save('maestros',maestros);
+        const o=document.createElement('option');o.value=n;o.textContent=n;
+        sel.insertBefore(o,sel.lastElementChild);
+        sel.value=n;
+      }else{sel.value='';}
+    }
+  };
+}
+
+function calcPerdida(){
+  const kgha=parseFloat(document.getElementById('cf-perdida').value)||0;
   const campo=document.getElementById('cf-campo').value;
-  const lote=document.getElementById('cf-lote').value;
-  const cultivo=document.getElementById('cf-cultivo').value;
-  if(!campo||!lote) return;
-  const loteData=(CAMPOS[campo]?.lotes||[]).find(l=>l.nombre===lote&&(!cultivo||l.cultivo===cultivo));
-  if(!loteData){ document.getElementById('cf-avance-info').style.display='none'; return; }
-  const hasTot=loteData.has;
-  const hasYa=getAv(campo,lote,loteData.cultivo);
-  const resta=Math.max(0,hasTot-hasYa);
-  const pct=hasTot>0?Math.min(100,Math.round(hasYa/hasTot*100)):0;
-  document.getElementById('ci-total').textContent=hasTot.toFixed(1)+' ha';
-  document.getElementById('ci-ya').textContent=hasYa.toFixed(1)+' ha';
-  document.getElementById('ci-resta').textContent=resta.toFixed(1)+' ha restantes';
-  document.getElementById('ci-prog').style.width=pct+'%';
-  document.getElementById('cf-avance-info').style.display='block';
+  if(!campo){document.getElementById('cf-perdida-tot').value='';return;}
+  let totalHas=0;
+  const lotes=CAMPOS[campo]?.lotes||[];
+  lotes.forEach((_,i)=>{
+    const chk=document.getElementById('lchk-'+i);
+    if(chk&&chk.classList.contains('on')){
+      totalHas+=parseFloat(document.getElementById('lhas-'+i)?.value||0)||0;
+    }
+  });
+  document.getElementById('cf-perdida-tot').value=kgha>0&&totalHas>0?Math.round(kgha*totalHas):'';
 }
 
-function calcKgCampo(){
-  const rinde=parseFloat(document.getElementById('cf-rinde').value)||0;
-  const has=parseFloat(document.getElementById('cf-has').value)||0;
-  if(rinde>0&&has>0){
-    // 1 qq = 100 kg
-    document.getElementById('cf-kg-campo').value=Math.round(rinde*100*has);
-  }
+// PDF HANDLING
+function handlePDF(input){
+  Array.from(input.files).forEach(f=>{
+    const reader=new FileReader();
+    reader.onload=e=>{
+      const b64=e.target.result;
+      const text=atob(b64.split(',')[1]);
+      const cpe=extraerCPE(text,f.name);
+      pendingPDFs.push({name:f.name,size:f.size,b64,cpe});
+      renderPDFList();
+    };
+    reader.readAsDataURL(f);
+  });
+  input.value='';
 }
 
-function calcPerdidaTotal(){
-  const kgha=parseFloat(document.getElementById('cf-perdida-kgha').value)||0;
-  const has=parseFloat(document.getElementById('cf-has').value)||0;
-  document.getElementById('cf-perdida-total').value=kgha>0&&has>0?(kgha*has).toFixed(0):'';
+function extraerCPE(text,fname){
+  const g=(pattern,flags='i')=>{const m=text.match(new RegExp(pattern,flags));return m?m[1]?.trim()||m[0]?.trim():'';};
+  const gLine=(label)=>{const m=text.match(new RegExp(label+'[:\\s]+([^\\n]+)','i'));return m?m[1]?.trim():'';};
+  return {
+    nCPE: g('N[°o]\\s*CPE[:\\s]+([\\d\\-]+)') || g('(\\d{5}-\\d{8})'),
+    ctg: g('CTG[:\\s]+(\\d+)'),
+    fecha: g('Fecha[:\\s]+(\\d{2}/\\d{2}/\\d{4})'),
+    vencimiento: g('Vencimiento[:\\s]+(\\d{2}/\\d{2}/\\d{4})'),
+    titular: g('Titular Carta de Porte[:\\s]+([^\\n]+)'),
+    destinatario: g('Destinatario[:\\s]+([^\\n]+)'),
+    destino: g('Destino[:\\s]+([^\\n]+)'),
+    transportista: g('Empresa Transportista[:\\s]+([^\\n]+)'),
+    chofer: g('Chofer[:\\s]+([^\\n]+)'),
+    flete: g('Flete pagador[:\\s]+([^\\n]+)'),
+    grano: g('Grano\\s*/\\s*Tipo[:\\s]+([^\\n]+)'),
+    campaña: g('Campaña[:\\s]+(\\d{4})'),
+    pesoBruto: g('Peso Bruto[\\s]+(\\d+)'),
+    pessTara: g('Peso Tara[\\s]+(\\d+)'),
+    pesoNeto: g('Peso Neto[\\s]+(\\d+)'),
+    localidadOrigen: g('Localidad[:\\s]+([A-Z ]+)'),
+    provinciaOrigen: g('Provincia[:\\s]+([A-Z ]+)'),
+    dominios: g('Dominios[:\\s]+([^\\n]+)'),
+    kms: g('Kms\\.\\s*a recorrer[:\\s]+(\\d+)'),
+    pesoBrutoDesc: g('Peso Bruto \\(kg\\)[:\\s]+(\\d+)'),
+    pesoNetoDesc: g('Peso Neto \\(kg\\)[:\\s]+(\\d+)'),
+    pessTaraDesc: g('Peso Tara \\(kg\\)[:\\s]+(\\d+)'),
+    fechaArribo: g('Fecha Arribo[:\\s]+([^\\n]+)'),
+    fechaDescarga: g('Fecha Descarga[:\\s]+([^\\n]+)'),
+    archivo: fname
+  };
+}
+
+function renderPDFList(){
+  document.getElementById('cf-pdf-list').innerHTML=pendingPDFs.map((p,i)=>`
+    <div>
+      <div class="pdf-item">
+        <span>📄</span>
+        <span class="pn">${p.name}</span>
+        <span style="font-size:11px;color:var(--mut);">${(p.size/1024).toFixed(0)}kb</span>
+        <button class="pd" onclick="pendingPDFs.splice(${i},1);renderPDFList()">×</button>
+      </div>
+      ${p.cpe?`<div class="pe-box">
+        <div class="pe-title">📋 CPE ${p.cpe.nCPE||'—'} · CTG ${p.cpe.ctg||'—'}</div>
+        <div class="pe-grid">
+          <div><div class="pe-lbl">Fecha</div><div class="pe-val">${p.cpe.fecha||'—'}</div></div>
+          <div><div class="pe-lbl">Grano/Tipo</div><div class="pe-val">${p.cpe.grano||'—'}</div></div>
+          <div><div class="pe-lbl">Dominios</div><div class="pe-val">${p.cpe.dominios||'—'}</div></div>
+          <div><div class="pe-lbl">Chofer</div><div class="pe-val">${p.cpe.chofer||'—'}</div></div>
+          <div><div class="pe-lbl">P. Bruto</div><div class="pe-val">${p.cpe.pesoBruto||'—'} kg</div></div>
+          <div><div class="pe-lbl">P. Neto</div><div class="pe-val">${p.cpe.pesoNeto||'—'} kg</div></div>
+          <div><div class="pe-lbl">Destino</div><div class="pe-val">${p.cpe.destino||'—'}</div></div>
+          <div><div class="pe-lbl">Transportista</div><div class="pe-val">${(p.cpe.transportista||'—').slice(0,30)}</div></div>
+        </div>
+      </div>`:''}
+    </div>`).join('');
 }
 
 async function guardarCampo(){
   const fecha=document.getElementById('cf-fecha').value;
   const campo=document.getElementById('cf-campo').value;
-  const lote=document.getElementById('cf-lote').value;
-  const cultivo=document.getElementById('cf-cultivo').value;
-  const contra=document.getElementById('cf-contratista').value;
-  const has=parseFloat(document.getElementById('cf-has').value)||0;
+  if(!fecha||!campo){toast('Completá fecha y establecimiento','err');return;}
+
+  // get selected lotes
+  const lotes=CAMPOS[campo]?.lotes||[];
+  const lotesSelec=[];
+  lotes.forEach((l,i)=>{
+    const chk=document.getElementById('lchk-'+i);
+    if(chk&&chk.classList.contains('on')){
+      const has=parseFloat(document.getElementById('lhas-'+i)?.value||0)||0;
+      if(has>0) lotesSelec.push({nombre:l.nombre,cultivo:l.cultivo,hasTot:l.has,has});
+    }
+  });
+  if(!lotesSelec.length){toast('Seleccioná al menos un lote con has.','err');return;}
+
+  // get contratistas
+  const contraWrap=document.getElementById('cf-contratistas-wrap');
+  const contratistas=Array.from(contraWrap.querySelectorAll('select')).map(s=>s.value).filter(v=>v&&v!=='__nuevo');
   const humedad=parseFloat(document.getElementById('cf-humedad').value)||0;
-  const obs=document.getElementById('cf-obs').value;
-  const kgCampo=parseFloat(document.getElementById('cf-kg-campo').value)||0;
-  const perdidaKgha=parseFloat(document.getElementById('cf-perdida-kgha').value)||0;
+  const perdidaKgha=parseFloat(document.getElementById('cf-perdida').value)||0;
   const perdidaCausa=document.getElementById('cf-perdida-causa').value;
-  const perdidaTotal=perdidaKgha>0?perdidaKgha*has:0;
-  if(!fecha||!campo||!lote||!has){ toast('Completá fecha, campo, lote y has.','err'); return; }
-
-  // Verificar que no exceda el total
-  const loteData=(CAMPOS[campo]?.lotes||[]).find(l=>l.nombre===lote&&(!cultivo||l.cultivo===cultivo));
-  if(loteData){
-    const hasYa=getAv(campo,lote,loteData.cultivo);
-    if(hasYa+has>loteData.has+0.1){ toast(`⚠️ Superás las ${loteData.has} ha del lote`,'err'); return; }
-    addAv(campo,lote,loteData.cultivo,has);
-  }
-
+  const obs=document.getElementById('cf-obs').value;
   const pdfNames=pendingPDFs.map(p=>p.name);
-  const rec={id:Date.now().toString(),fecha,campo,lote,cultivo,contratista:contra,has,humedad,kgCampo,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfs:pdfNames,ts:Date.now()};
-  rCampo.push(rec); save('r_campo',rCampo);
 
-  const row=[fecha,campo,lote,cultivo,contra,has,humedad,kgCampo,perdidaKgha,perdidaTotal,perdidaCausa,obs,pdfNames.join(';'),rec.id];
-  const synced=await syncToSheets('Campo',row);
-  toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
-  pendingPDFs=[]; setTimeout(goHome,1200);
+  // save CPE data
+  pendingPDFs.forEach(p=>{if(p.cpe){rCPE.push({...p.cpe,campo,fecha,archivo:p.name,id:Date.now()+'_'+Math.random()});}});
+  save('r_cpe',rCPE);
+
+  // create one record per lote
+  const totalHas=lotesSelec.reduce((s,l)=>s+l.has,0);
+  for(const l of lotesSelec){
+    const perdidaTot=perdidaKgha>0?Math.round(perdidaKgha*l.has):0;
+    // check limit
+    const yaAv=getAv(campo,l.nombre,l.cultivo);
+    if(yaAv+l.has>l.hasTot+0.1){toast(`⚠️ ${l.nombre}: superás las ${l.hasTot} ha totales`,'err');return;}
+    addAv(campo,l.nombre,l.cultivo,l.has);
+    const rec={id:Date.now().toString()+'_'+l.nombre,fecha,campo,lote:l.nombre,cultivo:l.cultivo,has:l.has,humedad,perdidaKgha,perdidaTot,perdidaCausa,contratistas:contratistas.join(';'),obs,pdfs:pdfNames.join(';'),ts:Date.now()};
+    rCampo.push(rec);
+    const row=[fecha,campo,l.nombre,l.cultivo,l.has,humedad,perdidaKgha,perdidaTot,perdidaCausa,contratistas.join(';'),obs,pdfNames.join(';'),rec.id];
+    await syncToSheets('Campo',row);
+  }
+  save('r_campo',rCampo);
+  toast('✅ Registro guardado');
+  setTimeout(goHome,1200);
 }
 
-// ══════════════════════════════════════════
-// FORM: BALANZA
-// ══════════════════════════════════════════
-let balSelLog = null;
-
-async function initBalanza(){
-  balSelLog = null;
-  document.getElementById('bal-paso1').style.display='block';
-  document.getElementById('bal-paso2').style.display='none';
-  document.getElementById('bf-buscar').value='';
-  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('bal-cambio-pat').style.display='none';
-
-  // Cargar registros de logística desde Google Sheets
+// ════════════════════════════════════
+// FORM: CAMIONES EN CAMPO
+// ════════════════════════════════════
+async function initCampoCam(){
+  document.getElementById('cc-buscar').value='';
   if(cfg.url){
-    const lista=document.getElementById('bal-log-lista');
-    lista.innerHTML='<div class="empty" style="padding:20px 0;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando camiones...</p></div>';
-    try {
-      const r = await fetch(cfg.url + '?sheet=Logistica&t=' + Date.now());
-      const d = await r.json();
-      if(d.ok && d.rows && d.rows.length){
-        // El sheet devuelve filas con estos índices (según HEADERS de Apps Script):
-        // 0:Fecha, 1:PatenteChasis, 2:PatenteAcoplado, 3:Chofer, 4:CUITChofer,
-        // 5:EmpresaTransporte, 6:CUITTransporte, 7:Destino,
-        // 8:Establecimiento, 9:Lote, 10:Cultivo, 11:Observaciones, 12:ID
-        const fromSheet = d.rows.map((row, i) => ({
-          id: row[12] || ('s_' + i),
-          fecha: String(row[0]||'').split('T')[0].replace(/\//g,'-'),
-          patenteChasis: String(row[1]||''),
-          patenteAcoplado: String(row[2]||''),
-          chofer: String(row[3]||''),
-          cuitChofer: String(row[4]||''),
-          transporte: String(row[5]||''),
-          cuitTransporte: String(row[6]||''),
-          destino: String(row[7]||''),
-          campo: String(row[8]||''),
-          lote: String(row[9]||''),
-          cultivo: String(row[10]||''),
-          obs: String(row[11]||''),
-          ts: Date.now() - i * 1000,
-          fromSheet: true
-        }));
-        // Merge: locales propios + sheet, sin duplicados por id
-        const sheetIds = new Set(fromSheet.map(r=>r.id));
-        const soloLocales = rLogistica.filter(r=>!sheetIds.has(r.id));
-        rLogistica = [...soloLocales, ...fromSheet];
-        save('r_logistica', rLogistica);
+    try{
+      const r=await fetch(cfg.url+'?sheet=Logistica&t='+Date.now());
+      const d=await r.json();
+      if(d.ok&&d.rows&&d.rows.length){
+        const sheetIds=new Set(rLogistica.map(r=>r.id));
+        d.rows.forEach((row,i)=>{
+          const id=String(row[12]||'s_'+i);
+          if(!sheetIds.has(id)){
+            rLogistica.push({id,fecha:String(row[0]||'').split('T')[0],patenteChasis:String(row[1]||''),patenteAcoplado:String(row[2]||''),chofer:String(row[3]||''),cuitChofer:String(row[4]||''),transporte:String(row[5]||''),cuitTransporte:String(row[6]||''),destino:String(row[7]||''),campo:String(row[8]||''),lote:String(row[9]||''),cultivo:String(row[10]||''),obs:String(row[11]||''),ts:Date.now()-i*1000,fromSheet:true});
+          }
+        });
+        save('r_logistica',rLogistica);
       }
-    } catch(e){ console.log('Error cargando logistica:', e); }
+    }catch(e){}
   }
-  renderBalanzaLista();
+  renderCampoCam();
 }
 
-function renderBalanzaLista(){
-  const q=document.getElementById('bf-buscar').value.toLowerCase();
+function renderCampoCam(){
+  const q=document.getElementById('cc-buscar').value.toLowerCase();
   const todayStr=today();
-  let regs=[...rLogistica].filter(l=>l.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
-  if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,20);
+  let regs=[...rLogistica].filter(r=>r.fecha===todayStr||!r.fecha).sort((a,b)=>b.ts-a.ts);
+  if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,30);
+  if(q) regs=regs.filter(r=>(r.patenteChasis+r.campo+r.chofer).toLowerCase().includes(q));
 
-  if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer+r.campo+r.lote).toLowerCase().includes(q));
-
-  const lista=document.getElementById('bal-log-lista');
-  if(!regs.length){
-    lista.innerHTML='<div class="empty" style="padding:24px 0;"><div class="ei">🚛</div><p>No hay camiones de logística para hoy.<br>Usá "Cargar sin logística" abajo.</p></div>';
-    return;
-  }
+  const lista=document.getElementById('cc-lista');
+  if(!regs.length){lista.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones de logística cargados</p></div>';return;}
 
   lista.innerHTML=regs.map(r=>{
-    // check if already weighed today
+    const st=camLlegados[r.id]||{};
+    const llego=st.llegado||false;
+    const kg=st.kg||0;
+    return `<div class="blog-card ${llego?'llego':''}">
+      <div style="display:flex;align-items:center;gap:10px;">
+        <button class="tilde-btn ${llego?'on':''}" onclick="toggleLlegada('${r.id}')" title="Marcar llegada">${llego?'✓':''}</button>
+        <div style="flex:1;">
+          <div class="blog-patente">${r.patenteChasis}</div>
+          <div class="blog-meta">👤 ${r.chofer||'—'} · 🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</div>
+          ${llego?`<div class="blog-meta" style="color:var(--greenl);margin-top:2px;">✅ Llegó al campo</div>`:''}
+          ${kg>0?`<div class="blog-meta" style="color:var(--goldl);">📦 ${kg.toLocaleString('es')} kg estimados</div>`:''}
+        </div>
+        ${llego?`<button class="add-btn" onclick="abrirKg('${r.id}','${r.patenteChasis}','${r.campo}')" style="padding:6px 10px;font-size:11px;">✏ Kg</button>`:''}
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function toggleLlegada(id){
+  const st=camLlegados[id]||{};
+  st.llegado=!st.llegado;
+  camLlegados[id]=st;
+  save('r_llegados',camLlegados);
+  renderCampoCam();
+  syncToSheets('CampoLlegada',[id,st.llegado?'SI':'NO',today(),Date.now()]);
+}
+
+function abrirKg(id,pat,campo){
+  mkLogId=id;
+  const st=camLlegados[id]||{};
+  document.getElementById('modal-kg-info').textContent=`${pat} · ${campo}`;
+  document.getElementById('mk-kg').value=st.kg||'';
+  document.getElementById('mk-obs').value=st.obs||'';
+  openModal('modal-kg');
+}
+
+function guardarKg(){
+  if(!mkLogId)return;
+  const kg=parseFloat(document.getElementById('mk-kg').value)||0;
+  const obs=document.getElementById('mk-obs').value;
+  const st=camLlegados[mkLogId]||{};
+  st.kg=kg;st.obs=obs;
+  camLlegados[mkLogId]=st;
+  save('r_llegados',camLlegados);
+  closeModal('modal-kg');
+  toast('✅ Kg guardados');
+  renderCampoCam();
+  syncToSheets('KgEstimados',[mkLogId,kg,obs,today(),Date.now()]);
+}
+
+// ════════════════════════════════════
+// FORM: BALANZA
+// ════════════════════════════════════
+async function initBalanza(){
+  balSelLog=null;
+  document.getElementById('bal-p1').style.display='block';
+  document.getElementById('bal-p2').style.display='none';
+  document.getElementById('bf-buscar').value='';
+  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+
+  if(cfg.url){
+    document.getElementById('bal-lista').innerHTML='<div class="empty" style="padding:20px;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando...</p></div>';
+    try{
+      const r=await fetch(cfg.url+'?sheet=Logistica&t='+Date.now());
+      const d=await r.json();
+      if(d.ok&&d.rows&&d.rows.length){
+        const sheetIds=new Set(rLogistica.map(r=>r.id));
+        d.rows.forEach((row,i)=>{
+          const id=String(row[12]||'s_'+i);
+          if(!sheetIds.has(id)){
+            rLogistica.push({id,fecha:String(row[0]||'').split('T')[0],patenteChasis:String(row[1]||''),patenteAcoplado:String(row[2]||''),chofer:String(row[3]||''),cuitChofer:String(row[4]||''),transporte:String(row[5]||''),cuitTransporte:String(row[6]||''),destino:String(row[7]||''),campo:String(row[8]||''),lote:String(row[9]||''),cultivo:String(row[10]||''),obs:String(row[11]||''),ts:Date.now()-i*1000,fromSheet:true});
+          }
+        });
+        save('r_logistica',rLogistica);
+      }
+    }catch(e){}
+  }
+  renderBalLista();
+}
+
+function renderBalLista(){
+  const q=document.getElementById('bf-buscar').value.toLowerCase();
+  const todayStr=today();
+  let regs=[...rLogistica].filter(r=>r.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
+  if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,20);
+  if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer+r.campo+r.lote).toLowerCase().includes(q));
+  const lista=document.getElementById('bal-lista');
+  if(!regs.length){lista.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones de logística.<br>Usá "Cargar sin logística".</p></div>';return;}
+  lista.innerHTML=regs.map(r=>{
     const pesado=rBalanza.some(b=>b.logisticaId===r.id);
-    return `<div class="blog-card ${pesado?'pesado':''}" onclick="${pesado?'':' balSeleccionar(\''+r.id+'\')'}">
+    const st=camLlegados[r.id]||{};
+    return `<div class="blog-card ${pesado?'done':''}" onclick="${pesado?'':` balSeleccionar('${r.id}')`}">
       <div style="display:flex;align-items:center;justify-content:space-between;">
         <span class="blog-patente">${r.patenteChasis}</span>
-        <span class="blog-badge ${pesado?'':'pend'}">${pesado?'✓ Pesado':'Pendiente'}</span>
+        <span class="badge ${pesado?'b-ok':'b-pend'}">${pesado?'✓ Pesado':'Pendiente'}</span>
       </div>
-      <div class="blog-meta">👤 ${r.chofer||'—'} &nbsp;·&nbsp; 🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</div>
+      <div class="blog-meta">👤 ${r.chofer||'—'} · 🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</div>
       ${r.destino?`<div class="blog-meta">📍 ${r.destino}</div>`:''}
-      ${pesado?'<div class="blog-meta" style="color:var(--greenl);margin-top:2px;">Ya tiene peso cargado</div>':''}
+      ${st.kg>0?`<div class="blog-meta" style="color:var(--goldl);">Campo estimó: ${st.kg.toLocaleString('es')} kg</div>`:''}
     </div>`;
   }).join('');
 }
 
 function balSeleccionar(logId){
   const reg=rLogistica.find(r=>r.id===logId);
-  if(!reg) return;
+  if(!reg)return;
   balSelLog=reg;
-  document.getElementById('bal-paso1').style.display='none';
-  document.getElementById('bal-paso2').style.display='block';
-  document.getElementById('bal-info-pat').textContent=reg.patenteChasis+(reg.patenteAcoplado?' / '+reg.patenteAcoplado:'');
-  document.getElementById('bal-info-detalle').textContent=`${reg.chofer||'—'} · ${reg.campo||'—'}${reg.lote?' · '+reg.lote:''} · ${reg.destino||'sin destino'}`;
-  document.getElementById('bal-cambio-pat').style.display='none';
+  const st=camLlegados[logId]||{};
+  document.getElementById('bal-p1').style.display='none';
+  document.getElementById('bal-p2').style.display='block';
+  const kgInfo=document.getElementById('bal-kg-campo-info');
+  // Build info box
+  document.getElementById('bal-cam-info').innerHTML=`
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--gold);">${reg.patenteChasis}${reg.patenteAcoplado?' / '+reg.patenteAcoplado:''}</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:3px;">👤 ${reg.chofer||'—'} · 🌾 ${reg.campo||'—'}${reg.lote?' · '+reg.lote:''}</div>
+    ${reg.destino?`<div style="font-size:12px;color:var(--mut);">📍 ${reg.destino}</div>`:''}
+    ${st.kg>0?`<div class="info-row" style="margin-top:6px;"><span>Kg estimados campo</span><span class="info-val">${st.kg.toLocaleString('es')} kg</span></div>`:''}`;
+
   ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+  // populate cupos
+  const todayStr=today();
+  const campo=reg.campo||'';
+  const cuposDisp=rCupos.filter(c=>c.fecha===todayStr&&(!campo||c.campo===campo)&&c.disponible>0);
+  const sel=document.getElementById('bf-cupo');
+  sel.innerHTML='<option value="">— Sin cupo / no va a puerto —</option>';
+  cuposDisp.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=`${c.campo} · ${c.destino} (${c.disponible} disp.)`;sel.appendChild(o);});
+  document.getElementById('bal-devolver').style.display='none';
 }
 
-function balSinLogistica(){
-  // create a blank pseudo-record
-  balSelLog={ id:null, fecha:today(), patenteChasis:'', campo:'', lote:'', chofer:'', destino:'' };
-  document.getElementById('bal-paso1').style.display='none';
-  document.getElementById('bal-paso2').style.display='block';
-  document.getElementById('bal-info-pat').textContent='Sin registro de logística';
-  document.getElementById('bal-info-detalle').textContent='Seleccioná la patente manualmente';
-  // force show patente selector
-  popSel('bf-patente-nueva',maestros.patentes.map(p=>p.chasis));
-  document.getElementById('bal-cambio-pat').style.display='block';
+function balSinLog(){
+  balSelLog={id:null,fecha:today(),patenteChasis:'',campo:'',lote:'',chofer:'',destino:''};
+  document.getElementById('bal-p1').style.display='none';
+  document.getElementById('bal-p2').style.display='block';
+  document.getElementById('bal-cam-info').innerHTML=`
+    <div style="font-size:13px;color:var(--mut);margin-bottom:8px;">Sin registro de logística</div>
+    <div class="frow"><div><label>Patente</label><input type="text" id="bal-pat-manual" placeholder="ABC 123" oninput="this.value=this.value.toUpperCase()"></div><div><label>Campo</label><select id="bal-campo-manual"><option value="">—</option>${Object.keys(CAMPOS).map(c=>`<option>${c}</option>`).join('')}</select></div></div>`;
   ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('bf-cupo').innerHTML='<option value="">— Sin cupo —</option>';
+  document.getElementById('bal-devolver').style.display='none';
 }
 
-function balVolver(){
-  document.getElementById('bal-paso1').style.display='block';
-  document.getElementById('bal-paso2').style.display='none';
-  balSelLog=null;
+function balVolver(){document.getElementById('bal-p1').style.display='block';document.getElementById('bal-p2').style.display='none';balSelLog=null;}
+
+function abrirDevolver(){
+  if(!balSelLog)return;
+  balDevolverId=balSelLog.id;
+  document.getElementById('modal-dev-info').textContent=`Devolver cupo asignado al camión ${balSelLog.patenteChasis}?`;
+  openModal('modal-dev');
 }
 
-function balCambiarPatente(){
-  const wrap=document.getElementById('bal-cambio-pat');
-  const open=wrap.style.display==='block';
-  if(!open){ popSel('bf-patente-nueva',maestros.patentes.map(p=>p.chasis)); }
-  wrap.style.display=open?'none':'block';
+function confirmarDevolver(){
+  // find balanza record and remove cupo
+  const balRec=rBalanza.find(b=>b.logisticaId===balDevolverId);
+  if(balRec&&balRec.cupoId){
+    const cupo=rCupos.find(c=>c.id===balRec.cupoId);
+    if(cupo){cupo.disponible=(cupo.disponible||0)+1;save('r_cupos',rCupos);}
+    balRec.cupoId='';save('r_balanza',rBalanza);
+  }
+  closeModal('modal-dev');
+  toast('✅ Cupo devuelto');
 }
 
 function calcNeto(){
@@ -808,70 +945,71 @@ function calcNeto(){
 }
 
 async function guardarBalanza(){
-  if(!balSelLog){ toast('Seleccioná un camión primero','err'); return; }
+  if(!balSelLog){toast('Seleccioná un camión','err');return;}
   const tara=parseFloat(document.getElementById('bf-tara').value)||0;
   const bruto=parseFloat(document.getElementById('bf-bruto').value)||0;
   const neto=bruto-tara;
   const obs=document.getElementById('bf-obs').value;
-  if(!bruto){ toast('Ingresá el peso bruto','err'); return; }
+  const cupoId=document.getElementById('bf-cupo').value;
+  if(!bruto){toast('Ingresá el peso bruto','err');return;}
 
-  // patente: usar la del registro de logística, o la seleccionada manualmente
   let patente=balSelLog.patenteChasis;
-  const patNueva=document.getElementById('bf-patente-nueva').value;
-  if(patNueva) patente=patNueva;
+  const manualPat=document.getElementById('bal-pat-manual');
+  if(manualPat&&manualPat.value)patente=manualPat.value;
 
-  // buscar kg estimados de campo para ese campo/lote del dia
-  const regCampo=rCampo.filter(r=>r.campo===balSelLog.campo&&r.lote===balSelLog.lote&&r.fecha===balSelLog.fecha);
-  const kgCampo=regCampo.length>0?(regCampo[regCampo.length-1].kgCampo||0):0;
+  let campo=balSelLog.campo;
+  const manualCampo=document.getElementById('bal-campo-manual');
+  if(manualCampo&&manualCampo.value)campo=manualCampo.value;
+
+  const st=camLlegados[balSelLog.id]||{};
+  const kgCampo=st.kg||0;
   const diferencia=kgCampo>0?neto-kgCampo:0;
 
-  const rec={
-    id:Date.now().toString(),
-    logisticaId:balSelLog.id,
-    fecha:balSelLog.fecha||today(),
-    campo:balSelLog.campo,
-    lote:balSelLog.lote,
-    patente,
-    chofer:balSelLog.chofer,
-    destino:balSelLog.destino,
-    tara,bruto,neto,kgCampo,diferencia,obs,ts:Date.now()
-  };
-  rBalanza.push(rec); save('r_balanza',rBalanza);
-  const row=[rec.fecha,rec.campo,rec.lote,patente,tara,bruto,neto,kgCampo,diferencia,obs,rec.id,balSelLog.id||''];
+  // consume cupo
+  if(cupoId){
+    const cupo=rCupos.find(c=>c.id===cupoId);
+    if(cupo&&cupo.disponible>0){cupo.disponible--;save('r_cupos',rCupos);}
+  }
+
+  const rec={id:Date.now().toString(),logisticaId:balSelLog.id,fecha:balSelLog.fecha||today(),campo,lote:balSelLog.lote,patente,chofer:balSelLog.chofer,destino:balSelLog.destino,tara,bruto,neto,kgCampo,diferencia,cupoId,obs,ts:Date.now()};
+  rBalanza.push(rec);save('r_balanza',rBalanza);
+  const row=[rec.fecha,campo,rec.lote,patente,tara,bruto,neto,kgCampo,diferencia,cupoId,obs,rec.id,balSelLog.id||''];
   const synced=await syncToSheets('Balanza',row);
   toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
   setTimeout(goHome,1200);
 }
 
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // FORM: LOGÍSTICA
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 function initLogistica(){
   document.getElementById('lf-fecha').value=today();
   popSel('lf-campo',Object.keys(CAMPOS));
   popSel('lf-lote',[]);
-  popSel('lf-ch',maestros.patentes.map(p=>p.chasis));
-  ['lf-ac','lf-chofer','lf-cuit-ch','lf-transp','lf-cuit-tr','lf-obs'].forEach(id=>document.getElementById(id).value='');
-  selDest=''; renderDestChips();
+  ['lf-ch','lf-ac','lf-chofer','lf-cuit-ch','lf-transp','lf-cuit-tr','lf-obs'].forEach(id=>document.getElementById(id).value='');
+  selDest='';renderDestChips();
 }
-
 function renderDestChips(){
-  document.getElementById('dest-chips').innerHTML=maestros.destinos.map(d=>`<span class="dest-chip ${d===selDest?'sel':''}" onclick="selDestino('${d.replace(/'/g,"\\'")}')">${d}</span>`).join('');
+  document.getElementById('dest-chips').innerHTML=maestros.destinos.map(d=>`<span class="chip dest ${d===selDest?'sel':''}" onclick="selDestino('${d.replace(/'/g,"\\'")}')">  ${d}</span>`).join('');
 }
-function selDestino(d){ selDest=d; renderDestChips(); }
+function selDestino(d){selDest=d;renderDestChips();}
 function addDestino(){
-  const v=document.getElementById('lf-nuevo-dest').value.trim(); if(!v) return;
-  if(!maestros.destinos.includes(v)) maestros.destinos.push(v);
-  save('maestros',maestros); selDest=v;
+  const v=document.getElementById('lf-nuevo-dest').value.trim();if(!v)return;
+  if(!maestros.destinos.includes(v))maestros.destinos.push(v);
+  save('maestros',maestros);selDest=v;
   document.getElementById('lf-nuevo-dest').value='';
   renderDestChips();
 }
-
+function onCampoChange(prefix){
+  const campo=document.getElementById(prefix+'-campo').value;
+  const lotes=campo&&CAMPOS[campo]?[...new Set(CAMPOS[campo].lotes.map(l=>l.nombre))]:[];
+  popSel(prefix+'-lote',lotes);
+}
 async function guardarLogistica(){
   const fecha=document.getElementById('lf-fecha').value;
-  const ch=document.getElementById('lf-ch').value;
-  const ac=document.getElementById('lf-ac').value;
-  const chofer=document.getElementById('lf-chofer').value;
+  const ch=document.getElementById('lf-ch').value.trim();
+  const ac=document.getElementById('lf-ac').value.trim();
+  const chofer=document.getElementById('lf-chofer').value.trim();
   const cuitCh=document.getElementById('lf-cuit-ch').value;
   const transp=document.getElementById('lf-transp').value;
   const cuitTr=document.getElementById('lf-cuit-tr').value;
@@ -879,136 +1017,175 @@ async function guardarLogistica(){
   const lote=document.getElementById('lf-lote').value;
   const cultivo=document.getElementById('lf-cultivo').value;
   const obs=document.getElementById('lf-obs').value;
-  if(!fecha||!ch||!chofer){ toast('Completá fecha, patente y chofer','err'); return; }
+  if(!fecha||!ch||!chofer){toast('Completá fecha, patente y chofer','err');return;}
   const rec={id:Date.now().toString(),fecha,patenteChasis:ch,patenteAcoplado:ac,chofer,cuitChofer:cuitCh,transporte:transp,cuitTransporte:cuitTr,destino:selDest,campo,lote,cultivo,obs,ts:Date.now()};
-  rLogistica.push(rec); save('r_logistica',rLogistica);
+  rLogistica.push(rec);save('r_logistica',rLogistica);
   const row=[fecha,ch,ac,chofer,cuitCh,transp,cuitTr,selDest,campo,lote,cultivo,obs,rec.id];
   const synced=await syncToSheets('Logistica',row);
   toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
   setTimeout(goHome,1200);
 }
 
-// ══════════════════════════════════════════
-// NUEVA PATENTE
-// ══════════════════════════════════════════
-function saveNewPat(){
-  const ch=document.getElementById('np-ch').value.trim().toUpperCase();
-  const ac=document.getElementById('np-ac').value.trim().toUpperCase();
-  if(!ch){ toast('Ingresá patente chasis','err'); return; }
-  if(!maestros.patentes.find(p=>p.chasis===ch)) maestros.patentes.push({chasis:ch,acoplado:ac});
-  save('maestros',maestros);
-  document.getElementById('np-ch').value=''; document.getElementById('np-ac').value='';
-  closeModal('modal-pat'); toast('✅ Patente agregada');
-  if(curScr==='scr-balanza'){ popSel('bf-patente-nueva',maestros.patentes.map(p=>p.chasis)); }
-  if(curScr==='scr-logistica') popSel('lf-ch',maestros.patentes.map(p=>p.chasis));
+// ════════════════════════════════════
+// CUPOS
+// ════════════════════════════════════
+function initCupos(){
+  document.getElementById('cupo-fecha').value=today();
+  popSel('cupo-campo',Object.keys(CAMPOS));
+  renderCuposLista();
+}
+async function guardarCupo(){
+  const fecha=document.getElementById('cupo-fecha').value;
+  const campo=document.getElementById('cupo-campo').value;
+  const cant=parseInt(document.getElementById('cupo-cant').value)||0;
+  const destino=document.getElementById('cupo-destino').value.trim();
+  if(!fecha||!campo||!cant){toast('Completá todos los campos','err');return;}
+  const rec={id:Date.now().toString(),fecha,campo,disponible:cant,total:cant,destino,ts:Date.now()};
+  rCupos.push(rec);save('r_cupos',rCupos);
+  document.getElementById('cupo-cant').value='';
+  document.getElementById('cupo-destino').value='';
+  renderCuposLista();
+  const row=[fecha,campo,cant,destino,rec.id];
+  const synced=await syncToSheets('Cupos',row);
+  toast(synced?'✅ Cupo guardado y sincronizado':'✅ Cupo guardado');
+}
+function renderCuposLista(){
+  const todayStr=today();
+  const regs=rCupos.filter(c=>c.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
+  const lista=document.getElementById('cupos-lista');
+  if(!regs.length){lista.innerHTML='<div class="empty"><div class="ei">🎯</div><p>Sin cupos cargados para hoy</p></div>';return;}
+  lista.innerHTML=regs.map(c=>`
+    <div class="cupo-card">
+      <div class="cupo-hdr">
+        <span style="font-family:'Barlow Condensed',sans-serif;font-size:17px;color:var(--gold);">${c.campo}</span>
+        <span class="badge ${c.disponible>0?'b-pend':'b-red'}">${c.disponible>0?c.disponible+' disp.':'Agotado'}</span>
+      </div>
+      <div class="row-meta">
+        <span>📍 ${c.destino||'—'}</span>
+        <span>Total: ${c.total} · Usados: ${c.total-c.disponible}</span>
+      </div>
+    </div>`).join('');
 }
 
-// ══════════════════════════════════════════
-// PDF
-// ══════════════════════════════════════════
-function handlePDF(input, prefix){
-  Array.from(input.files).forEach(f=>{
-    const reader=new FileReader();
-    reader.onload=e=>{ pendingPDFs.push({name:f.name,size:f.size,b64:e.target.result}); renderPDFList(prefix); };
-    reader.readAsDataURL(f);
-  });
-  input.value='';
+// ════════════════════════════════════
+// VER AVANCE — FILTRO MÚLTIPLE
+// ════════════════════════════════════
+function initCultFilter(){
+  const allCults=[...new Set(Object.values(CAMPOS).flatMap(c=>c.lotes.map(l=>l.cultivo)))].sort();
+  const wrap=document.getElementById('cult-filter');
+  wrap.innerHTML=`<span class="chip sel" id="cult-all" onclick="toggleAllCult(this)" style="margin:3px;">Todos</span>`+
+    allCults.map(c=>`<span class="chip" data-cult="${c}" onclick="toggleCult(this,'${c.replace(/'/g,"\\'")}') "style="margin:3px;">${c}</span>`).join('');
 }
-function renderPDFList(prefix){
-  document.getElementById(prefix+'-pdf-list').innerHTML=pendingPDFs.map((p,i)=>`
-    <div class="pdf-item"><span>📄</span><span class="pn">${p.name}</span><span style="font-size:11px;color:var(--mut);">${(p.size/1024).toFixed(0)}kb</span><button class="pd" onclick="pendingPDFs.splice(${i},1);renderPDFList('${prefix}')">×</button></div>`).join('');
+function toggleAllCult(el){
+  selCultivos.clear();
+  document.querySelectorAll('[data-cult]').forEach(c=>c.classList.remove('sel'));
+  el.classList.add('sel');
+  renderAvance();
+}
+function toggleCult(el,cult){
+  document.getElementById('cult-all').classList.remove('sel');
+  if(selCultivos.has(cult)){selCultivos.delete(cult);el.classList.remove('sel');}
+  else{selCultivos.add(cult);el.classList.add('sel');}
+  if(!selCultivos.size){document.getElementById('cult-all').classList.add('sel');}
+  renderAvance();
 }
 
-// ══════════════════════════════════════════
-// VER AVANCE
-// ══════════════════════════════════════════
 function renderAvance(){
-  const filtCult=document.getElementById('av-fil-cult').value;
   const buscar=document.getElementById('av-buscar').value.toLowerCase();
-
-  // populate cultivo filter
-  const sel=document.getElementById('av-fil-cult');
-  if(sel.options.length===1){
-    const cults=[...new Set(Object.values(CAMPOS).flatMap(c=>c.lotes.map(l=>l.cultivo)))].sort();
-    cults.forEach(c=>{ const o=document.createElement('option'); o.value=c; o.textContent=c; sel.appendChild(o); });
-    sel.value=filtCult;
-  }
+  const filtCults=selCultivos.size>0?selCultivos:null;
 
   let tHas=0,tAv=0;
-  Object.entries(CAMPOS).forEach(([est,data])=>{
-    data.lotes.forEach(l=>{
-      if(!filtCult||l.cultivo===filtCult){ tHas+=l.has; tAv+=getAv(est,l.nombre,l.cultivo); }
-    });
-  });
+  Object.entries(CAMPOS).forEach(([est,d])=>d.lotes.forEach(l=>{
+    if(!filtCults||filtCults.has(l.cultivo)){tHas+=l.has;tAv+=getAv(est,l.nombre,l.cultivo);}
+  }));
   const pct=tHas>0?Math.round(tAv/tHas*100):0;
 
   document.getElementById('av-sum').innerHTML=`
     <div class="sc"><div class="sv">${pct}%</div><div class="sl">Avance</div></div>
-    <div class="sc"><div class="sv">${Math.round(tAv).toLocaleString('es')}</div><div class="sl">Has cosech.</div></div>
+    <div class="sc"><div class="sv">${Math.round(tAv).toLocaleString('es')}</div><div class="sl">Has cos.</div></div>
     <div class="sc"><div class="sv">${Math.round(tHas-tAv).toLocaleString('es')}</div><div class="sl">Has rest.</div></div>
     <div class="sc"><div class="sv">${rBalanza.length}</div><div class="sl">Camiones</div></div>`;
 
   const list=document.getElementById('av-list');
   const entries=Object.entries(CAMPOS).filter(([est])=>!buscar||est.toLowerCase().includes(buscar));
-
   list.innerHTML=entries.map(([est,data])=>{
     let cHas=0,cAv=0;
-    data.lotes.forEach(l=>{ if(!filtCult||l.cultivo===filtCult){ cHas+=l.has; cAv+=getAv(est,l.nombre,l.cultivo); } });
-    if(filtCult&&cHas===0) return '';
+    data.lotes.forEach(l=>{if(!filtCults||filtCults.has(l.cultivo)){cHas+=l.has;cAv+=getAv(est,l.nombre,l.cultivo);}});
+    if(filtCults&&cHas===0)return '';
     const cPct=cHas>0?Math.min(100,Math.round(cAv/cHas*100)):0;
     const isExp=expCampos[est];
 
-    const lotesHTML=data.lotes.map(l=>{
-      if(filtCult&&l.cultivo!==filtCult) return '';
+    // Contratistas avance
+    const contraMap={};
+    rCampo.filter(r=>r.campo===est&&(!filtCults||filtCults.has(r.cultivo))).forEach(r=>{
+      (r.contratistas||'').split(';').filter(Boolean).forEach(c=>{
+        if(!contraMap[c])contraMap[c]=0;
+        contraMap[c]+=r.has||0;
+      });
+    });
+
+    const lotesHTML=data.lotes.filter(l=>!filtCults||filtCults.has(l.cultivo)).map(l=>{
       const lAv=getAv(est,l.nombre,l.cultivo);
       const lPct=l.has>0?Math.min(100,Math.round(lAv/l.has*100)):0;
-      const lResta=Math.max(0,l.has-lAv);
-      return `<div class="lote-row">
-        <span class="lote-name">${l.nombre}</span>
-        <span class="lote-cult">${l.cultivo}</span>
-        <div class="lote-pbg"><div class="lote-pfill" style="width:${lPct}%"></div></div>
-        <span class="lote-pct">${lPct}%</span>
-        <span class="lote-has">${lAv.toFixed(1)}/${l.has} ha</span>
+      // contratistas por lote
+      const lContra={};
+      rCampo.filter(r=>r.campo===est&&r.lote===l.nombre&&r.cultivo===l.cultivo).forEach(r=>{
+        (r.contratistas||'').split(';').filter(Boolean).forEach(c=>{if(!lContra[c])lContra[c]=0;lContra[c]+=r.has||0;});
+      });
+      const contraStr=Object.entries(lContra).map(([c,h])=>`${c}: ${h.toFixed(1)} ha`).join(' · ');
+      return `<div style="padding:6px 0;border-bottom:1px solid rgba(255,255,255,.04);">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:4px;">
+          <span style="font-size:12px;color:var(--wh);flex:1;">${l.nombre}</span>
+          <span style="font-size:10px;color:var(--mut);background:rgba(255,255,255,.06);padding:1px 5px;border-radius:4px;">${l.cultivo}</span>
+          <span style="font-size:11px;color:var(--mut);width:28px;text-align:right;">${lPct}%</span>
+          <span style="font-size:11px;color:var(--mut);width:80px;text-align:right;white-space:nowrap;">${lAv.toFixed(1)}/${l.has} ha</span>
+        </div>
+        <div style="background:rgba(255,255,255,.08);border-radius:3px;height:4px;overflow:hidden;"><div style="height:4px;border-radius:3px;background:var(--green);width:${lPct}%"></div></div>
+        ${contraStr?`<div style="font-size:10px;color:var(--mut);margin-top:3px;padding-left:6px;border-left:2px solid rgba(201,168,76,.3);">${contraStr}</div>`:''}
       </div>`;
     }).join('');
 
-    return `<div class="campo-card" onclick="toggleCampo('${est}')">
-      <div class="campo-hdr">
-        <span class="campo-name">${est}</span>
+    const contraResumen=Object.entries(contraMap).map(([c,h])=>`${c}: ${h.toFixed(1)} ha`).join(' · ');
+
+    return `<div class="campo-card">
+      <div class="campo-hdr" onclick="expCampos['${est}']=!expCampos['${est}'];renderAvance();">
+        <div>
+          <span class="campo-name">${est}</span>
+          ${contraResumen?`<div style="font-size:11px;color:var(--mut);margin-top:2px;">${contraResumen}</div>`:''}
+        </div>
         <div style="display:flex;align-items:center;gap:6px;">
-          <span class="campo-pct">${cPct}%</span>
-          <span class="chevron ${isExp?'open':''}">▼</span>
+          <span style="font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--goldl);">${cPct}%</span>
+          <span style="font-size:10px;color:var(--mut);transition:.2s;${isExp?'transform:rotate(180deg)':''}">▼</span>
         </div>
       </div>
       <div class="prog-bg"><div class="prog-fill" style="width:${cPct}%"></div></div>
-      <div class="campo-meta">${cAv.toFixed(1)} cosechadas · ${(cHas-cAv).toFixed(1)} restantes · ${cHas.toFixed(1)} ha total</div>
-      <div class="lote-expand ${isExp?'open':''}">${lotesHTML}</div>
+      <div style="font-size:11px;color:var(--mut);">${cAv.toFixed(1)} cosechadas · ${(cHas-cAv).toFixed(1)} restantes · ${cHas.toFixed(1)} ha total</div>
+      <div style="${isExp?'':'display:none;'}border-top:1px solid var(--brd);margin-top:10px;padding-top:8px;">
+        ${lotesHTML}
+      </div>
     </div>`;
   }).join('');
 }
 
-function toggleCampo(est){ expCampos[est]=!expCampos[est]; renderAvance(); }
-
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 // VER CAMIONES
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 function renderCamiones(){
   const fechas=[...new Set(rBalanza.map(r=>r.fecha))].sort().reverse();
   const campos=[...new Set(rBalanza.map(r=>r.campo))];
-  const lotes=[...new Set(rBalanza.map(r=>r.lote))];
   const ff=document.getElementById('fc-fecha').value;
   const fc=document.getElementById('fc-campo').value;
-  const fl=document.getElementById('fc-lote').value;
-  popSel('fc-fecha',fechas,'Todas fechas'); popSel('fc-campo',campos,'Todos campos'); popSel('fc-lote',lotes,'Todos lotes');
-  if(ff) document.getElementById('fc-fecha').value=ff;
-  if(fc) document.getElementById('fc-campo').value=fc;
-  if(fl) document.getElementById('fc-lote').value=fl;
+  const fest=document.getElementById('fc-estado').value;
+  popSel('fc-fecha',fechas,'Todas fechas');
+  popSel('fc-campo',campos,'Todos campos');
+  if(ff)document.getElementById('fc-fecha').value=ff;
+  if(fc)document.getElementById('fc-campo').value=fc;
+  document.getElementById('fc-estado').value=fest;
 
   let regs=[...rBalanza].sort((a,b)=>b.ts-a.ts);
-  if(ff) regs=regs.filter(r=>r.fecha===ff);
-  if(fc) regs=regs.filter(r=>r.campo===fc);
-  if(fl) regs=regs.filter(r=>r.lote===fl);
-  const tn=regs.reduce((s,r)=>s+r.neto,0);
+  if(ff)regs=regs.filter(r=>r.fecha===ff);
+  if(fc)regs=regs.filter(r=>r.campo===fc);
+  const tn=regs.reduce((s,r)=>s+(r.neto||0),0);
 
   document.getElementById('cam-sum').innerHTML=`
     <div class="sc"><div class="sv">${regs.length}</div><div class="sl">Camiones</div></div>
@@ -1017,63 +1194,74 @@ function renderCamiones(){
     <div class="sc"><div class="sv">${[...new Set(regs.map(r=>r.campo))].length}</div><div class="sl">Campos</div></div>`;
 
   const list=document.getElementById('cam-list');
-  if(!regs.length){ list.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones para este filtro</p></div>'; return; }
-
+  if(!regs.length){list.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones para este filtro</p></div>';return;}
+  const difColor=d=>d>0?'var(--greenl)':d<0?'var(--red)':'var(--mut)';
   list.innerHTML=regs.map(r=>{
-    const log=rLogistica.find(l=>l.patenteChasis===r.patente&&l.fecha===r.fecha);
-    const difColor=r.diferencia>0?'var(--greenl)':r.diferencia<0?'var(--red)':'var(--mut)';
-    const difTxt=r.diferencia>0?'+'+r.diferencia.toLocaleString('es'):r.diferencia!==0?r.diferencia.toLocaleString('es'):'';
+    const log=rLogistica.find(l=>l.id===r.logisticaId);
+    const cupo=r.cupoId?rCupos.find(c=>c.id===r.cupoId):null;
     return `<div class="row-card">
       <div class="row-top"><span class="pat">${r.patente}</span><span class="tn">${(r.neto/1000).toFixed(2)} Tn</span></div>
       <div class="row-meta">
         <span>📅 ${r.fecha}</span>
-        <span>🌾 ${r.campo}${r.lote?' · '+r.lote:''}</span>
+        <span>🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</span>
         ${log?`<span>👤 ${log.chofer}</span>`:''}
-        ${log&&log.destino?`<span>📍 ${log.destino}</span>`:''}
+        ${r.destino||log?.destino?`<span>📍 ${r.destino||log?.destino}</span>`:''}
       </div>
       ${r.kgCampo>0?`<div class="row-meta" style="margin-top:5px;background:rgba(255,255,255,.04);border-radius:6px;padding:5px 8px;">
-        <span>Campo estimó: <b style="color:var(--goldl)">${r.kgCampo.toLocaleString('es')} kg</b></span>
+        <span>Campo: <b style="color:var(--goldl)">${r.kgCampo.toLocaleString('es')} kg</b></span>
         <span>Balanza: <b style="color:var(--greenl)">${r.neto.toLocaleString('es')} kg</b></span>
-        ${difTxt?`<span>Dif: <b style="color:${difColor}">${difTxt} kg</b></span>`:''}
+        ${r.diferencia?`<span>Dif: <b style="color:${difColor(r.diferencia)}">${r.diferencia>0?'+':''}${r.diferencia.toLocaleString('es')} kg</b></span>`:''}
       </div>`:''}
-      ${log?`<div class="row-meta" style="margin-top:4px;"><span>🏢 ${log.transporte||'—'}</span><span>CUIT: ${log.cuitChofer||'—'}</span></div>`:''}
-      ${r.obs?`<div class="row-obs">💬 ${r.obs}</div>`:''}
+      ${cupo?`<div class="row-meta" style="margin-top:4px;"><span>🎯 Cupo: ${cupo.destino||cupo.campo}</span></div>`:''}
+      ${log?`<div class="row-meta" style="margin-top:2px;"><span>🏢 ${log.transporte||'—'}</span></div>`:''}
+      ${r.obs?`<div style="font-size:11px;color:rgba(245,245,240,.4);margin-top:4px;font-style:italic;">💬 ${r.obs}</div>`:''}
     </div>`;
   }).join('');
 }
 
-// ══════════════════════════════════════════
-// OBSERVACIONES
-// ══════════════════════════════════════════
-const obsKW={humedad:['humedad','mojado','seco','húmedo'],demora:['demora','retraso','espera','tarde','parado'],maquina:['cosechadora','máquina','falla','mecánico','roto','motor'],camion:['camión','camion','patente','transporte','chofer'],lote:['lote','campo','zona']};
-const obsLbl={humedad:'Humedad',demora:'Demora',maquina:'Máquina',camion:'Camión',lote:'Lote',general:'General'};
-function classObs(t){ const tl=t.toLowerCase(); for(const[tag,words] of Object.entries(obsKW)) if(words.some(w=>tl.includes(w))) return tag; return 'general'; }
-
-function renderObs(){
-  const all=[];
-  rCampo.forEach(r=>{ if(r.obs?.trim()) all.push({text:r.obs,campo:r.campo,lote:r.lote,fecha:r.fecha,ts:r.ts}); });
-  rBalanza.forEach(r=>{ if(r.obs?.trim()) all.push({text:r.obs,campo:r.campo,lote:r.lote,fecha:r.fecha,ts:r.ts}); });
-  rLogistica.forEach(r=>{ if(r.obs?.trim()) all.push({text:r.obs,campo:r.campo,lote:r.lote,fecha:r.fecha,ts:r.ts}); });
-  all.sort((a,b)=>b.ts-a.ts);
-  const list=document.getElementById('obs-list');
-  if(!all.length){ list.innerHTML='<div class="empty"><div class="ei">📋</div><p>Sin observaciones cargadas</p></div>'; return; }
-  list.innerHTML=all.map(o=>{
-    const tag=classObs(o.text);
-    return `<div class="row-card"><span class="badge b-${tag}">${obsLbl[tag]}</span><div style="font-size:13px;margin:5px 0;line-height:1.5;">${o.text}</div><div class="row-meta"><span>📅 ${o.fecha}</span><span>🌾 ${o.campo||'—'}${o.lote?' · '+o.lote:''}</span></div></div>`;
-  }).join('');
+// ════════════════════════════════════
+// EXPORTAR CPE EXCEL
+// ════════════════════════════════════
+function renderExport(){
+  document.getElementById('export-sum').innerHTML=`
+    <div class="sc"><div class="sv">${rCPE.length}</div><div class="sl">CPE</div></div>
+    <div class="sc"><div class="sv">${[...new Set(rCPE.map(c=>c.campo||''))].filter(Boolean).length}</div><div class="sl">Campos</div></div>
+    <div class="sc"><div class="sv">${[...new Set(rCPE.map(c=>c.ctg||''))].filter(Boolean).length}</div><div class="sl">CTG únicos</div></div>
+    <div class="sc"><div class="sv">${rCPE.filter(c=>c.pesoNeto).reduce((s,c)=>s+(parseInt(c.pesoNeto)||0),0).toLocaleString('es')}</div><div class="sl">Kg totales</div></div>`;
+  if(!rCPE.length){document.getElementById('export-preview').innerHTML='<div class="empty"><div class="ei">📄</div><p>Sin cartas de porte adjuntadas aún.<br>Adjuntá PDFs en "Cargar Campo".</p></div>';return;}
+  document.getElementById('export-preview').innerHTML=rCPE.slice(0,5).map(c=>`
+    <div class="row-card" style="margin-bottom:8px;">
+      <div class="row-top"><span class="pat" style="font-size:14px;">CPE ${c.nCPE||'—'}</span><span style="font-size:11px;color:var(--mut);">CTG ${c.ctg||'—'}</span></div>
+      <div class="row-meta"><span>📅 ${c.fecha||'—'}</span><span>🌾 ${c.grano||'—'}</span><span>⚖️ ${c.pesoNeto||'—'} kg</span></div>
+      <div class="row-meta" style="margin-top:3px;"><span>🚛 ${(c.dominios||'—')}</span><span>👤 ${(c.chofer||'—').split('-').pop()?.trim()}</span></div>
+    </div>`).join('')+(rCPE.length>5?`<div style="text-align:center;font-size:12px;color:var(--mut);padding:8px;">... y ${rCPE.length-5} más</div>`:'');
 }
 
-// ══════════════════════════════════════════
+function exportarExcel(){
+  if(!rCPE.length){toast('Sin cartas de porte para exportar','err');return;}
+  const headers=['N° CPE','CTG','Fecha','Vencimiento','Campo','Titular CP','Destinatario','Destino','Transportista','Chofer','Flete Pagador','Grano/Tipo','Campaña','Peso Bruto (kg)','Peso Tara (kg)','Peso Neto (kg)','Localidad Origen','Provincia Origen','Dominios','Kms','Bruto Descarga (kg)','Tara Descarga (kg)','Neto Descarga (kg)','Fecha Arribo','Fecha Descarga','Archivo'];
+  const rows=rCPE.map(c=>[c.nCPE||'',c.ctg||'',c.fecha||'',c.vencimiento||'',c.campo||'',c.titular||'',c.destinatario||'',c.destino||'',c.transportista||'',c.chofer||'',c.flete||'',c.grano||'',c.campaña||'',c.pesoBruto||'',c.pessTara||'',c.pesoNeto||'',c.localidadOrigen||'',c.provinciaOrigen||'',c.dominios||'',c.kms||'',c.pesoBrutoDesc||'',c.pessTaraDesc||'',c.pesoNetoDesc||'',c.fechaArribo||'',c.fechaDescarga||'',c.archivo||'']);
+
+  // Build CSV
+  const csv=[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
+  const BOM='\uFEFF';
+  const blob=new Blob([BOM+csv],{type:'text/csv;charset=utf-8'});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement('a');
+  a.href=url;a.download=`cartas_porte_${today()}.csv`;
+  document.body.appendChild(a);a.click();document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  toast('✅ Excel exportado');
+}
+
+// ════════════════════════════════════
 // INIT
-// ══════════════════════════════════════════
+// ════════════════════════════════════
 (function init(){
   document.getElementById('r-'+role).classList.add('active');
-  renderHomeBtns(); updateHero();
-  if(cfg.url){
-    mostrarConectado(true);
-  } else {
-    mostrarConectado(false);
-  }
+  renderHomeBtns();updateHero();
+  initCultFilter();
+  if(cfg.url){showCfgOk();}
 })();
 </script>
 </body>
