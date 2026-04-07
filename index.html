@@ -197,17 +197,13 @@ textarea{resize:vertical;min-height:68px;}
 <!-- CARGAR CAMPO -->
 <div class="scr" id="scr-campo">
   <div class="sec-hdr">📅 Fecha y Establecimiento</div>
-  <div class="frow fld">
-    <div><label>Fecha</label><input type="date" id="cf-fecha"></div>
-    <div><label>Establecimiento</label><select id="cf-campo" onchange="onCampoChangeCF()"><option value="">— Seleccionar —</option></select></div>
+  <div class="fld">
+    <label>Fecha</label><input type="date" id="cf-fecha">
   </div>
 
-  <div class="sec-hdr">🗂 Lotes y Hectáreas</div>
-  <div id="cf-lotes-wrap"><div class="empty" style="padding:16px;"><p>Seleccioná un establecimiento</p></div></div>
-
-  <div class="sec-hdr">👷 Contratistas</div>
-  <div id="cf-contratistas-wrap"></div>
-  <button class="add-btn" onclick="addContratista()" style="width:100%;margin-bottom:8px;">+ Agregar contratista</button>
+  <div class="sec-hdr">🏡 Campos y Lotes</div>
+  <div id="cf-campos-wrap"></div>
+  <button class="add-btn" onclick="addCampoBloque()" style="width:100%;margin-bottom:4px;">+ Agregar campo</button>
 
   <div class="sec-hdr">📊 Datos adicionales</div>
   <div class="frow fld">
@@ -243,8 +239,17 @@ textarea{resize:vertical;min-height:68px;}
 
 <!-- CAMIONES EN CAMPO -->
 <div class="scr" id="scr-campo-cam">
-  <div style="margin-bottom:12px;">
-    <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="cc-buscar" placeholder="Buscar patente o campo..." oninput="renderCampoCam()">
+  <div class="frow" style="margin-bottom:10px;gap:8px;">
+    <div>
+      <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Campo</label>
+      <select id="cc-campo-fil" onchange="renderCampoCam()" style="background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;width:100%;">
+        <option value="">Todos</option>
+      </select>
+    </div>
+    <div style="flex:1;">
+      <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Buscar</label>
+      <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="cc-buscar" placeholder="Patente o chofer..." oninput="renderCampoCam()">
+    </div>
   </div>
   <div id="cc-lista"></div>
 </div>
@@ -253,9 +258,16 @@ textarea{resize:vertical;min-height:68px;}
 <div class="scr" id="scr-balanza">
   <!-- PASO 1: Lista de camiones -->
   <div id="bal-p1">
-    <div style="display:flex;gap:8px;margin-bottom:10px;">
+    <div class="frow" style="margin-bottom:10px;gap:8px;">
+      <div>
+        <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Campo</label>
+        <select id="bf-campo-fil" onchange="renderBalLista()" style="background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;width:100%;">
+          <option value="">Todos</option>
+        </select>
+      </div>
       <div style="flex:1;">
-        <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="bf-buscar" placeholder="Buscar patente, campo, chofer..." oninput="renderBalLista()">
+        <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Buscar</label>
+        <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="bf-buscar" placeholder="Patente o chofer..." oninput="renderBalLista()">
       </div>
     </div>
     <!-- tabs: pendiente tara / pendiente bruto / listos -->
@@ -574,90 +586,176 @@ function updateHero(){
 // ════════════════════════════════════
 function initCampo(){
   document.getElementById('cf-fecha').value=today();
-  popSel('cf-campo',Object.keys(CAMPOS));
-  document.getElementById('cf-lotes-wrap').innerHTML='<div class="empty" style="padding:16px;"><p>Seleccioná un establecimiento</p></div>';
-  document.getElementById('cf-contratistas-wrap').innerHTML='';
+  document.getElementById('cf-campos-wrap').innerHTML='';
   ['cf-humedad','cf-perdida','cf-perdida-tot','cf-obs'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('cf-perdida-causa').value='';
   pendingPDFs=[];document.getElementById('cf-pdf-list').innerHTML='';
-  addContratista();
+  addCampoBloque(); // start with one campo block
 }
 
-function onCampoChangeCF(){
-  const campo=document.getElementById('cf-campo').value;
-  const wrap=document.getElementById('cf-lotes-wrap');
-  if(!campo||!CAMPOS[campo]){wrap.innerHTML='<div class="empty" style="padding:16px;"><p>Seleccioná un establecimiento</p></div>';return;}
-  const lotes=CAMPOS[campo].lotes;
-  wrap.innerHTML=lotes.map((l,i)=>`
-    <div class="lote-item" id="li-${i}">
-      <div class="lote-item-hdr" onclick="toggleLote(${i})">
-        <div class="lote-chk" id="lchk-${i}"></div>
-        <div style="flex:1;">
-          <div class="lote-item-name">${l.nombre}</div>
-          <div class="lote-item-cult">${l.cultivo} · ${l.has} ha</div>
-        </div>
-      </div>
-      <div class="lote-inputs" id="linputs-${i}">
-        <div class="frow">
-          <div><label>Has. cosechadas hoy</label><input type="number" id="lhas-${i}" placeholder="0" step="0.1" min="0" max="${l.has}" oninput="calcPerdida()"></div>
-          <div><label>Has. ya cosechadas</label><input type="number" readonly value="${getAv(document.getElementById('cf-campo').value,l.nombre,l.cultivo).toFixed(1)}" style="opacity:.6;"></div>
-        </div>
-        <div style="font-size:11px;color:var(--mut);margin-top:2px;">Restante: ${Math.max(0,l.has-getAv(document.getElementById('cf-campo').value,l.nombre,l.cultivo)).toFixed(1)} ha</div>
-      </div>
-    </div>`).join('');
-}
+// ── MULTI-CAMPO BLOCKS ──
+let campoBlocks = 0;
 
-function toggleLote(i){
-  const chk=document.getElementById('lchk-'+i);
-  const item=document.getElementById('li-'+i);
-  const inputs=document.getElementById('linputs-'+i);
-  const on=chk.classList.toggle('on');
-  chk.textContent=on?'✓':'';
-  item.classList.toggle('sel',on);
-  inputs.classList.toggle('open',on);
-}
-
-function addContratista(){
-  const wrap=document.getElementById('cf-contratistas-wrap');
-  const idx=wrap.children.length;
-  const div=document.createElement('div');
-  div.className='contra-row';
-  div.innerHTML=`
-    <select style="flex:1;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:14px;outline:none;" id="contra-${idx}">
-      <option value="">— Contratista —</option>
-      ${maestros.contratistas.map(c=>`<option>${c}</option>`).join('')}
-      <option value="__nuevo">+ Nuevo contratista...</option>
-    </select>
-    <button class="rm" onclick="this.parentElement.remove()">×</button>`;
+function addCampoBloque(){
+  const idx = campoBlocks++;
+  const wrap = document.getElementById('cf-campos-wrap');
+  const div = document.createElement('div');
+  div.id = 'cblock-'+idx;
+  div.style.cssText = 'background:var(--bg3);border:1px solid var(--brd);border-radius:12px;padding:12px;margin-bottom:10px;';
+  div.innerHTML = `
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+      <span style="font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;color:var(--gold);">CAMPO ${idx+1}</span>
+      ${idx>0?`<button onclick="document.getElementById('cblock-${idx}').remove()" style="background:none;border:none;color:var(--red);font-size:18px;cursor:pointer;">×</button>`:''}
+    </div>
+    <div class="fld">
+      <label>Establecimiento</label>
+      <select id="cb-campo-${idx}" onchange="onCampoBloque(${idx})" style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:10px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:14px;outline:none;">
+        <option value="">— Seleccionar —</option>
+        ${Object.keys(CAMPOS).map(c=>`<option>${c}</option>`).join('')}
+      </select>
+    </div>
+    <div id="cb-lotes-${idx}" style="margin-bottom:8px;"></div>
+    <div class="sec-hdr" style="margin:10px 0 8px;">👷 Contratistas</div>
+    <div id="cb-contras-${idx}"></div>
+    <button class="add-btn" onclick="addContraBloque(${idx})" style="width:100%;margin-top:4px;">+ Agregar contratista</button>
+  `;
   wrap.appendChild(div);
-  const sel=div.querySelector('select');
-  sel.onchange=()=>{
+  addContraBloque(idx);
+}
+
+function onCampoBloque(idx){
+  const campo = document.getElementById('cb-campo-'+idx).value;
+  const wrap = document.getElementById('cb-lotes-'+idx);
+  if(!campo||!CAMPOS[campo]){wrap.innerHTML='';return;}
+  const lotes = CAMPOS[campo].lotes;
+  wrap.innerHTML = '<div class="sec-hdr" style="margin:10px 0 8px;">🗂 Lotes</div>' +
+    lotes.map((l,i)=>`
+      <div id="lb-${idx}-${i}" style="background:var(--bg);border:1px solid var(--brd);border-radius:8px;padding:10px;margin-bottom:6px;">
+        <div style="display:flex;align-items:center;gap:8px;cursor:pointer;" onclick="toggleLoteBloque(${idx},${i})">
+          <div id="lbchk-${idx}-${i}" style="width:18px;height:18px;border-radius:4px;border:2px solid var(--brd);flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:11px;transition:.15s;"></div>
+          <div style="flex:1;">
+            <div style="font-size:13px;font-weight:600;">${l.nombre}</div>
+            <div style="font-size:11px;color:var(--mut);">${l.cultivo} · ${l.has} ha · Ya cosechado: ${getAv(campo,l.nombre,l.cultivo).toFixed(1)} ha</div>
+          </div>
+        </div>
+        <div id="lbinp-${idx}-${i}" style="display:none;margin-top:8px;padding-top:8px;border-top:1px solid var(--brd);">
+          <label>Has. cosechadas hoy</label>
+          <input type="number" id="lbhas-${idx}-${i}" placeholder="0" step="0.1" min="0" max="${Math.max(0,l.has-getAv(campo,l.nombre,l.cultivo)).toFixed(1)}" style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:8px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:14px;outline:none;" oninput="calcPerdida()">
+          <div style="font-size:10px;color:var(--mut);margin-top:2px;">Máx disponible: ${Math.max(0,l.has-getAv(campo,l.nombre,l.cultivo)).toFixed(1)} ha</div>
+        </div>
+      </div>`).join('');
+}
+
+function toggleLoteBloque(bidx,lidx){
+  const chk = document.getElementById('lbchk-'+bidx+'-'+lidx);
+  const inp = document.getElementById('lbinp-'+bidx+'-'+lidx);
+  const lb  = document.getElementById('lb-'+bidx+'-'+lidx);
+  const on  = !chk.classList.contains('on');
+  chk.classList.toggle('on', on);
+  chk.style.background = on?'var(--gold)':'';
+  chk.style.borderColor = on?'var(--gold)':'var(--brd)';
+  chk.textContent = on?'✓':'';
+  inp.style.display = on?'block':'none';
+  lb.style.borderColor = on?'var(--gold)':'var(--brd)';
+}
+
+function addContraBloque(bidx){
+  const wrap = document.getElementById('cb-contras-'+bidx);
+  if(!wrap)return;
+  const cidx = wrap.children.length;
+  const div = document.createElement('div');
+  div.style.cssText = 'display:flex;gap:8px;margin-bottom:8px;align-items:flex-start;';
+  div.innerHTML = `
+    <div style="flex:1;">
+      <select id="cbcon-${bidx}-${cidx}" style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:8px;padding:9px 10px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;margin-bottom:4px;">
+        <option value="">— Contratista —</option>
+        ${maestros.contratistas.map(c=>`<option>${c}</option>`).join('')}
+        <option value="__nuevo">+ Nuevo...</option>
+      </select>
+      <input type="number" id="cbhas-${bidx}-${cidx}" placeholder="Has. de este contratista" step="0.1" min="0" style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:8px;padding:8px 10px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;">
+    </div>
+    <button onclick="this.parentElement.remove()" style="background:none;border:none;color:var(--red);font-size:20px;cursor:pointer;padding-top:6px;">×</button>`;
+  wrap.appendChild(div);
+  const sel = div.querySelector('select');
+  sel.onchange = ()=>{
     if(sel.value==='__nuevo'){
       const n=prompt('Nombre del contratista:');
-      if(n){
-        if(!maestros.contratistas.includes(n))maestros.contratistas.push(n);
-        save('maestros',maestros);
-        const o=document.createElement('option');o.value=n;o.textContent=n;
-        sel.insertBefore(o,sel.lastElementChild);
-        sel.value=n;
-      }else{sel.value='';}
+      if(n){if(!maestros.contratistas.includes(n))maestros.contratistas.push(n);save('maestros',maestros);const o=document.createElement('option');o.value=n;o.textContent=n;sel.insertBefore(o,sel.lastElementChild);sel.value=n;}
+      else sel.value='';
     }
   };
 }
 
 function calcPerdida(){
   const kgha=parseFloat(document.getElementById('cf-perdida').value)||0;
-  const campo=document.getElementById('cf-campo').value;
-  if(!campo){document.getElementById('cf-perdida-tot').value='';return;}
   let totalHas=0;
-  const lotes=CAMPOS[campo]?.lotes||[];
-  lotes.forEach((_,i)=>{
-    const chk=document.getElementById('lchk-'+i);
-    if(chk&&chk.classList.contains('on')){
-      totalHas+=parseFloat(document.getElementById('lhas-'+i)?.value||0)||0;
-    }
-  });
+  document.querySelectorAll('[id^="lbhas-"]').forEach(inp=>{totalHas+=parseFloat(inp.value)||0;});
   document.getElementById('cf-perdida-tot').value=kgha>0&&totalHas>0?Math.round(kgha*totalHas):'';
+}
+
+async function guardarCampo(){
+  const fecha=document.getElementById('cf-fecha').value;
+  if(!fecha){toast('Ingresá la fecha','err');return;}
+  const humedad=parseFloat(document.getElementById('cf-humedad').value)||0;
+  const perdidaKgha=parseFloat(document.getElementById('cf-perdida').value)||0;
+  const perdidaCausa=document.getElementById('cf-perdida-causa').value;
+  const obs=document.getElementById('cf-obs').value;
+  const pdfNames=pendingPDFs.map(p=>p.name);
+
+  // collect all lote entries from all campo blocks
+  const entries=[];
+  const cWrap=document.getElementById('cf-campos-wrap');
+  const blocks=cWrap.querySelectorAll('[id^="cblock-"]');
+
+  for(const block of blocks){
+    const bidx=block.id.replace('cblock-','');
+    const campo=document.getElementById('cb-campo-'+bidx)?.value;
+    if(!campo)continue;
+    const lotes=CAMPOS[campo]?.lotes||[];
+
+    // get contratistas for this block
+    const contraWrap=document.getElementById('cb-contras-'+bidx);
+    const contratistas=[];
+    if(contraWrap){
+      const rows=contraWrap.children;
+      for(let ci=0;ci<rows.length;ci++){
+        const sel=document.getElementById('cbcon-'+bidx+'-'+ci);
+        const hasInp=document.getElementById('cbhas-'+bidx+'-'+ci);
+        if(sel&&sel.value&&sel.value!=='__nuevo'){
+          contratistas.push({nombre:sel.value,has:parseFloat(hasInp?.value||0)||0});
+        }
+      }
+    }
+
+    lotes.forEach((l,li)=>{
+      const chk=document.getElementById('lbchk-'+bidx+'-'+li);
+      if(!chk||!chk.classList.contains('on'))return;
+      const has=parseFloat(document.getElementById('lbhas-'+bidx+'-'+li)?.value||0)||0;
+      if(has<=0)return;
+      entries.push({campo,lote:l.nombre,cultivo:l.cultivo,hasTot:l.has,has,contratistas});
+    });
+  }
+
+  if(!entries.length){toast('Seleccioná al menos un lote con has.','err');return;}
+
+  // save CPE
+  pendingPDFs.forEach(p=>{if(p.cpe)rCPE.push({...p.cpe,campos:entries.map(e=>e.campo).join(';'),fecha,id:Date.now().toString()+'_'+Math.random()});});
+  save('r_cpe',rCPE);
+
+  for(const e of entries){
+    const yaAv=getAv(e.campo,e.lote,e.cultivo);
+    if(yaAv+e.has>e.hasTot+0.1){toast(`⚠️ ${e.campo} ${e.lote}: superás las ${e.hasTot} ha`,'err');return;}
+    addAv(e.campo,e.lote,e.cultivo,e.has);
+    const perdidaTot=perdidaKgha>0?Math.round(perdidaKgha*e.has):0;
+    const contraStr=e.contratistas.map(c=>`${c.nombre}:${c.has}`).join(';');
+    const rec={id:Date.now().toString()+'_'+e.lote,fecha,campo:e.campo,lote:e.lote,cultivo:e.cultivo,has:e.has,humedad,perdidaKgha,perdidaTot,perdidaCausa,contratistas:contraStr,obs,pdfs:pdfNames.join(';'),ts:Date.now()};
+    rCampo.push(rec);
+    const row=[fecha,e.campo,e.lote,e.cultivo,e.has,humedad,perdidaKgha,perdidaTot,perdidaCausa,contraStr,obs,pdfNames.join(';'),rec.id];
+    await syncToSheets('Campo',row);
+  }
+  save('r_campo',rCampo);
+  toast('✅ Registro guardado');
+  setTimeout(goHome,1200);
 }
 
 // PDF HANDLING
@@ -679,6 +777,10 @@ function handlePDF(input){
 function extraerCPE(text,fname){
   const g=(pattern,flags='i')=>{const m=text.match(new RegExp(pattern,flags));return m?m[1]?.trim()||m[0]?.trim():'';};
   const gLine=(label)=>{const m=text.match(new RegExp(label+'[:\\s]+([^\\n]+)','i'));return m?m[1]?.trim():'';};
+  // extract dominios - chasis and acoplado separately
+  const dominiosFull = g('Dominios[:\\s]+([^\\n]+)');
+  const domParts = dominiosFull.split(/\s*-\s*/);
+  
   return {
     nCPE: g('N[°o]\\s*CPE[:\\s]+([\\d\\-]+)') || g('(\\d{5}-\\d{8})'),
     ctg: g('CTG[:\\s]+(\\d+)'),
@@ -687,18 +789,23 @@ function extraerCPE(text,fname){
     titular: g('Titular Carta de Porte[:\\s]+([^\\n]+)'),
     destinatario: g('Destinatario[:\\s]+([^\\n]+)'),
     destino: g('Destino[:\\s]+([^\\n]+)'),
+    localidadDestino: g('D - DESTINO[\\s\\S]{0,200}Localidad[:\\s]+([A-Z ]+)'),
     transportista: g('Empresa Transportista[:\\s]+([^\\n]+)'),
     chofer: g('Chofer[:\\s]+([^\\n]+)'),
     flete: g('Flete pagador[:\\s]+([^\\n]+)'),
+    intermediario: g('Intermediario de flete[:\\s]+([^\\n]+)'),
     grano: g('Grano\\s*/\\s*Tipo[:\\s]+([^\\n]+)'),
-    campaña: g('Campaña[:\\s]+(\\d{4})'),
+    campaña: g('Campa[ñn]a[:\\s]+(\\d{4})'),
     pesoBruto: g('Peso Bruto[\\s]+(\\d+)'),
     pessTara: g('Peso Tara[\\s]+(\\d+)'),
     pesoNeto: g('Peso Neto[\\s]+(\\d+)'),
-    localidadOrigen: g('Localidad[:\\s]+([A-Z ]+)'),
+    localidadOrigen: g('C - PROCEDENCIA[\\s\\S]{0,100}Localidad[:\\s]+([A-Z ]+)'),
     provinciaOrigen: g('Provincia[:\\s]+([A-Z ]+)'),
-    dominios: g('Dominios[:\\s]+([^\\n]+)'),
+    dominios: dominiosFull,
+    dominioCamion: domParts[0]?.trim()||'',
+    dominioAcoplado: domParts[1]?.trim()||'',
     kms: g('Kms\\.\\s*a recorrer[:\\s]+(\\d+)'),
+    tarifa: g('Tarifa[:\\s]+([\\d\\.]+)'),
     pesoBrutoDesc: g('Peso Bruto \\(kg\\)[:\\s]+(\\d+)'),
     pesoNetoDesc: g('Peso Neto \\(kg\\)[:\\s]+(\\d+)'),
     pessTaraDesc: g('Peso Tara \\(kg\\)[:\\s]+(\\d+)'),
@@ -806,10 +913,16 @@ async function initCampoCam(){
 }
 
 function renderCampoCam(){
-  const q=document.getElementById('cc-buscar').value.toLowerCase();
+  const q=(document.getElementById('cc-buscar')?.value||'').toLowerCase();
+  const campoFil=(document.getElementById('cc-campo-fil')?.value||'');
   const todayStr=today();
   let regs=[...rLogistica].filter(r=>r.fecha===todayStr||!r.fecha).sort((a,b)=>b.ts-a.ts);
   if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,30);
+  // populate campo filter
+  const campos=[...new Set(regs.map(r=>r.campo).filter(Boolean))];
+  const sel=document.getElementById('cc-campo-fil');
+  if(sel){const cur=sel.value;sel.innerHTML='<option value="">Todos</option>'+campos.map(c=>`<option ${c===cur?'selected':''}>${c}</option>`).join('');}
+  if(campoFil) regs=regs.filter(r=>r.campo===campoFil);
   if(q) regs=regs.filter(r=>(r.patenteChasis+r.campo+r.chofer).toLowerCase().includes(q));
 
   const lista=document.getElementById('cc-lista');
@@ -908,10 +1021,16 @@ async function initBalanza(){
 }
 
 function renderBalLista(){
-  const q=document.getElementById('bf-buscar').value.toLowerCase();
+  const q=(document.getElementById('bf-buscar')?.value||'').toLowerCase();
+  const campoFil=(document.getElementById('bf-campo-fil')?.value||'');
   const todayStr=today();
   let regs=[...rLogistica].filter(r=>r.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
   if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,20);
+  // populate campo filter
+  const campos=[...new Set(regs.map(r=>r.campo).filter(Boolean))];
+  const sel=document.getElementById('bf-campo-fil');
+  if(sel){const cur=sel.value;sel.innerHTML='<option value="">Todos</option>'+campos.map(c=>`<option ${c===cur?'selected':''}>${c}</option>`).join('');}
+  if(campoFil) regs=regs.filter(r=>r.campo===campoFil);
   if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer+r.campo+r.lote).toLowerCase().includes(q));
 
   const lista=document.getElementById('bal-lista');
@@ -1358,20 +1477,73 @@ function renderExport(){
 
 function exportarExcel(){
   if(!rCPE.length){toast('Sin cartas de porte para exportar','err');return;}
-  const headers=['N° CPE','CTG','Fecha','Vencimiento','Campo','Titular CP','Destinatario','Destino','Transportista','Chofer','Flete Pagador','Grano/Tipo','Campaña','Peso Bruto (kg)','Peso Tara (kg)','Peso Neto (kg)','Localidad Origen','Provincia Origen','Dominios','Kms','Bruto Descarga (kg)','Tara Descarga (kg)','Neto Descarga (kg)','Fecha Arribo','Fecha Descarga','Archivo'];
-  const rows=rCPE.map(c=>[c.nCPE||'',c.ctg||'',c.fecha||'',c.vencimiento||'',c.campo||'',c.titular||'',c.destinatario||'',c.destino||'',c.transportista||'',c.chofer||'',c.flete||'',c.grano||'',c.campaña||'',c.pesoBruto||'',c.pessTara||'',c.pesoNeto||'',c.localidadOrigen||'',c.provinciaOrigen||'',c.dominios||'',c.kms||'',c.pesoBrutoDesc||'',c.pessTaraDesc||'',c.pesoNetoDesc||'',c.fechaArribo||'',c.fechaDescarga||'',c.archivo||'']);
+  const headers=[
+    'Fecha','N° Carta Porte','CTG','Campaña','Grano',
+    'Peso Neto (kg)','Remitente Venta Primaria','Destino','Localidad Destino',
+    'Observaciones','Dominio Camión','Dominio Acoplado',
+    'Flete Pagador','Empresa Transportista','Intermediario del Flete',
+    'Kms a Recorrer','Tarifa','Campo','Archivo'
+  ];
 
-  // Build CSV
-  const csv=[headers,...rows].map(r=>r.map(v=>`"${String(v).replace(/"/g,'""')}"`).join(',')).join('\n');
-  const BOM='\uFEFF';
-  const blob=new Blob([BOM+csv],{type:'text/csv;charset=utf-8'});
+  // detect duplicate CPEs by N° Carta Porte
+  const cpeCounts={};
+  rCPE.forEach(c=>{const k=c.nCPE||c.ctg||'';if(k)cpeCounts[k]=(cpeCounts[k]||0)+1;});
+
+  const rows=rCPE.map(c=>{
+    const domParts=(c.dominios||'').split(' - ');
+    const domCam=c.dominioCamion||domParts[0]||'';
+    const domAcop=c.dominioAcoplado||domParts[1]||'';
+    const key=c.nCPE||c.ctg||'';
+    const isDup=key&&cpeCounts[key]>1;
+    return {
+      isDup,
+      vals:[
+        c.fecha||'',c.nCPE||'',c.ctg||'',c.campaña||'',c.grano||'',
+        c.pesoNeto||c.pesoNetoDesc||'',c.titular||'',c.destino||'',c.localidadDestino||'',
+        c.obs||'',domCam,domAcop,c.flete||'',c.transportista||'',c.intermediario||'',
+        c.kms||'',c.tarifa||'',c.campo||'',c.archivo||''
+      ]
+    };
+  });
+
+  // Build HTML table (opens in Excel with colors)
+  const esc=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  const headerRow=headers.map(h=>`<th style="background:#2D3526;color:#C9A84C;font-weight:bold;padding:4px 8px;border:1px solid #ccc;">${esc(h)}</th>`).join('');
+
+  let dupCount=0;
+  const dataRows=rows.map(r=>{
+    const bg=r.isDup?'#FFD0D0':'';
+    if(r.isDup)dupCount++;
+    return `<tr style="background:${bg};">${r.vals.map(v=>`<td style="padding:4px 8px;border:1px solid #ccc;${r.isDup?'color:#990000;font-weight:bold;':''}">${esc(v)}</td>`).join('')}</tr>`;
+  }).join('');
+
+  const dupNote=dupCount>0?`<p style="color:#990000;font-weight:bold;margin-bottom:8px;">⚠ ${dupCount} fila(s) duplicada(s) marcadas en rojo</p>`:'<p style="color:green;margin-bottom:8px;">✓ Sin duplicados detectados</p>';
+
+  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
+<head><meta charset="UTF-8"><meta name=ProgId content=Excel.Sheet><meta name=Generator content="Microsoft Excel 11">
+<style>table{border-collapse:collapse;}th,td{white-space:nowrap;}</style></head>
+<body>
+<p style="font-weight:bold;font-size:14px;margin-bottom:4px;">Cartas de Porte CPE — ${today()}</p>
+<p style="margin-bottom:4px;">Total: ${rCPE.length} registros</p>
+${dupNote}
+<table>
+<thead><tr>${headerRow}</tr></thead>
+<tbody>${dataRows}</tbody>
+</table>
+</body></html>`;
+
+  const blob=new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
   const url=URL.createObjectURL(blob);
   const a=document.createElement('a');
-  a.href=url;a.download=`cartas_porte_${today()}.csv`;
+  a.href=url;
+  a.download=`cartas_porte_${today()}.xls`;
   document.body.appendChild(a);a.click();document.body.removeChild(a);
   URL.revokeObjectURL(url);
-  toast('✅ Excel exportado');
+  if(dupCount>0)toast(`⚠ ${dupCount} CPE duplicadas en rojo`,'err');
+  else toast('✅ Excel exportado sin duplicados');
 }
+
+
 
 // ════════════════════════════════════
 // INIT
