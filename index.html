@@ -155,6 +155,8 @@ textarea{resize:vertical;min-height:68px;}
 .tilde-btn{width:32px;height:32px;border-radius:50%;border:2px solid var(--brd);background:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;}
 .tilde-btn.on{background:var(--green);border-color:var(--green);}
 </style>
+<script src="https://accounts.google.com/gsi/client" async defer></script>
+<script src="https://apis.google.com/js/api.js" async defer></script>
 </head>
 <body>
 
@@ -235,6 +237,7 @@ textarea{resize:vertical;min-height:68px;}
   </div>
   <div id="cf-pdf-list"></div>
   <button class="save-btn" onclick="guardarCampo()">GUARDAR REGISTRO</button>
+  <button id="btn-drive-upload" onclick="subirPDFsDrive()" style="width:100%;margin-top:8px;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;display:none;">☁ SUBIR PDFs A GOOGLE DRIVE</button>
 </div>
 
 <!-- CAMIONES EN CAMPO -->
@@ -413,11 +416,17 @@ textarea{resize:vertical;min-height:68px;}
 <!-- EXPORTAR CPE -->
 <div class="scr" id="scr-export">
   <div class="info-box">
-    <div style="font-size:13px;color:var(--wh);margin-bottom:4px;">📄 Cartas de Porte adjuntadas</div>
-    <div style="font-size:11px;color:var(--mut);">Descargá cada PDF adjuntado desde campo.</div>
+    <div style="font-size:13px;color:var(--wh);margin-bottom:4px;">☁ Cartas de Porte en Google Drive</div>
+    <div style="font-size:11px;color:var(--mut);">Los PDFs que subió campo se guardan en Drive. Iniciá sesión para verlos.</div>
   </div>
-  <div class="sum-strip" id="export-sum"></div>
-  <div id="export-preview"></div>
+  <div id="drive-login-wrap">
+    <button onclick="loginDrive()" style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;margin-bottom:12px;">🔐 INICIAR SESIÓN CON GOOGLE</button>
+  </div>
+  <div id="drive-content" style="display:none;">
+    <button onclick="listarDrivePDFs()" style="width:100%;background:var(--bg3);color:var(--gold);border:1.5px solid rgba(201,168,76,.3);border-radius:12px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;margin-bottom:12px;">🔄 ACTUALIZAR LISTA</button>
+    <div class="sum-strip" id="export-sum"></div>
+    <div id="export-preview"></div>
+  </div>
 </div>
 
 <!-- MODAL KG ESTIMADOS -->
@@ -457,6 +466,10 @@ const CAMPOS = {"CAM":{"has_total":1006.0,"lotes":[{"nombre":"1_Cloquell","culti
 const LS=k=>{try{return localStorage.getItem(k);}catch(e){return null;}};
 const LSset=(k,v)=>{try{localStorage.setItem(k,typeof v==='string'?v:JSON.stringify(v));}catch(e){}};
 let cfg={url:LS('cfg_url')||''};
+const DRIVE_CLIENT_ID='363433702858-hk0oksp9a6s3phpqr23jkjksmsjutsq8.apps.googleusercontent.com';
+const DRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
+let driveToken=LS('drive_token')||'';
+let driveTokenExp=parseInt(LS('drive_token_exp')||'0');
 let maestros=JSON.parse(LS('maestros')||'null')||{contratistas:['García Hnos.','Ramírez SA','López & Cía.'],destinos:['Acopio El Recuerdo','Planta Las Parejas','Puerto Rosario']};
 let rCampo=JSON.parse(LS('r_campo')||'[]');
 let rBalanza=JSON.parse(LS('r_balanza')||'[]');
@@ -473,6 +486,11 @@ let balSelLog=null;
 let balDevolverId=null;
 let mkLogId=null;
 let selCultivos=new Set();
+let driveAccessToken=null;
+const GDRIVE_CLIENT_ID='363433702858-hk0oksp9a6s3phpqr23jkjksmsjutsq8.apps.googleusercontent.com';
+const GDRIVE_SCOPE='https://www.googleapis.com/auth/drive.file';
+const GDRIVE_FOLDER_NAME='Cosecha CPE 25-26';
+let gdriveFolderId=null;
 
 // ════════════════════════════════════
 // HELPERS
@@ -759,11 +777,25 @@ async function guardarCampo(){
 
 // PDF HANDLING
 function handlePDF(input){
+  const campo = document.getElementById('cb-campo-0')?.value || '';
+  const fecha = document.getElementById('cf-fecha')?.value || today();
   Array.from(input.files).forEach(f=>{
     const reader=new FileReader();
-    reader.onload=e=>{
-      pendingPDFs.push({name:f.name,size:f.size,b64:e.target.result});
+    reader.onload=async e=>{
+      const pdf={name:f.name,size:f.size,b64:e.target.result,driveLink:'',campo,fecha};
+      pendingPDFs.push(pdf);
       renderPDFList();
+      // Auto-upload to Drive if authenticated
+      if(isDriveTokenValid()){
+        const idx=pendingPDFs.length-1;
+        const result=await subirPDFaDrive(pdf,campo,fecha);
+        if(result){
+          pendingPDFs[idx].driveLink=result.webViewLink;
+          pendingPDFs[idx].driveId=result.id;
+          renderPDFList();
+          toast('✅ '+f.name+' subido a Drive');
+        }
+      }
     };
     reader.readAsDataURL(f);
   });
@@ -938,29 +970,116 @@ function extraerCPE(text,fname){
 
 function renderPDFList(){
   document.getElementById('cf-pdf-list').innerHTML=pendingPDFs.map((p,i)=>`
-    <div>
-      <div class="pdf-item">
-        <span>📄</span>
-        <span class="pn">${p.name}</span>
-        <span style="font-size:11px;color:var(--mut);">${(p.size/1024).toFixed(0)}kb</span>
+    <div class="pdf-item" style="flex-direction:column;align-items:stretch;">
+      <div style="display:flex;align-items:center;gap:8px;">
+        <span>${p.driveLink?'☁️':'📄'}</span>
+        <div style="flex:1;min-width:0;">
+          <div class="pn">${p.name}</div>
+          <div style="font-size:10px;color:${p.driveLink?'var(--greenl)':'var(--mut)'};">${p.driveLink?'✅ Subido a Drive':(p.size/1024).toFixed(0)+' kb — subiendo...'}</div>
+        </div>
+        ${p.driveLink?`<a href="${p.driveLink}" target="_blank" style="font-size:11px;color:var(--blue);padding:3px 8px;border:1px solid rgba(58,123,213,.3);border-radius:5px;text-decoration:none;white-space:nowrap;">Ver</a>`:''}
         <button class="pd" onclick="pendingPDFs.splice(${i},1);renderPDFList()">×</button>
       </div>
-      ${p.cpe?`<div class="pe-box">
-        <div class="pe-title">📋 CPE ${p.cpe.nCPE||'—'} · CTG ${p.cpe.ctg||'—'}</div>
-        <div class="pe-grid">
-          <div><div class="pe-lbl">Fecha</div><div class="pe-val">${p.cpe.fecha||'—'}</div></div>
-          <div><div class="pe-lbl">Grano/Tipo</div><div class="pe-val">${p.cpe.grano||'—'}</div></div>
-          <div><div class="pe-lbl">Dominios</div><div class="pe-val">${p.cpe.dominios||'—'}</div></div>
-          <div><div class="pe-lbl">Chofer</div><div class="pe-val">${p.cpe.chofer||'—'}</div></div>
-          <div><div class="pe-lbl">P. Bruto</div><div class="pe-val">${p.cpe.pesoBruto||'—'} kg</div></div>
-          <div><div class="pe-lbl">P. Neto</div><div class="pe-val">${p.cpe.pesoNeto||'—'} kg</div></div>
-          <div><div class="pe-lbl">Destino</div><div class="pe-val">${p.cpe.destino||'—'}</div></div>
-          <div><div class="pe-lbl">Transportista</div><div class="pe-val">${(p.cpe.transportista||'—').slice(0,30)}</div></div>
-        </div>
-      </div>`:''}
     </div>`).join('');
 }
 
+
+// ════════════════════════════════════
+// GOOGLE DRIVE
+// ════════════════════════════════════
+function isDriveTokenValid(){
+  return driveToken && Date.now() < driveTokenExp - 60000;
+}
+
+function authDrive(callback){
+  if(isDriveTokenValid()){callback();return;}
+  const client = google.accounts.oauth2.initTokenClient({
+    client_id: DRIVE_CLIENT_ID,
+    scope: DRIVE_SCOPE,
+    callback: (resp)=>{
+      if(resp.error){toast('Error autenticando Drive','err');return;}
+      driveToken = resp.access_token;
+      driveTokenExp = Date.now() + (resp.expires_in * 1000);
+      LSset('drive_token', driveToken);
+      LSset('drive_token_exp', String(driveTokenExp));
+      toast('✅ Google Drive conectado');
+      callback();
+    }
+  });
+  client.requestAccessToken();
+}
+
+async function getOrCreateFolder(name, parentId){
+  // Check if folder exists
+  const q = `name='${name}' and mimeType='application/vnd.google-apps.folder' and '${parentId}' in parents and trashed=false`;
+  const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name)`,{
+    headers:{Authorization:'Bearer '+driveToken}
+  });
+  const d = await r.json();
+  if(d.files&&d.files.length>0) return d.files[0].id;
+  // Create folder
+  const cr = await fetch('https://www.googleapis.com/drive/v3/files',{
+    method:'POST',
+    headers:{Authorization:'Bearer '+driveToken,'Content-Type':'application/json'},
+    body: JSON.stringify({name, mimeType:'application/vnd.google-apps.folder', parents:[parentId]})
+  });
+  const cd = await cr.json();
+  return cd.id;
+}
+
+async function subirPDFaDrive(pdf, campo, fecha){
+  if(!isDriveTokenValid()){toast('Autenticá Drive primero','err');return null;}
+  try{
+    // Get or create root folder "Cosecha 25-26"
+    const rootQ = `name='Cosecha 25-26' and mimeType='application/vnd.google-apps.folder' and trashed=false`;
+    const rr = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(rootQ)}&fields=files(id)`,{headers:{Authorization:'Bearer '+driveToken}});
+    const rd = await rr.json();
+    let rootId = rd.files&&rd.files.length>0 ? rd.files[0].id : 'root';
+    if(!rd.files||!rd.files.length){
+      const cr = await fetch('https://www.googleapis.com/drive/v3/files',{method:'POST',headers:{Authorization:'Bearer '+driveToken,'Content-Type':'application/json'},body:JSON.stringify({name:'Cosecha 25-26',mimeType:'application/vnd.google-apps.folder'})});
+      const cd = await cr.json(); rootId = cd.id;
+    }
+    // campo folder
+    const campoId = await getOrCreateFolder(campo||'Sin Campo', rootId);
+    // Upload PDF
+    const b64data = pdf.b64.split(',')[1];
+    const binary = atob(b64data);
+    const bytes = new Uint8Array(binary.length);
+    for(let i=0;i<binary.length;i++) bytes[i]=binary.charCodeAt(i);
+    const blob = new Blob([bytes],{type:'application/pdf'});
+    const form = new FormData();
+    form.append('metadata', new Blob([JSON.stringify({name:pdf.name,parents:[campoId]})],{type:'application/json'}));
+    form.append('file', blob);
+    const up = await fetch('https://www.googleapis.com/upload/drive/v3/files?uploadType=multipart&fields=id,name,webViewLink',{
+      method:'POST',
+      headers:{Authorization:'Bearer '+driveToken},
+      body: form
+    });
+    const ud = await up.json();
+    // Make it readable by anyone with link
+    await fetch(`https://www.googleapis.com/drive/v3/files/${ud.id}/permissions`,{
+      method:'POST',
+      headers:{Authorization:'Bearer '+driveToken,'Content-Type':'application/json'},
+      body: JSON.stringify({role:'reader',type:'anyone'})
+    });
+    return ud;
+  }catch(e){
+    console.log('Drive upload error:',e);
+    return null;
+  }
+}
+
+async function listarPDFsDrive(){
+  if(!isDriveTokenValid()) return [];
+  try{
+    const q = `mimeType='application/pdf' and trashed=false and name contains 'cpe'`;
+    const r = await fetch(`https://www.googleapis.com/drive/v3/files?q=${encodeURIComponent(q)}&fields=files(id,name,parents,webViewLink,createdTime)&pageSize=200&orderBy=createdTime desc`,{
+      headers:{Authorization:'Bearer '+driveToken}
+    });
+    const d = await r.json();
+    return d.files||[];
+  }catch(e){return [];}
+}
 
 // ════════════════════════════════════
 // CAMIONES EN CAMPO
@@ -1525,59 +1644,75 @@ function renderCamiones(){
 // EXPORTAR CPE EXCEL
 // ════════════════════════════════════
 function renderExport(){
-  // Collect all stored PDFs from campo records
-  const allPDFs = pendingPDFs; // current session
-  // Also get from rCampo stored pdf names
-  const stored = [];
+  const preview=document.getElementById('export-preview');
+  const sumEl=document.getElementById('export-sum');
+
+  // Group rCampo records by campo
+  const byCampo={};
   rCampo.forEach(r=>{
-    if(r.pdfs){
-      r.pdfs.split(';').filter(Boolean).forEach(name=>{
-        stored.push({name, campo:r.campo, lote:r.lote, fecha:r.fecha});
-      });
-    }
+    if(!byCampo[r.campo])byCampo[r.campo]=[];
+    byCampo[r.campo].push(r);
   });
 
-  document.getElementById('export-sum').innerHTML=`
-    <div class="sc"><div class="sv">${pendingPDFs.length}</div><div class="sl">PDFs sesión</div></div>
-    <div class="sc"><div class="sv">${stored.length}</div><div class="sl">CPE registradas</div></div>
-    <div class="sc"><div class="sv">${[...new Set(rCampo.map(r=>r.campo))].length}</div><div class="sl">Campos</div></div>
-    <div class="sc"><div class="sv">${rCampo.length}</div><div class="sl">Registros</div></div>`;
+  const totalPDFs=rCampo.reduce((s,r)=>s+(r.pdfs?r.pdfs.split(';').filter(Boolean).length:0),0);
+  sumEl.innerHTML=`
+    <div class="sc"><div class="sv">${Object.keys(byCampo).length}</div><div class="sl">Campos</div></div>
+    <div class="sc"><div class="sv">${rCampo.length}</div><div class="sl">Registros</div></div>
+    <div class="sc"><div class="sv">${totalPDFs}</div><div class="sl">CPE adjuntadas</div></div>
+    <div class="sc"><div class="sv">${isDriveTokenValid()?'✅':'—'}</div><div class="sl">Drive</div></div>`;
 
-  const preview = document.getElementById('export-preview');
-
-  if(!pendingPDFs.length && !stored.length){
-    preview.innerHTML='<div class="empty"><div class="ei">📄</div><p>Sin PDFs adjuntados aún.<br>Adjuntá CPE en "Cargar Campo".</p></div>';
-    return;
+  // Drive connect button
+  let html='';
+  if(!isDriveTokenValid()){
+    html+=`<div style="background:rgba(58,123,213,.1);border:1px solid rgba(58,123,213,.3);border-radius:12px;padding:16px;margin-bottom:14px;text-align:center;">
+      <div style="font-size:13px;color:var(--wh);margin-bottom:10px;">Conectá Google Drive para ver y descargar los PDFs</div>
+      <button onclick="authDrive(()=>{renderExport();})" style="background:var(--blue);color:#fff;border:none;border-radius:8px;padding:10px 20px;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;">🔗 CONECTAR GOOGLE DRIVE</button>
+    </div>`;
+  } else {
+    html+=`<div style="background:rgba(90,154,62,.1);border:1px solid rgba(90,154,62,.3);border-radius:8px;padding:10px 14px;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:12px;color:var(--greenl);">✅ Google Drive conectado</span>
+      <button onclick="cargarPDFsDrive()" style="background:none;border:1px solid rgba(90,154,62,.4);border-radius:6px;padding:5px 10px;color:var(--greenl);font-size:11px;cursor:pointer;">🔄 Actualizar</button>
+    </div>`;
   }
 
-  let html = '';
-
-  // PDFs de la sesión actual (con base64, descargables)
-  if(pendingPDFs.length){
-    html += `<div class="sec-hdr" style="margin-top:0;">📥 PDFs de esta sesión</div>`;
-    html += pendingPDFs.map((p,i)=>`
-      <div class="row-card" style="display:flex;align-items:center;gap:10px;">
-        <span style="font-size:24px;">📄</span>
-        <div style="flex:1;">
-          <div style="font-size:13px;font-weight:600;">${p.name}</div>
-          <div style="font-size:11px;color:var(--mut);">${(p.size/1024).toFixed(0)} kb</div>
-        </div>
-        <button onclick="descargarPDF(${i})" style="background:var(--gold);color:#181C14;border:none;border-radius:8px;padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;">⬇ BAJAR</button>
-      </div>`).join('');
+  // PDFs by campo from records
+  if(Object.keys(byCampo).length){
+    Object.entries(byCampo).sort().forEach(([campo,regs])=>{
+      html+=`<div class="campo-card" style="cursor:default;margin-bottom:10px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;color:var(--gold);margin-bottom:10px;">🌾 ${campo}</div>`;
+      regs.forEach(r=>{
+        const pdfs=(r.pdfs||'').split(';').filter(Boolean);
+        if(!pdfs.length) return;
+        html+=`<div style="margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid var(--brd);">
+          <div style="font-size:11px;color:var(--mut);margin-bottom:6px;">📅 ${r.fecha} · ${r.lote||'—'}</div>`;
+        pdfs.forEach(pname=>{
+          // check if we have a Drive link for this file
+          const driveFile=window.driveFiles?window.driveFiles.find(f=>f.name===pname):null;
+          html+=`<div style="display:flex;align-items:center;gap:8px;background:rgba(58,123,213,.08);border:1px solid rgba(58,123,213,.15);border-radius:8px;padding:7px 10px;margin-bottom:4px;">
+            <span>📄</span>
+            <span style="flex:1;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;">${pname}</span>
+            ${driveFile?`<a href="${driveFile.webViewLink}" target="_blank" style="font-size:11px;color:var(--blue);padding:3px 8px;border:1px solid rgba(58,123,213,.3);border-radius:5px;text-decoration:none;white-space:nowrap;">⬇ Ver</a>`:'<span style="font-size:10px;color:var(--mut);">Subí desde campo</span>'}
+          </div>`;
+        });
+        html+='</div>';
+      });
+      html+='</div>';
+    });
+  } else {
+    html+='<div class="empty"><div class="ei">📄</div><p>Sin registros de campo con CPE aún.</p></div>';
   }
 
-  // Registro de CPE por campo
-  if(stored.length){
-    html += `<div class="sec-hdr">📋 CPE registradas por campo</div>`;
-    html += stored.map(s=>`
-      <div class="row-card">
-        <div style="font-size:13px;font-weight:600;">📄 ${s.name}</div>
-        <div class="row-meta" style="margin-top:4px;"><span>📅 ${s.fecha}</span><span>🌾 ${s.campo}${s.lote?' · '+s.lote:''}</span></div>
-      </div>`).join('');
-  }
-
-  preview.innerHTML = html;
+  preview.innerHTML=html;
 }
+
+async function cargarPDFsDrive(){
+  if(!isDriveTokenValid()){toast('Conectá Drive primero','err');return;}
+  toast('Cargando PDFs de Drive...');
+  window.driveFiles=await listarPDFsDrive();
+  toast('✅ '+( window.driveFiles.length)+' PDFs en Drive');
+  renderExport();
+}
+
 
 function descargarPDF(idx){
   const p = pendingPDFs[idx];
