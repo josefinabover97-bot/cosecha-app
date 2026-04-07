@@ -775,43 +775,120 @@ function handlePDF(input){
 }
 
 function extraerCPE(text,fname){
-  const g=(pattern,flags='i')=>{const m=text.match(new RegExp(pattern,flags));return m?m[1]?.trim()||m[0]?.trim():'';};
-  const gLine=(label)=>{const m=text.match(new RegExp(label+'[:\\s]+([^\\n]+)','i'));return m?m[1]?.trim():'';};
-  // extract dominios - chasis and acoplado separately
-  const dominiosFull = g('Dominios[:\\s]+([^\\n]+)');
+  // PDF text has values on lines AFTER label, separated by blank lines
+  // Helper: get value on next non-empty line after a label
+  function gNext(label){
+    const lines=text.split('\n');
+    for(let i=0;i<lines.length;i++){
+      if(lines[i].trim().match(new RegExp(label.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')+'\\s*:?\\s*$','i'))){
+        for(let j=i+1;j<Math.min(i+5,lines.length);j++){
+          const v=lines[j].trim();
+          if(v&&!v.match(/^[A-Z][\w\s]+:$/)&&v!=='-')return v;
+        }
+      }
+    }
+    return '';
+  }
+  // Helper: get value by inline pattern
+  function g(pat){
+    const m=text.match(new RegExp(pat,'i'));
+    return m?m[1].trim():'';
+  }
+  // Helper: get Nth non-empty line after label
+  function gNth(label,n){
+    const lines=text.split('\n');
+    for(let i=0;i<lines.length;i++){
+      if(lines[i].trim().match(new RegExp(label,'i'))){
+        let cnt=0;
+        for(let j=i+1;j<Math.min(i+20,lines.length);j++){
+          const v=lines[j].trim();
+          if(v){cnt++;if(cnt===n)return v;}
+        }
+      }
+    }
+    return '';
+  }
+
+  const lines=text.split('\n');
+
+  // N° CPE: line 4 is "N° CPE:" then line 5 is the value
+  const nCPE = gNext('N° CPE');
+  const ctg  = g('CTG:\\s*(\\d+)');
+  const fecha= g('Fecha:\\s*(\\d{2}/\\d{2}/\\d{4})');
+  const venc = gNext('Vencimiento');
+
+  // Intervinientes
+  const titular      = gNext('Titular Carta de Porte');
+  const remVentaPrim = gNext('Rte\\. Comercial Venta Primaria');
+  const destinatario = gNext('Destinatario');
+  const destino      = gNext('Destino');
+  const transportista= gNext('Empresa Transportista');
+  const fleteStr     = gNext('Flete pagador');
+  const intermediario= gNext('Intermediario de flete');
+
+  // Chofer: label + Intermediario are on same block, value is 2 lines after Chofer
+  const chofer = gNext('Chofer');
+
+  // Grano/Tipo
+  const grano = g('Tipo:\\s*([^\\n]+)');
+  const campaña = gNext('Campaña');
+
+  // Pesos - Bruto is line 60, Neto is line 61 (after "Peso Bruto\nPeso Neto\n\nCondicional\n\n")
+  let pesoBruto='', pesoNeto='', pesoTara='';
+  for(let i=0;i<lines.length;i++){
+    if(lines[i].trim()==='Peso Bruto'){
+      // next non-empty after "Peso Neto" and "Condicional" block
+      let foundPesoNeto=false;
+      for(let j=i+1;j<Math.min(i+15,lines.length);j++){
+        const v=lines[j].trim();
+        if(v==='Peso Neto'){foundPesoNeto=true;continue;}
+        if(foundPesoNeto&&v&&v.match(/^\d+$/)){
+          if(!pesoBruto)pesoBruto=v;
+          else if(!pesoNeto)pesoNeto=v;
+          if(pesoBruto&&pesoNeto)break;
+        }
+      }
+      break;
+    }
+  }
+  pesoTara = gNext('Peso Tara');
+
+  // Procedencia
+  const locOrigen  = gNth('C - PROCEDENCIA',3); // Si, LAS ROSAS
+  const provOrigen = gNext('Provincia');
+
+  // Destino mercadería - CHACABUCO is after "Dirección:" block
+  const locDestino = gNext('Dirección');
+
+  // Transporte
+  const dominiosFull = gNext('Dominios');
   const domParts = dominiosFull.split(/\s*-\s*/);
-  
+  const domCamion  = domParts[0]||'';
+  const domAcoplado= domParts[1]||'';
+
+  // Kms: after "Kms. a recorrer:" skip date line, then value
+  const kms = gNth('Kms\\.\\s*a recorrer',2);
+  const tarifa = gNext('Tarifa');
+
+  // Descarga
+  const pesoNetoDesc  = gNext('Peso Neto \\(kg\\)');
+  const pesoBrutoDesc = gNext('Peso Bruto \\(kg\\)');
+  const pesoTaraDesc  = gNext('Peso Tara \\(kg\\)');
+  const fechaArribo   = gNext('Fecha Arribo');
+  const fechaDescarga = gNext('Fecha Descarga');
+
   return {
-    nCPE: g('N[°o]\\s*CPE[:\\s]+([\\d\\-]+)') || g('(\\d{5}-\\d{8})'),
-    ctg: g('CTG[:\\s]+(\\d+)'),
-    fecha: g('Fecha[:\\s]+(\\d{2}/\\d{2}/\\d{4})'),
-    vencimiento: g('Vencimiento[:\\s]+(\\d{2}/\\d{2}/\\d{4})'),
-    titular: g('Titular Carta de Porte[:\\s]+([^\\n]+)'),
-    destinatario: g('Destinatario[:\\s]+([^\\n]+)'),
-    destino: g('Destino[:\\s]+([^\\n]+)'),
-    localidadDestino: g('D - DESTINO[\\s\\S]{0,200}Localidad[:\\s]+([A-Z ]+)'),
-    transportista: g('Empresa Transportista[:\\s]+([^\\n]+)'),
-    chofer: g('Chofer[:\\s]+([^\\n]+)'),
-    flete: g('Flete pagador[:\\s]+([^\\n]+)'),
-    intermediario: g('Intermediario de flete[:\\s]+([^\\n]+)'),
-    grano: g('Grano\\s*/\\s*Tipo[:\\s]+([^\\n]+)'),
-    campaña: g('Campa[ñn]a[:\\s]+(\\d{4})'),
-    pesoBruto: g('Peso Bruto[\\s]+(\\d+)'),
-    pessTara: g('Peso Tara[\\s]+(\\d+)'),
-    pesoNeto: g('Peso Neto[\\s]+(\\d+)'),
-    localidadOrigen: g('C - PROCEDENCIA[\\s\\S]{0,100}Localidad[:\\s]+([A-Z ]+)'),
-    provinciaOrigen: g('Provincia[:\\s]+([A-Z ]+)'),
-    dominios: dominiosFull,
-    dominioCamion: domParts[0]?.trim()||'',
-    dominioAcoplado: domParts[1]?.trim()||'',
-    kms: g('Kms\\.\\s*a recorrer[:\\s]+(\\d+)'),
-    tarifa: g('Tarifa[:\\s]+([\\d\\.]+)'),
-    pesoBrutoDesc: g('Peso Bruto \\(kg\\)[:\\s]+(\\d+)'),
-    pesoNetoDesc: g('Peso Neto \\(kg\\)[:\\s]+(\\d+)'),
-    pessTaraDesc: g('Peso Tara \\(kg\\)[:\\s]+(\\d+)'),
-    fechaArribo: g('Fecha Arribo[:\\s]+([^\\n]+)'),
-    fechaDescarga: g('Fecha Descarga[:\\s]+([^\\n]+)'),
-    archivo: fname
+    nCPE, ctg, fecha, vencimiento:venc,
+    titular, remVentaPrim, destinatario, destino, locDestino,
+    transportista, flete:fleteStr, intermediario, chofer,
+    grano, campaña,
+    pesoBruto, pesoNeto, pesoTara,
+    locOrigen, provOrigen,
+    dominios:dominiosFull, dominioCamion:domCamion, dominioAcoplado:domAcoplado,
+    kms, tarifa,
+    pesoBrutoDesc, pesoNetoDesc, pesoTaraDesc,
+    fechaArribo, fechaDescarga,
+    archivo:fname
   };
 }
 
@@ -1490,17 +1567,18 @@ function exportarExcel(){
   rCPE.forEach(c=>{const k=c.nCPE||c.ctg||'';if(k)cpeCounts[k]=(cpeCounts[k]||0)+1;});
 
   const rows=rCPE.map(c=>{
-    const domParts=(c.dominios||'').split(' - ');
-    const domCam=c.dominioCamion||domParts[0]||'';
-    const domAcop=c.dominioAcoplado||domParts[1]||'';
+    const domCam=c.dominioCamion||'';
+    const domAcop=c.dominioAcoplado||'';
     const key=c.nCPE||c.ctg||'';
     const isDup=key&&cpeCounts[key]>1;
     return {
       isDup,
       vals:[
         c.fecha||'',c.nCPE||'',c.ctg||'',c.campaña||'',c.grano||'',
-        c.pesoNeto||c.pesoNetoDesc||'',c.titular||'',c.destino||'',c.localidadDestino||'',
-        c.obs||'',domCam,domAcop,c.flete||'',c.transportista||'',c.intermediario||'',
+        c.pesoNeto||c.pesoNetoDesc||'',c.remVentaPrim||c.titular||'',
+        c.destino||'',c.locDestino||'',
+        c.obs||'',domCam,domAcop,
+        c.flete||'',c.transportista||'',c.intermediario||'',
         c.kms||'',c.tarifa||'',c.campo||'',c.archivo||''
       ]
     };
