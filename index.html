@@ -251,34 +251,74 @@ textarea{resize:vertical;min-height:68px;}
 
 <!-- BALANZA -->
 <div class="scr" id="scr-balanza">
+  <!-- PASO 1: Lista de camiones -->
   <div id="bal-p1">
-    <div class="sec-hdr" style="margin-top:0;">🚛 Seleccionar camión de logística</div>
-    <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;margin-bottom:10px;" id="bf-buscar" placeholder="Buscar patente, campo, chofer..." oninput="renderBalLista()">
+    <div style="display:flex;gap:8px;margin-bottom:10px;">
+      <div style="flex:1;">
+        <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="bf-buscar" placeholder="Buscar patente, campo, chofer..." oninput="renderBalLista()">
+      </div>
+    </div>
+    <!-- tabs: pendiente tara / pendiente bruto / listos -->
+    <div style="display:flex;gap:6px;margin-bottom:12px;">
+      <button id="balt-tara" class="rbtn active" onclick="setBalTab('tara')" style="font-size:11px;padding:6px 4px;">⚖️ Cargar Tara</button>
+      <button id="balt-bruto" class="rbtn" onclick="setBalTab('bruto')" style="font-size:11px;padding:6px 4px;">🔁 Cargar Bruto</button>
+      <button id="balt-listos" class="rbtn" onclick="setBalTab('listos')" style="font-size:11px;padding:6px 4px;">✅ Completos</button>
+    </div>
     <div id="bal-lista"></div>
     <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--brd);">
       <button class="add-btn" onclick="balSinLog()">+ Cargar sin logística</button>
     </div>
   </div>
+
+  <!-- PASO 2: Formulario tara o bruto -->
   <div id="bal-p2" style="display:none;">
     <div class="info-box" id="bal-cam-info"></div>
-    <div class="sec-hdr">⚖️ Pesajes</div>
-    <div class="frow3 fld">
-      <div><label>Tara (kg)</label><input type="number" id="bf-tara" placeholder="10000" oninput="calcNeto()"></div>
-      <div><label>Bruto (kg)</label><input type="number" id="bf-bruto" placeholder="28000" oninput="calcNeto()"></div>
-      <div><label>Neto (kg)</label><input type="number" id="bf-neto" class="neto" readonly placeholder="—"></div>
+
+    <!-- TARA (primer pesaje) -->
+    <div id="bal-form-tara">
+      <div class="sec-hdr">⚖️ Primer pesaje — Tara</div>
+      <div class="fld">
+        <label>Tara (kg)</label>
+        <input type="number" id="bf-tara" placeholder="10000" style="font-size:18px;font-weight:700;">
+      </div>
+      <div class="fld"><label>Observaciones</label><textarea id="bf-obs-tara" placeholder="Novedades..."></textarea></div>
+      <div style="display:flex;gap:10px;">
+        <button class="add-btn" onclick="balVolver()" style="padding:12px 16px;">← Volver</button>
+        <button class="save-btn" style="flex:1;margin-top:0;" onclick="guardarTara()">GUARDAR TARA</button>
+      </div>
     </div>
-    <div class="sec-hdr">🎯 Cupo / Puerto</div>
-    <div class="fld">
-      <label>Asignar cupo disponible</label>
-      <select id="bf-cupo"><option value="">— Sin cupo / no va a puerto —</option></select>
-    </div>
-    <div id="bal-devolver" style="display:none;margin-bottom:10px;">
-      <button class="add-btn" style="color:var(--red);border-color:rgba(192,57,43,.4);width:100%;" onclick="abrirDevolver()">↩ Devolver cupo asignado</button>
-    </div>
-    <div class="fld"><label>Observaciones</label><textarea id="bf-obs" placeholder="Novedades..."></textarea></div>
-    <div style="display:flex;gap:10px;">
-      <button class="add-btn" onclick="balVolver()" style="padding:12px 16px;">← Volver</button>
-      <button class="save-btn" style="flex:1;margin-top:0;" onclick="guardarBalanza()">GUARDAR</button>
+
+    <!-- BRUTO (segundo pesaje, editable) -->
+    <div id="bal-form-bruto" style="display:none;">
+      <div class="sec-hdr">⚖️ Segundo pesaje — Bruto</div>
+      <div class="frow fld">
+        <div>
+          <label>Tara registrada (kg)</label>
+          <input type="number" id="bf-tara-edit" class="neto" placeholder="—" oninput="calcNeto()">
+          <div style="font-size:10px;color:var(--mut);margin-top:2px;">Editable si hubo error</div>
+        </div>
+        <div>
+          <label>Bruto (kg)</label>
+          <input type="number" id="bf-bruto" placeholder="28000" style="font-size:18px;font-weight:700;" oninput="calcNeto()">
+        </div>
+      </div>
+      <div class="fld">
+        <label>Neto (kg)</label>
+        <input type="number" id="bf-neto" class="neto" readonly placeholder="—">
+      </div>
+      <div class="sec-hdr">🎯 Cupo / Puerto</div>
+      <div class="fld">
+        <label>Asignar cupo disponible</label>
+        <select id="bf-cupo"><option value="">— Sin cupo / no va a puerto —</option></select>
+      </div>
+      <div id="bal-devolver" style="display:none;margin-bottom:10px;">
+        <button class="add-btn" style="color:var(--red);border-color:rgba(192,57,43,.4);width:100%;" onclick="abrirDevolver()">↩ Devolver cupo asignado</button>
+      </div>
+      <div class="fld"><label>Observaciones</label><textarea id="bf-obs" placeholder="Novedades..."></textarea></div>
+      <div style="display:flex;gap:10px;">
+        <button class="add-btn" onclick="balVolver()" style="padding:12px 16px;">← Volver</button>
+        <button class="save-btn" style="flex:1;margin-top:0;" onclick="guardarBruto()">GUARDAR BRUTO</button>
+      </div>
     </div>
   </div>
 </div>
@@ -829,12 +869,23 @@ function guardarKg(){
 // ════════════════════════════════════
 // FORM: BALANZA
 // ════════════════════════════════════
+let balTab = 'tara'; // 'tara' | 'bruto' | 'listos'
+let balEditId = null; // id del registro de balanza a completar con bruto
+
+function setBalTab(tab){
+  balTab = tab;
+  ['tara','bruto','listos'].forEach(t=>{
+    document.getElementById('balt-'+t).classList.toggle('active', t===tab);
+  });
+  renderBalLista();
+}
+
 async function initBalanza(){
-  balSelLog=null;
+  balSelLog = null; balEditId = null; balTab = 'tara';
   document.getElementById('bal-p1').style.display='block';
   document.getElementById('bal-p2').style.display='none';
   document.getElementById('bf-buscar').value='';
-  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+  ['tara','bruto','listos'].forEach(t=>document.getElementById('balt-'+t).classList.toggle('active',t==='tara'));
 
   if(cfg.url){
     document.getElementById('bal-lista').innerHTML='<div class="empty" style="padding:20px;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando...</p></div>';
@@ -862,43 +913,97 @@ function renderBalLista(){
   let regs=[...rLogistica].filter(r=>r.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
   if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,20);
   if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer+r.campo+r.lote).toLowerCase().includes(q));
+
   const lista=document.getElementById('bal-lista');
-  if(!regs.length){lista.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones de logística.<br>Usá "Cargar sin logística".</p></div>';return;}
-  lista.innerHTML=regs.map(r=>{
-    const pesado=rBalanza.some(b=>b.logisticaId===r.id);
-    const st=camLlegados[r.id]||{};
-    return `<div class="blog-card ${pesado?'done':''}" onclick="${pesado?'':` balSeleccionar('${r.id}')`}">
-      <div style="display:flex;align-items:center;justify-content:space-between;">
-        <span class="blog-patente">${r.patenteChasis}</span>
-        <span class="badge ${pesado?'b-ok':'b-pend'}">${pesado?'✓ Pesado':'Pendiente'}</span>
-      </div>
-      <div class="blog-meta">👤 ${r.chofer||'—'} · 🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</div>
-      ${r.destino?`<div class="blog-meta">📍 ${r.destino}</div>`:''}
-      ${st.kg>0?`<div class="blog-meta" style="color:var(--goldl);">Campo estimó: ${st.kg.toLocaleString('es')} kg</div>`:''}
-    </div>`;
-  }).join('');
+
+  if(balTab==='tara'){
+    // Camiones sin tara aún
+    const sinTara=regs.filter(r=>!rBalanza.some(b=>b.logisticaId===r.id));
+    if(!sinTara.length){lista.innerHTML='<div class="empty"><div class="ei">✅</div><p>Todos los camiones ya tienen tara.<br>Pasá a "Cargar Bruto".</p></div>';return;}
+    lista.innerHTML=sinTara.map(r=>`
+      <div class="blog-card" onclick="balSeleccionarTara('${r.id}')">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="blog-patente">${r.patenteChasis}</span>
+          <span class="badge b-pend">Sin tara</span>
+        </div>
+        <div class="blog-meta">👤 ${r.chofer||'—'} · 🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</div>
+        ${r.destino?`<div class="blog-meta">📍 ${r.destino}</div>`:''}
+      </div>`).join('');
+
+  } else if(balTab==='bruto'){
+    // Camiones con tara pero sin bruto
+    const conTaraSinBruto=rBalanza.filter(b=>b.tara>0&&!b.bruto).sort((a,b)=>b.ts-a.ts);
+    const filtrados=q?conTaraSinBruto.filter(b=>(b.patente+b.campo+b.chofer).toLowerCase().includes(q)):conTaraSinBruto;
+    if(!filtrados.length){lista.innerHTML='<div class="empty"><div class="ei">⚖️</div><p>Sin camiones con tara pendiente de bruto.</p></div>';return;}
+    lista.innerHTML=filtrados.map(b=>`
+      <div class="blog-card" onclick="balSeleccionarBruto('${b.id}')">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="blog-patente">${b.patente}</span>
+          <span class="badge b-pend">Falta bruto</span>
+        </div>
+        <div class="blog-meta">🌾 ${b.campo||'—'}${b.lote?' · '+b.lote:''} · 👤 ${b.chofer||'—'}</div>
+        <div class="blog-meta" style="color:var(--goldl);">Tara: ${b.tara.toLocaleString('es')} kg</div>
+        ${b.kgCampo>0?`<div class="blog-meta" style="color:var(--mut);">Campo estimó: ${b.kgCampo.toLocaleString('es')} kg</div>`:''}
+      </div>`).join('');
+
+  } else {
+    // Completos (tara + bruto)
+    const completos=rBalanza.filter(b=>b.tara>0&&b.bruto>0).sort((a,b)=>b.ts-a.ts);
+    const filtrados=q?completos.filter(b=>(b.patente+b.campo).toLowerCase().includes(q)):completos;
+    if(!filtrados.length){lista.innerHTML='<div class="empty"><div class="ei">📋</div><p>Sin camiones completos aún.</p></div>';return;}
+    lista.innerHTML=filtrados.map(b=>`
+      <div class="blog-card done">
+        <div style="display:flex;align-items:center;justify-content:space-between;">
+          <span class="blog-patente">${b.patente}</span>
+          <span class="badge b-ok">${(b.neto/1000).toFixed(2)} Tn</span>
+        </div>
+        <div class="blog-meta">🌾 ${b.campo||'—'}${b.lote?' · '+b.lote:''}</div>
+        <div class="blog-meta">Tara: ${b.tara.toLocaleString('es')} · Bruto: ${b.bruto.toLocaleString('es')} kg</div>
+      </div>`).join('');
+  }
 }
 
-function balSeleccionar(logId){
+function balSeleccionarTara(logId){
   const reg=rLogistica.find(r=>r.id===logId);
   if(!reg)return;
-  balSelLog=reg;
-  const st=camLlegados[logId]||{};
+  balSelLog=reg; balEditId=null;
   document.getElementById('bal-p1').style.display='none';
   document.getElementById('bal-p2').style.display='block';
-  const kgInfo=document.getElementById('bal-kg-campo-info');
-  // Build info box
+  document.getElementById('bal-form-tara').style.display='block';
+  document.getElementById('bal-form-bruto').style.display='none';
+  const st=camLlegados[logId]||{};
   document.getElementById('bal-cam-info').innerHTML=`
     <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--gold);">${reg.patenteChasis}${reg.patenteAcoplado?' / '+reg.patenteAcoplado:''}</div>
     <div style="font-size:12px;color:var(--mut);margin-top:3px;">👤 ${reg.chofer||'—'} · 🌾 ${reg.campo||'—'}${reg.lote?' · '+reg.lote:''}</div>
     ${reg.destino?`<div style="font-size:12px;color:var(--mut);">📍 ${reg.destino}</div>`:''}
-    ${st.kg>0?`<div class="info-row" style="margin-top:6px;"><span>Kg estimados campo</span><span class="info-val">${st.kg.toLocaleString('es')} kg</span></div>`:''}`;
+    ${st.kg>0?`<div style="font-size:12px;color:var(--goldl);margin-top:4px;">📦 Campo estimó: ${st.kg.toLocaleString('es')} kg</div>`:''}`;
+  document.getElementById('bf-tara').value='';
+  document.getElementById('bf-obs-tara').value='';
+}
 
-  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
+function balSeleccionarBruto(balId){
+  const balRec=rBalanza.find(b=>b.id===balId);
+  if(!balRec)return;
+  balEditId=balId;
+  const logRec=rLogistica.find(r=>r.id===balRec.logisticaId)||{};
+  balSelLog=logRec;
+  document.getElementById('bal-p1').style.display='none';
+  document.getElementById('bal-p2').style.display='block';
+  document.getElementById('bal-form-tara').style.display='none';
+  document.getElementById('bal-form-bruto').style.display='block';
+  const st=camLlegados[balRec.logisticaId]||{};
+  document.getElementById('bal-cam-info').innerHTML=`
+    <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1.5px;color:var(--gold);">${balRec.patente}</div>
+    <div style="font-size:12px;color:var(--mut);margin-top:3px;">🌾 ${balRec.campo||'—'}${balRec.lote?' · '+balRec.lote:''} · 👤 ${balRec.chofer||'—'}</div>
+    <div style="font-size:13px;color:var(--goldl);margin-top:6px;font-weight:700;">Tara registrada: ${balRec.tara.toLocaleString('es')} kg</div>
+    ${st.kg>0?`<div style="font-size:12px;color:var(--mut);margin-top:2px;">Campo estimó: ${st.kg.toLocaleString('es')} kg</div>`:''}`;
+  document.getElementById('bf-tara-edit').value=balRec.tara;
+  document.getElementById('bf-bruto').value='';
+  document.getElementById('bf-neto').value='';
+  document.getElementById('bf-obs').value='';
   // populate cupos
-  const todayStr=today();
-  const campo=reg.campo||'';
-  const cuposDisp=rCupos.filter(c=>c.fecha===todayStr&&(!campo||c.campo===campo)&&c.disponible>0);
+  const campo=balRec.campo||'';
+  const cuposDisp=rCupos.filter(c=>c.fecha===today()&&(!campo||c.campo===campo)&&c.disponible>0);
   const sel=document.getElementById('bf-cupo');
   sel.innerHTML='<option value="">— Sin cupo / no va a puerto —</option>';
   cuposDisp.forEach(c=>{const o=document.createElement('option');o.value=c.id;o.textContent=`${c.campo} · ${c.destino} (${c.disponible} disp.)`;sel.appendChild(o);});
@@ -907,75 +1012,89 @@ function balSeleccionar(logId){
 
 function balSinLog(){
   balSelLog={id:null,fecha:today(),patenteChasis:'',campo:'',lote:'',chofer:'',destino:''};
+  balEditId=null;
   document.getElementById('bal-p1').style.display='none';
   document.getElementById('bal-p2').style.display='block';
+  document.getElementById('bal-form-tara').style.display='block';
+  document.getElementById('bal-form-bruto').style.display='none';
   document.getElementById('bal-cam-info').innerHTML=`
     <div style="font-size:13px;color:var(--mut);margin-bottom:8px;">Sin registro de logística</div>
-    <div class="frow"><div><label>Patente</label><input type="text" id="bal-pat-manual" placeholder="ABC 123" oninput="this.value=this.value.toUpperCase()"></div><div><label>Campo</label><select id="bal-campo-manual"><option value="">—</option>${Object.keys(CAMPOS).map(c=>`<option>${c}</option>`).join('')}</select></div></div>`;
-  ['bf-tara','bf-bruto','bf-neto','bf-obs'].forEach(id=>document.getElementById(id).value='');
-  document.getElementById('bf-cupo').innerHTML='<option value="">— Sin cupo —</option>';
-  document.getElementById('bal-devolver').style.display='none';
+    <div class="frow"><div><label>Patente</label><input type="text" id="bal-pat-manual" placeholder="ABC 123" oninput="this.value=this.value.toUpperCase()"></div>
+    <div><label>Campo</label><select id="bal-campo-manual"><option value="">—</option>${Object.keys(CAMPOS).map(c=>`<option>${c}</option>`).join('')}</select></div></div>`;
+  document.getElementById('bf-tara').value='';
+  document.getElementById('bf-obs-tara').value='';
 }
 
-function balVolver(){document.getElementById('bal-p1').style.display='block';document.getElementById('bal-p2').style.display='none';balSelLog=null;}
+function balVolver(){
+  document.getElementById('bal-p1').style.display='block';
+  document.getElementById('bal-p2').style.display='none';
+  balSelLog=null;balEditId=null;
+}
 
 function abrirDevolver(){
-  if(!balSelLog)return;
-  balDevolverId=balSelLog.id;
-  document.getElementById('modal-dev-info').textContent=`Devolver cupo asignado al camión ${balSelLog.patenteChasis}?`;
+  if(!balEditId)return;
+  const balRec=rBalanza.find(b=>b.id===balEditId);
+  if(!balRec)return;
+  document.getElementById('modal-dev-info').textContent=`Devolver cupo asignado al camión ${balRec.patente}?`;
   openModal('modal-dev');
 }
 
 function confirmarDevolver(){
-  // find balanza record and remove cupo
-  const balRec=rBalanza.find(b=>b.logisticaId===balDevolverId);
+  const balRec=rBalanza.find(b=>b.id===balEditId);
   if(balRec&&balRec.cupoId){
     const cupo=rCupos.find(c=>c.id===balRec.cupoId);
     if(cupo){cupo.disponible=(cupo.disponible||0)+1;save('r_cupos',rCupos);}
     balRec.cupoId='';save('r_balanza',rBalanza);
   }
-  closeModal('modal-dev');
-  toast('✅ Cupo devuelto');
+  closeModal('modal-dev');toast('✅ Cupo devuelto');
 }
 
 function calcNeto(){
   const b=parseFloat(document.getElementById('bf-bruto').value)||0;
-  const t=parseFloat(document.getElementById('bf-tara').value)||0;
+  const t=parseFloat(document.getElementById('bf-tara-edit').value)||0;
   document.getElementById('bf-neto').value=(b-t)>0?(b-t):'';
 }
 
-async function guardarBalanza(){
+async function guardarTara(){
   if(!balSelLog){toast('Seleccioná un camión','err');return;}
   const tara=parseFloat(document.getElementById('bf-tara').value)||0;
-  const bruto=parseFloat(document.getElementById('bf-bruto').value)||0;
-  const neto=bruto-tara;
-  const obs=document.getElementById('bf-obs').value;
-  const cupoId=document.getElementById('bf-cupo').value;
-  if(!bruto){toast('Ingresá el peso bruto','err');return;}
-
+  const obs=document.getElementById('bf-obs-tara').value;
+  if(!tara){toast('Ingresá el peso de tara','err');return;}
   let patente=balSelLog.patenteChasis;
   const manualPat=document.getElementById('bal-pat-manual');
   if(manualPat&&manualPat.value)patente=manualPat.value;
-
   let campo=balSelLog.campo;
   const manualCampo=document.getElementById('bal-campo-manual');
   if(manualCampo&&manualCampo.value)campo=manualCampo.value;
+  const st=camLlegados[balSelLog.id||'']||{};
+  const kgCampo=st.kg||0;
+  const rec={id:Date.now().toString(),logisticaId:balSelLog.id||null,fecha:balSelLog.fecha||today(),campo,lote:balSelLog.lote,patente,chofer:balSelLog.chofer,destino:balSelLog.destino,tara,bruto:0,neto:0,kgCampo,diferencia:0,cupoId:'',obs,ts:Date.now(),estado:'tara'};
+  rBalanza.push(rec);save('r_balanza',rBalanza);
+  const row=[rec.fecha,campo,rec.lote,patente,tara,0,0,kgCampo,0,'',obs,rec.id,balSelLog.id||''];
+  const synced=await syncToSheets('Balanza',row);
+  toast(synced?'✅ Tara guardada':'✅ Tara guardada localmente');
+  balVolver();setBalTab('bruto');
+}
 
-  const st=camLlegados[balSelLog.id]||{};
+async function guardarBruto(){
+  if(!balEditId){toast('Seleccioná un camión','err');return;}
+  const balRec=rBalanza.find(b=>b.id===balEditId);
+  if(!balRec){toast('Registro no encontrado','err');return;}
+  const tara=parseFloat(document.getElementById('bf-tara-edit').value)||balRec.tara;
+  const bruto=parseFloat(document.getElementById('bf-bruto').value)||0;
+  const neto=bruto-tara;
+  const cupoId=document.getElementById('bf-cupo').value;
+  const obs=document.getElementById('bf-obs').value;
+  if(!bruto){toast('Ingresá el peso bruto','err');return;}
+  const st=camLlegados[balRec.logisticaId||'']||{};
   const kgCampo=st.kg||0;
   const diferencia=kgCampo>0?neto-kgCampo:0;
-
-  // consume cupo
-  if(cupoId){
-    const cupo=rCupos.find(c=>c.id===cupoId);
-    if(cupo&&cupo.disponible>0){cupo.disponible--;save('r_cupos',rCupos);}
-  }
-
-  const rec={id:Date.now().toString(),logisticaId:balSelLog.id,fecha:balSelLog.fecha||today(),campo,lote:balSelLog.lote,patente,chofer:balSelLog.chofer,destino:balSelLog.destino,tara,bruto,neto,kgCampo,diferencia,cupoId,obs,ts:Date.now()};
-  rBalanza.push(rec);save('r_balanza',rBalanza);
-  const row=[rec.fecha,campo,rec.lote,patente,tara,bruto,neto,kgCampo,diferencia,cupoId,obs,rec.id,balSelLog.id||''];
+  if(cupoId){const cupo=rCupos.find(c=>c.id===cupoId);if(cupo&&cupo.disponible>0){cupo.disponible--;save('r_cupos',rCupos);}}
+  balRec.tara=tara;balRec.bruto=bruto;balRec.neto=neto;balRec.diferencia=diferencia;balRec.cupoId=cupoId;balRec.obs=obs;balRec.estado='completo';
+  save('r_balanza',rBalanza);
+  const row=[balRec.fecha,balRec.campo,balRec.lote,balRec.patente,tara,bruto,neto,kgCampo,diferencia,cupoId,obs,balRec.id,balRec.logisticaId||''];
   const synced=await syncToSheets('Balanza',row);
-  toast(synced?'✅ Guardado y sincronizado':'✅ Guardado localmente');
+  toast(synced?'✅ Bruto guardado y sincronizado':'✅ Bruto guardado');
   setTimeout(goHome,1200);
 }
 
