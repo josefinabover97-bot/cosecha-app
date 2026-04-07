@@ -155,7 +155,6 @@ textarea{resize:vertical;min-height:68px;}
 .tilde-btn{width:32px;height:32px;border-radius:50%;border:2px solid var(--brd);background:none;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;flex-shrink:0;transition:.15s;}
 .tilde-btn.on{background:var(--green);border-color:var(--green);}
 </style>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 </head>
 <body>
 
@@ -414,12 +413,11 @@ textarea{resize:vertical;min-height:68px;}
 <!-- EXPORTAR CPE -->
 <div class="scr" id="scr-export">
   <div class="info-box">
-    <div style="font-size:13px;color:var(--wh);margin-bottom:4px;">📊 Base de datos de Cartas de Porte</div>
-    <div style="font-size:11px;color:var(--mut);">Exporta todos los datos extraídos de las CPE adjuntadas en campo.</div>
+    <div style="font-size:13px;color:var(--wh);margin-bottom:4px;">📄 Cartas de Porte adjuntadas</div>
+    <div style="font-size:11px;color:var(--mut);">Descargá cada PDF adjuntado desde campo.</div>
   </div>
   <div class="sum-strip" id="export-sum"></div>
   <div id="export-preview"></div>
-  <button class="save-btn" onclick="exportarExcel()" style="margin-top:8px;">⬇ EXPORTAR EXCEL</button>
 </div>
 
 <!-- MODAL KG ESTIMADOS -->
@@ -763,36 +761,8 @@ async function guardarCampo(){
 function handlePDF(input){
   Array.from(input.files).forEach(f=>{
     const reader=new FileReader();
-    reader.onload=async e=>{
-      const b64=e.target.result;
-      let cpe=null;
-      try{
-        // Use PDF.js to extract text properly
-        pdfjsLib.GlobalWorkerOptions.workerSrc='https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-        const arr=new Uint8Array(atob(b64.split(',')[1]).split('').map(c=>c.charCodeAt(0)));
-        const pdf=await pdfjsLib.getDocument({data:arr}).promise;
-        let fullText='';
-        for(let p=1;p<=pdf.numPages;p++){
-          const page=await pdf.getPage(p);
-          const tc=await page.getTextContent();
-          // Sort items by y position then x to maintain reading order
-          const items=tc.items.sort((a,b)=>b.transform[5]-a.transform[5]||a.transform[4]-b.transform[4]);
-          let lastY=null;
-          for(const item of items){
-            const y=Math.round(item.transform[5]);
-            if(lastY!==null&&Math.abs(y-lastY)>3)fullText+='\n';
-            fullText+=item.str;
-            lastY=y;
-          }
-          fullText+='\n';
-        }
-        cpe=extraerCPE(fullText,f.name);
-      }catch(err){
-        console.log('PDF.js error:',err);
-        // fallback: try binary read
-        try{const text=atob(b64.split(',')[1]);cpe=extraerCPE(text,f.name);}catch(e2){}
-      }
-      pendingPDFs.push({name:f.name,size:f.size,b64,cpe});
+    reader.onload=e=>{
+      pendingPDFs.push({name:f.name,size:f.size,b64:e.target.result});
       renderPDFList();
     };
     reader.readAsDataURL(f);
@@ -1555,87 +1525,76 @@ function renderCamiones(){
 // EXPORTAR CPE EXCEL
 // ════════════════════════════════════
 function renderExport(){
-  document.getElementById('export-sum').innerHTML=`
-    <div class="sc"><div class="sv">${rCPE.length}</div><div class="sl">CPE</div></div>
-    <div class="sc"><div class="sv">${[...new Set(rCPE.map(c=>c.campo||''))].filter(Boolean).length}</div><div class="sl">Campos</div></div>
-    <div class="sc"><div class="sv">${[...new Set(rCPE.map(c=>c.ctg||''))].filter(Boolean).length}</div><div class="sl">CTG únicos</div></div>
-    <div class="sc"><div class="sv">${rCPE.filter(c=>c.pesoNeto).reduce((s,c)=>s+(parseInt(c.pesoNeto)||0),0).toLocaleString('es')}</div><div class="sl">Kg totales</div></div>`;
-  if(!rCPE.length){document.getElementById('export-preview').innerHTML='<div class="empty"><div class="ei">📄</div><p>Sin cartas de porte adjuntadas aún.<br>Adjuntá PDFs en "Cargar Campo".</p></div>';return;}
-  document.getElementById('export-preview').innerHTML=rCPE.slice(0,5).map(c=>`
-    <div class="row-card" style="margin-bottom:8px;">
-      <div class="row-top"><span class="pat" style="font-size:14px;">CPE ${c.nCPE||'—'}</span><span style="font-size:11px;color:var(--mut);">CTG ${c.ctg||'—'}</span></div>
-      <div class="row-meta"><span>📅 ${c.fecha||'—'}</span><span>🌾 ${c.grano||'—'}</span><span>⚖️ ${c.pesoNeto||'—'} kg</span></div>
-      <div class="row-meta" style="margin-top:3px;"><span>🚛 ${(c.dominios||'—')}</span><span>👤 ${(c.chofer||'—').split('-').pop()?.trim()}</span></div>
-    </div>`).join('')+(rCPE.length>5?`<div style="text-align:center;font-size:12px;color:var(--mut);padding:8px;">... y ${rCPE.length-5} más</div>`:'');
-}
-
-function exportarExcel(){
-  if(!rCPE.length){toast('Sin cartas de porte para exportar','err');return;}
-  const headers=[
-    'Fecha','N° Carta Porte','CTG','Campaña','Grano',
-    'Peso Neto (kg)','Remitente Venta Primaria','Destino','Localidad Destino',
-    'Observaciones','Dominio Camión','Dominio Acoplado',
-    'Flete Pagador','Empresa Transportista','Intermediario del Flete',
-    'Kms a Recorrer','Tarifa','Campo','Archivo'
-  ];
-
-  // detect duplicate CPEs by N° Carta Porte
-  const cpeCounts={};
-  rCPE.forEach(c=>{const k=c.nCPE||c.ctg||'';if(k)cpeCounts[k]=(cpeCounts[k]||0)+1;});
-
-  const rows=rCPE.map(c=>{
-    const domCam=c.dominioCamion||'';
-    const domAcop=c.dominioAcoplado||'';
-    const key=c.nCPE||c.ctg||'';
-    const isDup=key&&cpeCounts[key]>1;
-    return {
-      isDup,
-      vals:[
-        c.fecha||'',c.nCPE||'',c.ctg||'',c.campaña||'',c.grano||'',
-        c.pesoNeto||c.pesoNetoDesc||'',c.remVentaPrim||c.titular||'',
-        c.destino||'',c.locDestino||'',
-        c.obs||'',domCam,domAcop,
-        c.flete||'',c.transportista||'',c.intermediario||'',
-        c.kms||'',c.tarifa||'',c.campo||'',c.archivo||''
-      ]
-    };
+  // Collect all stored PDFs from campo records
+  const allPDFs = pendingPDFs; // current session
+  // Also get from rCampo stored pdf names
+  const stored = [];
+  rCampo.forEach(r=>{
+    if(r.pdfs){
+      r.pdfs.split(';').filter(Boolean).forEach(name=>{
+        stored.push({name, campo:r.campo, lote:r.lote, fecha:r.fecha});
+      });
+    }
   });
 
-  // Build HTML table (opens in Excel with colors)
-  const esc=v=>String(v).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  const headerRow=headers.map(h=>`<th style="background:#2D3526;color:#C9A84C;font-weight:bold;padding:4px 8px;border:1px solid #ccc;">${esc(h)}</th>`).join('');
+  document.getElementById('export-sum').innerHTML=`
+    <div class="sc"><div class="sv">${pendingPDFs.length}</div><div class="sl">PDFs sesión</div></div>
+    <div class="sc"><div class="sv">${stored.length}</div><div class="sl">CPE registradas</div></div>
+    <div class="sc"><div class="sv">${[...new Set(rCampo.map(r=>r.campo))].length}</div><div class="sl">Campos</div></div>
+    <div class="sc"><div class="sv">${rCampo.length}</div><div class="sl">Registros</div></div>`;
 
-  let dupCount=0;
-  const dataRows=rows.map(r=>{
-    const bg=r.isDup?'#FFD0D0':'';
-    if(r.isDup)dupCount++;
-    return `<tr style="background:${bg};">${r.vals.map(v=>`<td style="padding:4px 8px;border:1px solid #ccc;${r.isDup?'color:#990000;font-weight:bold;':''}">${esc(v)}</td>`).join('')}</tr>`;
-  }).join('');
+  const preview = document.getElementById('export-preview');
 
-  const dupNote=dupCount>0?`<p style="color:#990000;font-weight:bold;margin-bottom:8px;">⚠ ${dupCount} fila(s) duplicada(s) marcadas en rojo</p>`:'<p style="color:green;margin-bottom:8px;">✓ Sin duplicados detectados</p>';
+  if(!pendingPDFs.length && !stored.length){
+    preview.innerHTML='<div class="empty"><div class="ei">📄</div><p>Sin PDFs adjuntados aún.<br>Adjuntá CPE en "Cargar Campo".</p></div>';
+    return;
+  }
 
-  const html=`<html xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:x="urn:schemas-microsoft-com:office:excel" xmlns="http://www.w3.org/TR/REC-html40">
-<head><meta charset="UTF-8"><meta name=ProgId content=Excel.Sheet><meta name=Generator content="Microsoft Excel 11">
-<style>table{border-collapse:collapse;}th,td{white-space:nowrap;}</style></head>
-<body>
-<p style="font-weight:bold;font-size:14px;margin-bottom:4px;">Cartas de Porte CPE — ${today()}</p>
-<p style="margin-bottom:4px;">Total: ${rCPE.length} registros</p>
-${dupNote}
-<table>
-<thead><tr>${headerRow}</tr></thead>
-<tbody>${dataRows}</tbody>
-</table>
-</body></html>`;
+  let html = '';
 
-  const blob=new Blob([html],{type:'application/vnd.ms-excel;charset=utf-8'});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement('a');
-  a.href=url;
-  a.download=`cartas_porte_${today()}.xls`;
-  document.body.appendChild(a);a.click();document.body.removeChild(a);
-  URL.revokeObjectURL(url);
-  if(dupCount>0)toast(`⚠ ${dupCount} CPE duplicadas en rojo`,'err');
-  else toast('✅ Excel exportado sin duplicados');
+  // PDFs de la sesión actual (con base64, descargables)
+  if(pendingPDFs.length){
+    html += `<div class="sec-hdr" style="margin-top:0;">📥 PDFs de esta sesión</div>`;
+    html += pendingPDFs.map((p,i)=>`
+      <div class="row-card" style="display:flex;align-items:center;gap:10px;">
+        <span style="font-size:24px;">📄</span>
+        <div style="flex:1;">
+          <div style="font-size:13px;font-weight:600;">${p.name}</div>
+          <div style="font-size:11px;color:var(--mut);">${(p.size/1024).toFixed(0)} kb</div>
+        </div>
+        <button onclick="descargarPDF(${i})" style="background:var(--gold);color:#181C14;border:none;border-radius:8px;padding:8px 14px;font-family:'Barlow Condensed',sans-serif;font-size:14px;letter-spacing:1px;cursor:pointer;">⬇ BAJAR</button>
+      </div>`).join('');
+  }
+
+  // Registro de CPE por campo
+  if(stored.length){
+    html += `<div class="sec-hdr">📋 CPE registradas por campo</div>`;
+    html += stored.map(s=>`
+      <div class="row-card">
+        <div style="font-size:13px;font-weight:600;">📄 ${s.name}</div>
+        <div class="row-meta" style="margin-top:4px;"><span>📅 ${s.fecha}</span><span>🌾 ${s.campo}${s.lote?' · '+s.lote:''}</span></div>
+      </div>`).join('');
+  }
+
+  preview.innerHTML = html;
+}
+
+function descargarPDF(idx){
+  const p = pendingPDFs[idx];
+  if(!p) return;
+  const a = document.createElement('a');
+  a.href = p.b64;
+  a.download = p.name;
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  toast('✅ Descargando ' + p.name);
+}
+
+function descargarTodosPDFs(){
+  if(!pendingPDFs.length){toast('Sin PDFs en esta sesión','err');return;}
+  pendingPDFs.forEach((_,i)=>setTimeout(()=>descargarPDF(i),i*500));
+  toast('✅ Descargando ' + pendingPDFs.length + ' PDFs');
 }
 
 
