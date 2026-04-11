@@ -241,46 +241,53 @@ textarea{resize:vertical;min-height:68px;}
 
 <!-- CAMIONES EN CAMPO -->
 <div class="scr" id="scr-campo-cam">
-  <div class="frow" style="margin-bottom:10px;gap:8px;">
-    <div>
-      <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Campo</label>
-      <select id="cc-campo-fil" onchange="renderCampoCam()" style="background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;width:100%;">
-        <option value="">Todos</option>
-      </select>
-    </div>
-    <div style="flex:1;">
-      <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Buscar</label>
-      <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="cc-buscar" placeholder="Patente o chofer..." oninput="renderCampoCam()">
-    </div>
+  <!-- PASO A: Elegir campo -->
+  <div id="cc-paso-campo">
+    <div class="sec-hdr" style="margin-top:0;">🌾 ¿En qué campo estás?</div>
+    <div id="cc-campos-btns" style="display:flex;flex-direction:column;gap:10px;"></div>
   </div>
-  <div id="cc-lista"></div>
+  <!-- PASO B: Lista de camiones del campo -->
+  <div id="cc-paso-camiones" style="display:none;">
+    <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+      <button onclick="ccVolver()" style="background:none;border:1.5px solid var(--brd);border-radius:8px;padding:8px 12px;color:var(--gold);font-size:18px;cursor:pointer;">←</button>
+      <div style="flex:1;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:10px;padding:10px 14px;">
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gold);" id="cc-campo-seleccionado">—</div>
+        <div style="font-size:11px;color:var(--mut);">Camiones asignados hoy</div>
+      </div>
+    </div>
+    <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;margin-bottom:10px;" id="cc-buscar" placeholder="Buscar patente o chofer..." oninput="renderCampoCam()">
+    <div id="cc-lista"></div>
+  </div>
 </div>
 
 <!-- BALANZA -->
 <div class="scr" id="scr-balanza">
   <!-- PASO 1: Lista de camiones -->
   <div id="bal-p1">
-    <div class="frow" style="margin-bottom:10px;gap:8px;">
-      <div>
-        <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Campo</label>
-        <select id="bf-campo-fil" onchange="renderBalLista()" style="background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;width:100%;">
-          <option value="">Todos</option>
-        </select>
-      </div>
-      <div style="flex:1;">
-        <label style="font-size:10px;color:var(--mut);text-transform:uppercase;letter-spacing:.7px;">Buscar</label>
-        <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;" id="bf-buscar" placeholder="Patente o chofer..." oninput="renderBalLista()">
+    <!-- PASO A: Elegir campo -->
+    <div id="bal-paso-campo">
+      <div class="sec-hdr" style="margin-top:0;">🌾 ¿Qué campo pesás hoy?</div>
+      <div id="bal-campos-btns" style="display:flex;flex-direction:column;gap:10px;"></div>
+      <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--brd);">
+        <button class="add-btn" onclick="balSinLog()">+ Cargar sin logística</button>
       </div>
     </div>
-    <!-- tabs: pendiente tara / pendiente bruto / listos -->
-    <div style="display:flex;gap:6px;margin-bottom:12px;">
-      <button id="balt-tara" class="rbtn active" onclick="setBalTab('tara')" style="font-size:11px;padding:6px 4px;">⚖️ Cargar Tara</button>
-      <button id="balt-bruto" class="rbtn" onclick="setBalTab('bruto')" style="font-size:11px;padding:6px 4px;">🔁 Cargar Bruto</button>
-      <button id="balt-listos" class="rbtn" onclick="setBalTab('listos')" style="font-size:11px;padding:6px 4px;">✅ Completos</button>
-    </div>
-    <div id="bal-lista"></div>
-    <div style="margin-top:12px;padding-top:10px;border-top:1px solid var(--brd);">
-      <button class="add-btn" onclick="balSinLog()">+ Cargar sin logística</button>
+    <!-- PASO B: Lista de camiones del campo -->
+    <div id="bal-paso-camiones" style="display:none;">
+      <div style="display:flex;align-items:center;gap:10px;margin-bottom:14px;">
+        <button onclick="balVolverCampo()" style="background:none;border:1.5px solid var(--brd);border-radius:8px;padding:8px 12px;color:var(--gold);font-size:18px;cursor:pointer;">←</button>
+        <div style="flex:1;background:rgba(201,168,76,.1);border:1px solid rgba(201,168,76,.3);border-radius:10px;padding:10px 14px;">
+          <div style="font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;color:var(--gold);" id="bal-campo-seleccionado">—</div>
+          <div style="font-size:11px;color:var(--mut);">Camiones asignados hoy</div>
+        </div>
+      </div>
+      <div style="display:flex;gap:6px;margin-bottom:12px;">
+        <button id="balt-tara" class="rbtn active" onclick="setBalTab('tara')" style="font-size:11px;padding:6px 4px;">⚖️ Tara</button>
+        <button id="balt-bruto" class="rbtn" onclick="setBalTab('bruto')" style="font-size:11px;padding:6px 4px;">🔁 Bruto</button>
+        <button id="balt-listos" class="rbtn" onclick="setBalTab('listos')" style="font-size:11px;padding:6px 4px;">✅ Listos</button>
+      </div>
+      <input style="width:100%;background:rgba(255,255,255,.05);border:1.5px solid var(--brd);border-radius:10px;padding:9px 12px;color:var(--wh);font-family:Nunito,sans-serif;font-size:13px;outline:none;margin-bottom:10px;" id="bf-buscar" placeholder="Buscar patente o chofer..." oninput="renderBalLista()">
+      <div id="bal-lista"></div>
     </div>
   </div>
 
@@ -1095,8 +1102,14 @@ async function listarPDFsDrive(){
 // ════════════════════════════════════
 // CAMIONES EN CAMPO
 // ════════════════════════════════════
+let ccCampoSel = '';
+
 async function initCampoCam(){
-  document.getElementById('cc-buscar').value='';
+  ccCampoSel = '';
+  document.getElementById('cc-paso-campo').style.display='block';
+  document.getElementById('cc-paso-camiones').style.display='none';
+
+  // Load from Sheet
   if(cfg.url){
     try{
       const r=await fetch(cfg.url+'?sheet=Logistica&t='+Date.now());
@@ -1113,26 +1126,58 @@ async function initCampoCam(){
       }
     }catch(e){}
   }
-  // populate campo filter
-  const campos=[...new Set(rLogistica.map(r=>r.campo).filter(Boolean))];
-  const sel=document.getElementById('cc-campo-fil');
-  if(sel) sel.innerHTML='<option value="">Todos</option>'+campos.map(c=>`<option>${c}</option>`).join('');
+
+  // Show campos with camion counts
+  const todayStr=today();
+  const regs=[...rLogistica].filter(r=>r.fecha===todayStr||!r.fecha);
+  const campoMap={};
+  regs.forEach(r=>{
+    const c=r.campo||'Sin campo';
+    if(!campoMap[c])campoMap[c]=0;
+    campoMap[c]++;
+  });
+
+  const btns=document.getElementById('cc-campos-btns');
+  if(!Object.keys(campoMap).length){
+    btns.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones de logística cargados para hoy.</p></div>';
+    return;
+  }
+
+  btns.innerHTML=Object.entries(campoMap).sort().map(([campo,count])=>`
+    <button onclick="ccSelCampo('${campo.replace(/'/g,"\'")}') " style="background:var(--card);border:1.5px solid rgba(201,168,76,.3);border-radius:var(--r);padding:16px 18px;text-align:left;cursor:pointer;transition:.15s;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold);">${campo}</div>
+        <div style="font-size:12px;color:var(--mut);margin-top:2px;">${count} camión${count!==1?'es':''} asignado${count!==1?'s':''}</div>
+      </div>
+      <span style="font-size:24px;color:var(--gold);">→</span>
+    </button>`).join('');
+}
+
+function ccSelCampo(campo){
+  ccCampoSel=campo;
+  document.getElementById('cc-paso-campo').style.display='none';
+  document.getElementById('cc-paso-camiones').style.display='block';
+  document.getElementById('cc-campo-seleccionado').textContent=campo;
+  document.getElementById('cc-buscar').value='';
   renderCampoCam();
+}
+
+function ccVolver(){
+  document.getElementById('cc-paso-campo').style.display='block';
+  document.getElementById('cc-paso-camiones').style.display='none';
+  ccCampoSel='';
 }
 
 function renderCampoCam(){
   const q=(document.getElementById('cc-buscar')?.value||'').toLowerCase();
-  const campoFil=(document.getElementById('cc-campo-fil')?.value||'');
   const todayStr=today();
-  let regs=[...rLogistica].filter(r=>r.fecha===todayStr||!r.fecha).sort((a,b)=>b.ts-a.ts);
-  if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,30);
-  const campos=[...new Set(regs.map(r=>r.campo).filter(Boolean))];
-  const sel=document.getElementById('cc-campo-fil');
-  if(sel){const cur=sel.value;sel.innerHTML='<option value="">Todos</option>'+campos.map(c=>`<option ${c===cur?'selected':''}>${c}</option>`).join('');}
-  if(campoFil) regs=regs.filter(r=>r.campo===campoFil);
-  if(q) regs=regs.filter(r=>(r.patenteChasis+r.campo+r.chofer).toLowerCase().includes(q));
+  let regs=[...rLogistica].filter(r=>r.campo===ccCampoSel&&(r.fecha===todayStr||!r.fecha)).sort((a,b)=>b.ts-a.ts);
+  if(!regs.length) regs=[...rLogistica].filter(r=>r.campo===ccCampoSel).sort((a,b)=>b.ts-a.ts).slice(0,20);
+  if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer).toLowerCase().includes(q));
+
   const lista=document.getElementById('cc-lista');
-  if(!regs.length){lista.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones de logística cargados</p></div>';return;}
+  if(!regs.length){lista.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones para este campo hoy.</p></div>';return;}
+
   lista.innerHTML=regs.map(r=>{
     const st=camLlegados[r.id]||{};
     const llego=st.llegado||false;
@@ -1142,11 +1187,12 @@ function renderCampoCam(){
         <button class="tilde-btn ${llego?'on':''}" onclick="toggleLlegada('${r.id}')">${llego?'✓':''}</button>
         <div style="flex:1;">
           <div class="blog-patente">${r.patenteChasis}</div>
-          <div class="blog-meta">👤 ${r.chofer||'—'} · 🌾 ${r.campo||'—'}${r.lote?' · '+r.lote:''}</div>
+          <div class="blog-meta">👤 ${r.chofer||'—'}${r.lote?' · '+r.lote:''}</div>
+          ${r.destino?`<div class="blog-meta">📍 ${r.destino}</div>`:''}
           ${llego?'<div class="blog-meta" style="color:var(--greenl);">✅ Llegó al campo</div>':''}
           ${kg>0?`<div class="blog-meta" style="color:var(--goldl);">📦 ${kg.toLocaleString('es')} kg estimados</div>`:''}
         </div>
-        ${llego?`<button class="add-btn" onclick="abrirKg('${r.id}','${r.patenteChasis}','${r.campo}')" style="padding:6px 10px;font-size:11px;">✏ Kg</button>`:''}
+        ${llego?`<button class="add-btn" onclick="abrirKg('${r.id}','${r.patenteChasis}','${ccCampoSel}')" style="padding:6px 10px;font-size:11px;">✏ Kg</button>`:''}
       </div>
     </div>`;
   }).join('');
@@ -1199,14 +1245,18 @@ function setBalTab(tab){
   renderBalLista();
 }
 
+let balCampoSel = '';
+
 async function initBalanza(){
-  balSelLog=null;balEditId=null;balTab='tara';
+  balSelLog=null; balEditId=null; balCampoSel='';
   document.getElementById('bal-p1').style.display='block';
   document.getElementById('bal-p2').style.display='none';
-  document.getElementById('bf-buscar').value='';
-  ['tara','bruto','listos'].forEach(t=>{const el=document.getElementById('balt-'+t);if(el)el.classList.toggle('active',t==='tara');});
+  document.getElementById('bal-paso-campo').style.display='block';
+  document.getElementById('bal-paso-camiones').style.display='none';
+
+  // Load from Sheet
   if(cfg.url){
-    document.getElementById('bal-lista').innerHTML='<div class="empty" style="padding:20px;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando...</p></div>';
+    document.getElementById('bal-campos-btns').innerHTML='<div class="empty" style="padding:16px;"><div class="spinner" style="margin:0 auto 8px;"></div><p>Cargando camiones...</p></div>';
     try{
       const r=await fetch(cfg.url+'?sheet=Logistica&t='+Date.now());
       const d=await r.json();
@@ -1222,20 +1272,64 @@ async function initBalanza(){
       }
     }catch(e){}
   }
+
+  // Show campos with pending camion counts
+  const todayStr=today();
+  const regs=[...rLogistica].filter(r=>r.fecha===todayStr);
+  const campoMap={};
+  regs.forEach(r=>{
+    const c=r.campo||'Sin campo';
+    if(!campoMap[c])campoMap[c]={total:0,sinTara:0,sinBruto:0};
+    campoMap[c].total++;
+    const pesado=rBalanza.find(b=>b.logisticaId===r.id);
+    if(!pesado) campoMap[c].sinTara++;
+    else if(pesado&&!pesado.bruto) campoMap[c].sinBruto++;
+  });
+
+  const btns=document.getElementById('bal-campos-btns');
+  if(!Object.keys(campoMap).length){
+    btns.innerHTML='<div class="empty"><div class="ei">🚛</div><p>Sin camiones de logística para hoy.<br>Usá "Cargar sin logística" abajo.</p></div>';
+    return;
+  }
+
+  btns.innerHTML=Object.entries(campoMap).sort().map(([campo,cnt])=>`
+    <button onclick="balSelCampo('${campo.replace(/'/g,"\'")}') " style="background:var(--card);border:1.5px solid rgba(201,168,76,.3);border-radius:var(--r);padding:16px 18px;text-align:left;cursor:pointer;display:flex;align-items:center;justify-content:space-between;">
+      <div>
+        <div style="font-family:'Barlow Condensed',sans-serif;font-size:20px;letter-spacing:1px;color:var(--gold);">${campo}</div>
+        <div style="font-size:12px;color:var(--mut);margin-top:3px;">
+          ${cnt.sinTara>0?`<span style="color:var(--goldl);">⚖️ ${cnt.sinTara} sin tara</span> · `:''}
+          ${cnt.sinBruto>0?`<span style="color:var(--blue);">🔁 ${cnt.sinBruto} sin bruto</span>`:''}
+          ${cnt.sinTara===0&&cnt.sinBruto===0?`<span style="color:var(--greenl);">✅ Todos completos</span>`:''}
+        </div>
+      </div>
+      <span style="font-size:24px;color:var(--gold);">→</span>
+    </button>`).join('');
+}
+
+function balSelCampo(campo){
+  balCampoSel=campo;
+  document.getElementById('bal-paso-campo').style.display='none';
+  document.getElementById('bal-paso-camiones').style.display='block';
+  document.getElementById('bal-campo-seleccionado').textContent=campo;
+  document.getElementById('bf-buscar').value='';
+  balTab='tara';
+  ['tara','bruto','listos'].forEach(t=>{const el=document.getElementById('balt-'+t);if(el)el.classList.toggle('active',t==='tara');});
   renderBalLista();
+}
+
+function balVolverCampo(){
+  document.getElementById('bal-paso-campo').style.display='block';
+  document.getElementById('bal-paso-camiones').style.display='none';
+  balCampoSel='';
+  initBalanza();
 }
 
 function renderBalLista(){
   const q=(document.getElementById('bf-buscar')?.value||'').toLowerCase();
-  const campoFil=(document.getElementById('bf-campo-fil')?.value||'');
   const todayStr=today();
-  let regs=[...rLogistica].filter(r=>r.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
-  if(!regs.length) regs=[...rLogistica].sort((a,b)=>b.ts-a.ts).slice(0,20);
-  const campos=[...new Set(regs.map(r=>r.campo).filter(Boolean))];
-  const sel=document.getElementById('bf-campo-fil');
-  if(sel){const cur=sel.value;sel.innerHTML='<option value="">Todos</option>'+campos.map(c=>`<option ${c===cur?'selected':''}>${c}</option>`).join('');}
-  if(campoFil) regs=regs.filter(r=>r.campo===campoFil);
-  if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer+r.campo+r.lote).toLowerCase().includes(q));
+  let regs=[...rLogistica].filter(r=>r.campo===balCampoSel&&r.fecha===todayStr).sort((a,b)=>b.ts-a.ts);
+  if(!regs.length) regs=[...rLogistica].filter(r=>r.campo===balCampoSel).sort((a,b)=>b.ts-a.ts).slice(0,20);
+  if(q) regs=regs.filter(r=>(r.patenteChasis+r.chofer).toLowerCase().includes(q));
   const lista=document.getElementById('bal-lista');
   if(balTab==='tara'){
     const sinTara=regs.filter(r=>!rBalanza.some(b=>b.logisticaId===r.id));
