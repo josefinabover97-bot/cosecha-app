@@ -420,7 +420,7 @@ textarea{resize:vertical;min-height:68px;}
     <div style="font-size:11px;color:var(--mut);">Los PDFs que subió campo se guardan en Drive. Iniciá sesión para verlos.</div>
   </div>
   <div id="drive-login-wrap">
-    <button onclick="loginDrive()" style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;margin-bottom:12px;">🔐 INICIAR SESIÓN CON GOOGLE</button>
+    <button onclick="authDrive(()=>renderExport())" style="width:100%;background:var(--blue);color:#fff;border:none;border-radius:12px;padding:14px;font-family:'Barlow Condensed',sans-serif;font-size:18px;letter-spacing:1px;cursor:pointer;margin-bottom:12px;">🔐 INICIAR SESIÓN CON GOOGLE</button>
   </div>
   <div id="drive-content" style="display:none;">
     <button onclick="listarDrivePDFs()" style="width:100%;background:var(--bg3);color:var(--gold);border:1.5px solid rgba(201,168,76,.3);border-radius:12px;padding:12px;font-family:'Barlow Condensed',sans-serif;font-size:16px;letter-spacing:1px;cursor:pointer;margin-bottom:12px;">🔄 ACTUALIZAR LISTA</button>
